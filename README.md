@@ -1,0 +1,2 @@
+# autotracker
+Impacto de automatizaciones
