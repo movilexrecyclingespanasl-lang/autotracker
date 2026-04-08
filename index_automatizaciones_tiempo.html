@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoTracker · Impacto de Automatizaciones</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0f1a;--surface:#151929;--surface2:#1c2137;--border:#2a3050;
+  --text:#e8eaf0;--muted:#7a82a0;--dim:#4a5270;
+  --primary:#22d3a7;--primary-dim:#22d3a740;--accent:#6366f1;--accent-dim:#6366f130;
+  --warn:#f59e0b;--danger:#ef4444;--info:#3b82f6;
+  --radius:10px;--radius-lg:16px;
+}
+html{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+body{min-height:100vh;overflow-x:hidden}
+::selection{background:var(--primary);color:var(--bg)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:9px}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px)}
+.header h1{font-size:20px;font-weight:900;letter-spacing:-.5px}
+.header h1 em{color:var(--primary);font-style:normal}
+.header-sub{font-size:11px;color:var(--muted);font-weight:500}
+.container{max-width:1440px;margin:0 auto;padding:20px 20px 60px}
+
+.tabs{display:flex;gap:4px;background:var(--surface);border-radius:var(--radius);padding:4px}
+.tab{padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:700;font-size:12px;border:none;background:transparent;color:var(--muted);transition:all .2s;text-transform:uppercase;letter-spacing:.8px;font-family:inherit}
+.tab:hover{color:var(--text)}
+.tab.active{background:var(--primary);color:var(--bg)}
+
+.btn{padding:8px 18px;border-radius:var(--radius);border:none;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--primary);color:var(--bg)}.btn-primary:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{filter:brightness(1.15)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-ghost:hover{border-color:var(--muted);background:var(--surface2)}
+.btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-icon{background:none;border:none;cursor:pointer;font-size:16px;padding:4px 6px;border-radius:6px;transition:background .15s;color:var(--text)}.btn-icon:hover{background:var(--surface2)}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.kpi{background:var(--surface);border-radius:var(--radius-lg);padding:20px;position:relative;overflow:hidden;border:1px solid var(--border);transition:border-color .2s}
+.kpi:hover{border-color:var(--dim)}
+.kpi-bar{position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:6px}
+.kpi-value{font-size:28px;font-weight:900;letter-spacing:-.5px;line-height:1}
+.kpi-sub{font-size:11px;color:var(--dim);margin-top:6px;font-weight:500}
+
+.card{background:var(--surface);border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
+.card-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px}
+
+.form-card{border:2px solid var(--primary)!important}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.req{color:var(--danger)}
+.field input,.field select,.field textarea{padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:13px;transition:border-color .15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary)}
+.field textarea{resize:vertical}
+.preview-box{margin-top:14px;padding:14px;background:var(--bg);border-radius:var(--radius);font-size:13px;border:1px dashed var(--border)}
+.preview-box b{color:var(--primary)}
+.span2{grid-column:span 2}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters input,.filters select{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:13px}
+.filters input:focus,.filters select:focus{outline:none;border-color:var(--primary)}
+.filter-count{font-size:12px;color:var(--dim);margin-left:auto;font-weight:600}
+
+.table-wrap{overflow-x:auto;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+th{padding:12px 14px;text-align:left;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);border-bottom:2px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;transition:color .15s;font-family:inherit}
+th:hover{color:var(--text)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
+.cell-name{font-weight:700;max-width:240px}.cell-detail{font-size:11px;color:var(--dim);margin-top:2px}
+.cell-money{font-weight:800;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:13px}
+.cell-hours{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:13px}
+.cell-roi{font-weight:800;font-family:'JetBrains Mono',monospace}
+.cell-accum{font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:13px}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700}
+.badge-activa{background:#22d3a720;color:#22d3a7}
+.badge-desarrollo{background:#3b82f620;color:#3b82f6}
+.badge-pausada{background:#f59e0b20;color:#f59e0b}
+.badge-retirada{background:#64748b20;color:#64748b}
+
+.score-pill{display:inline-block;padding:4px 14px;border-radius:99px;font-weight:900;font-size:15px;font-family:'JetBrains Mono',monospace}
+.score-high{background:#22d3a720;color:#22d3a7}.score-mid{background:#6366f120;color:#6366f1}.score-low{background:#64748b20;color:#64748b}
+
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--border);border-radius:9px;outline:none;border:none;padding:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--primary);cursor:pointer}
+
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:16px;margin-top:16px}
+.chart-full{grid-column:1/-1}
+.chart-container{position:relative;height:260px}
+.empty-state{text-align:center;padding:50px 20px;color:var(--dim);font-weight:500}
+.section{display:flex;flex-direction:column;gap:16px}
+.hidden{display:none!important}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.kpi,.card,.table-wrap{animation:fadeIn .4s ease both}
+.kpi:nth-child(2){animation-delay:.05s}.kpi:nth-child(3){animation-delay:.1s}.kpi:nth-child(4){animation-delay:.15s}.kpi:nth-child(5){animation-delay:.2s}.kpi:nth-child(6){animation-delay:.25s}
+
+@media(max-width:768px){
+  .header{padding:12px 14px}.container{padding:14px 10px 60px}
+  .kpi-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.kpi-value{font-size:22px}
+  .chart-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.span2{grid-column:span 1}
+  .filters{flex-direction:column;align-items:stretch}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>⚡ <em>Auto</em>Tracker</h1>
+    <div class="header-sub" id="headerSub">Cargando...</div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
+    <button class="tab" data-tab="list">Registro</button>
+    <button class="tab" data-tab="scoring">Priorización</button>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="openForm()">+ Nueva</button>
+    <button class="btn btn-ghost" onclick="exportCSV()">⬇ CSV</button>
+    <button class="btn btn-ghost" onclick="exportJSON()">💾 Backup</button>
+    <label class="btn btn-ghost" style="cursor:pointer">📂 Restaurar<input type="file" accept=".json" onchange="importJSON(event)" style="display:none"></label>
+  </div>
+</div>
+
+<div class="container">
+  <div id="page-dashboard" class="section">
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="chart-grid">
+      <div class="card"><div class="card-title">📊 Ahorro mensual por departamento</div><div class="chart-container"><canvas id="chartDept"></canvas></div></div>
+      <div class="card"><div class="card-title">🏆 Top 10 automatizaciones (€/mes)</div><div class="chart-container"><canvas id="chartTop"></canvas></div></div>
+      <div class="card chart-full"><div class="card-title">📈 Evolución mensual del ahorro</div><div class="chart-container"><canvas id="chartEvol"></canvas></div></div>
+    </div>
+  </div>
+
+  <div id="page-list" class="section hidden">
+    <div id="formContainer"></div>
+    <div class="filters" id="filtersBar">
+      <input type="text" id="fSearch" placeholder="🔍 Buscar..." oninput="renderTable()">
+      <select id="fDept" onchange="renderTable()"><option value="">Departamento</option></select>
+      <select id="fTool" onchange="renderTable()"><option value="">Herramienta</option></select>
+      <select id="fStatus" onchange="renderTable()"><option value="">Estado</option></select>
+      <select id="fResp" onchange="renderTable()"><option value="">Responsable</option></select>
+      <button class="btn btn-sm btn-danger hidden" id="btnClearFilters" onclick="clearFilters()">✕ Limpiar</button>
+      <span class="filter-count" id="filterCount"></span>
+    </div>
+    <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
+  </div>
+
+  <div id="page-scoring" class="section hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div>
+        <h2 style="font-size:18px;font-weight:900">🎯 Priorización de futuras automatizaciones</h2>
+        <p style="color:var(--muted);font-size:13px;margin-top:4px">Ahorro potencial + frecuencia + impacto + facilidad → score /20</p>
+      </div>
+      <button class="btn btn-accent" onclick="openScoreForm()">+ Añadir oportunidad</button>
+    </div>
+    <div id="scoreFormContainer"></div>
+    <div class="table-wrap"><table><thead><tr><th>Proceso</th><th>Dept.</th><th>Ahorro pot.</th><th>Frec.</th><th>Impacto</th><th>Facilidad</th><th>SCORE</th><th></th></tr></thead><tbody id="scoreBody"></tbody></table></div>
+  </div>
+</div>
+
+<script>
+const DEPARTMENTS=["IT","Administración","RRHH","Comercial","Logística","Producción","Dirección","Otro"];
+const TOOLS=["n8n","Power Automate","Python","Excel/VBA","Apps Script","Power Apps","Otro"];
+const STATUSES=["En desarrollo","Activa","Pausada","Retirada"];
+const SK="autotracker_automations",SCK="autotracker_scorings";
+
+let automations=JSON.parse(localStorage.getItem(SK)||"[]");
+let scorings=JSON.parse(localStorage.getItem(SCK)||"[]");
+let currentTab="dashboard",sortCol="monthlySaving",sortDir="desc",editingId=null,editingScoreId=null;
+let chartDept,chartTop,chartEvol;
+
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const num=v=>parseFloat(v)||0;
+const fmt=(n,d=0)=>n.toLocaleString("es-ES",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtEur=n=>fmt(n,2)+" €";
+const fmtH=mins=>{const h=Math.floor(mins/60),m=Math.round(mins%60);return h>0?h+"h "+m+"m":m+"m"};
+function save(){localStorage.setItem(SK,JSON.stringify(automations));localStorage.setItem(SCK,JSON.stringify(scorings))}
+
+function calcMetrics(a){
+  const savedMin=(num(a.manualMinutes)-num(a.currentMinutes))*num(a.monthlyExecutions);
+  const savedHours=savedMin/60;const monthlySaving=savedHours*num(a.costPerHour);const annualSaving=monthlySaving*12;
+  const investmentCost=num(a.investmentHours)*num(a.costPerHour);
+  const roi=investmentCost>0?((annualSaving-investmentCost)/investmentCost)*100:(annualSaving>0?Infinity:0);
+  const paybackMonths=monthlySaving>0?investmentCost/monthlySaving:Infinity;
+  const monthsActive=a.startDate?Math.max(1,Math.round((Date.now()-new Date(a.startDate).getTime())/(1e3*60*60*24*30.44))):0;
+  const accumulated=monthlySaving*monthsActive;
+  return{savedMin,savedHours,monthlySaving,annualSaving,investmentCost,roi,paybackMonths,monthsActive,accumulated};
+}
+function scoringCalc(s){const sv=Math.min(5,Math.ceil(num(s.potentialSavingMin)/30));const fq=Math.min(5,Math.ceil(num(s.frequency)/20));return{sv,fq,total:sv+fq+num(s.impact)+num(s.ease)}}
+function badgeClass(s){return{Activa:"badge-activa","En desarrollo":"badge-desarrollo",Pausada:"badge-pausada",Retirada:"badge-retirada"}[s]||"badge-retirada"}
+
+// TABS
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  currentTab=t.dataset.tab;
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");
+  document.querySelectorAll("[id^='page-']").forEach(p=>p.classList.add("hidden"));
+  document.getElementById("page-"+currentTab).classList.remove("hidden");
+  if(currentTab==="dashboard")renderDashboard();if(currentTab==="list")renderTable();if(currentTab==="scoring")renderScoring();
+}));
+
+// DASHBOARD
+function renderDashboard(){
+  const active=automations.filter(a=>a.status==="Activa").map(a=>({...a,m:calcMetrics(a)}));
+  const tM=active.reduce((s,a)=>s+a.m.monthlySaving,0);
+  const tA=active.reduce((s,a)=>s+a.m.annualSaving,0);
+  const tH=active.reduce((s,a)=>s+a.m.savedHours,0);
+  const tAc=active.reduce((s,a)=>s+a.m.accumulated,0);
+  const tI=active.reduce((s,a)=>s+a.m.investmentCost,0);
+  const wr=active.filter(a=>a.m.roi!==Infinity&&a.m.investmentCost>0);
+  const ar=wr.length>0?wr.reduce((s,a)=>s+a.m.roi,0)/wr.length:0;
+  document.getElementById("headerSub").textContent=automations.length+" registradas · "+active.length+" activas";
+
+  const kpis=[
+    {l:"Ahorro mensual",v:fmtEur(tM),c:"var(--primary)"},
+    {l:"Ahorro anual",v:fmtEur(tA),c:"var(--info)"},
+    {l:"Ahorro acumulado",v:fmtEur(tAc),c:"var(--accent)",s:"Desde puesta en marcha"},
+    {l:"Horas/mes ahorradas",v:fmt(tH,1)+"h",c:"var(--warn)"},
+    {l:"ROI medio",v:fmt(ar,0)+"%",c:"#22c55e"},
+    {l:"Inversión total",v:fmtEur(tI),c:"var(--dim)",s:active.length+" activas"}
+  ];
+  document.getElementById("kpiGrid").innerHTML=kpis.map(k=>`<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div>${k.s?`<div class="kpi-sub">${k.s}</div>`:""}</div>`).join("");
+
+  // Dept
+  const dm={};active.forEach(a=>{dm[a.department]=(dm[a.department]||0)+a.m.monthlySaving});
+  const dd=Object.entries(dm).sort((a,b)=>b[1]-a[1]);
+  const dc=["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#14b8a6"];
+  if(chartDept)chartDept.destroy();
+  chartDept=new Chart(document.getElementById("chartDept"),{type:"bar",data:{labels:dd.map(d=>d[0]),datasets:[{data:dd.map(d=>Math.round(d[1]*100)/100),backgroundColor:dc.slice(0,dd.length),borderRadius:6,borderSkipped:false}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtEur(c.raw)}}},scales:{x:{ticks:{callback:v=>fmt(v)+"€",color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},y:{ticks:{color:"#7a82a0",font:{size:11,weight:600}},grid:{display:false}}}}});
+
+  // Top10
+  const t10=[...active].sort((a,b)=>b.m.monthlySaving-a.m.monthlySaving).slice(0,10);
+  if(chartTop)chartTop.destroy();
+  chartTop=new Chart(document.getElementById("chartTop"),{type:"bar",data:{labels:t10.map(a=>a.name.length>28?a.name.slice(0,28)+"…":a.name),datasets:[{data:t10.map(a=>Math.round(a.m.monthlySaving*100)/100),backgroundColor:"#22d3a7",borderRadius:6,borderSkipped:false}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtEur(c.raw)}}},scales:{x:{ticks:{callback:v=>fmt(v)+"€",color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},y:{ticks:{color:"#7a82a0",font:{size:10,weight:600}},grid:{display:false}}}}});
+
+  // Evolution
+  const em={};active.forEach(a=>{if(!a.startDate)return;const d=new Date(a.startDate);const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");em[k]=(em[k]||0)+a.m.monthlySaving});
+  const ek=Object.keys(em).sort();let ac=0;const ed=ek.map(k=>{ac+=em[k];return{month:k,n:Math.round(em[k]*100)/100,a:Math.round(ac*100)/100}});
+  if(chartEvol)chartEvol.destroy();
+  chartEvol=new Chart(document.getElementById("chartEvol"),{type:"line",data:{labels:ed.map(d=>d.month),datasets:[{label:"Acumulado",data:ed.map(d=>d.a),borderColor:"#6366f1",backgroundColor:"#6366f120",fill:true,tension:.3,pointRadius:4,borderWidth:3},{label:"Nuevo/mes",data:ed.map(d=>d.n),borderColor:"#22d3a7",borderDash:[5,5],tension:.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+": "+fmtEur(c.raw)}}},scales:{x:{ticks:{color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},y:{ticks:{callback:v=>fmt(v)+"€",color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}}}}});
+}
+
+// FORM
+function openForm(id){
+  editingId=id||null;
+  const a=id?automations.find(x=>x.id===id):{name:"",department:DEPARTMENTS[0],process:"",responsible:"",tool:TOOLS[0],status:"Activa",startDate:new Date().toISOString().split("T")[0],manualMinutes:"",currentMinutes:"",monthlyExecutions:"",costPerHour:"",investmentHours:"",notes:""};
+  if(currentTab!=="list"){currentTab="list";document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelector('[data-tab="list"]').classList.add("active");document.querySelectorAll("[id^='page-']").forEach(p=>p.classList.add("hidden"));document.getElementById("page-list").classList.remove("hidden");renderTable()}
+  const dO=DEPARTMENTS.map(d=>`<option ${d===a.department?"selected":""}>${d}</option>`).join("");
+  const tO=TOOLS.map(t=>`<option ${t===a.tool?"selected":""}>${t}</option>`).join("");
+  const sO=STATUSES.map(s=>`<option ${s===a.status?"selected":""}>${s}</option>`).join("");
+  document.getElementById("formContainer").innerHTML=`<div class="card form-card" style="animation:fadeIn .3s ease"><h3 style="font-size:16px;font-weight:900;margin-bottom:16px">${id?"✏️ Editar":"➕ Nueva automatización"}</h3><div class="form-grid"><div class="field span2"><div class="field-label">Nombre <span class="req">*</span></div><input id="fName" value="${(a.name||"").replace(/"/g,"&quot;")}"></div><div class="field"><div class="field-label">Departamento</div><select id="fDepartment">${dO}</select></div><div class="field"><div class="field-label">Proceso</div><input id="fProcess" value="${(a.process||"").replace(/"/g,"&quot;")}"></div><div class="field"><div class="field-label">Responsable</div><input id="fResponsible" value="${(a.responsible||"").replace(/"/g,"&quot;")}"></div><div class="field"><div class="field-label">Herramienta</div><select id="fToolSel">${tO}</select></div><div class="field"><div class="field-label">Estado</div><select id="fStatusSel">${sO}</select></div><div class="field"><div class="field-label">Fecha inicio</div><input type="date" id="fStartDate" value="${a.startDate||""}"></div><div class="field"><div class="field-label">Min. manual/ejecución <span class="req">*</span></div><input type="number" id="fManual" min="0" step="0.5" value="${a.manualMinutes}"></div><div class="field"><div class="field-label">Min. actual/ejecución <span class="req">*</span></div><input type="number" id="fCurrent" min="0" step="0.5" value="${a.currentMinutes}"></div><div class="field"><div class="field-label">Ejecuciones/mes <span class="req">*</span></div><input type="number" id="fExec" min="0" value="${a.monthlyExecutions}"></div><div class="field"><div class="field-label">€/hora departamento <span class="req">*</span></div><input type="number" id="fCost" min="0" step="0.5" value="${a.costPerHour}"></div><div class="field"><div class="field-label">Inversión (horas)</div><input type="number" id="fInvest" min="0" step="0.5" value="${a.investmentHours}"></div></div><div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="fNotes" rows="2">${a.notes||""}</textarea></div><div id="formPreview" class="preview-box hidden"></div><div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-primary" onclick="saveForm()">💾 Guardar</button><button class="btn btn-ghost" onclick="closeForm()">Cancelar</button></div></div>`;
+  ["fManual","fCurrent","fExec","fCost","fInvest"].forEach(i=>document.getElementById(i).addEventListener("input",updatePreview));
+  updatePreview();document.getElementById("fName").focus();
+}
+
+function updatePreview(){
+  const mm=num(document.getElementById("fManual").value),cm=num(document.getElementById("fCurrent").value),ex=num(document.getElementById("fExec").value),cost=num(document.getElementById("fCost").value),inv=num(document.getElementById("fInvest").value);
+  const box=document.getElementById("formPreview");
+  if(mm>0&&ex>0){const sm=(mm-cm)*ex;const mo=(sm/60)*cost;let h="<b>"+fmtH(sm)+"</b> ahorrados/mes → <b>"+fmtEur(mo)+"/mes</b> · <b>"+fmtEur(mo*12)+"/año</b>";if(inv>0&&mo>0)h+=" · Payback: <b>"+fmt(inv*cost/mo,1)+" meses</b>";box.innerHTML=h;box.classList.remove("hidden")}else box.classList.add("hidden");
+}
+
+function saveForm(){
+  const name=document.getElementById("fName").value.trim();if(!name)return alert("El nombre es obligatorio");
+  const data={id:editingId||uid(),name,department:document.getElementById("fDepartment").value,process:document.getElementById("fProcess").value.trim(),responsible:document.getElementById("fResponsible").value.trim(),tool:document.getElementById("fToolSel").value,status:document.getElementById("fStatusSel").value,startDate:document.getElementById("fStartDate").value,manualMinutes:document.getElementById("fManual").value,currentMinutes:document.getElementById("fCurrent").value,monthlyExecutions:document.getElementById("fExec").value,costPerHour:document.getElementById("fCost").value,investmentHours:document.getElementById("fInvest").value,notes:document.getElementById("fNotes").value.trim(),updatedAt:new Date().toISOString()};
+  if(editingId)automations=automations.map(a=>a.id===editingId?data:a);else automations.push(data);
+  save();closeForm();renderTable();
+}
+function closeForm(){editingId=null;document.getElementById("formContainer").innerHTML=""}
+function deleteAutomation(id){if(!confirm("¿Eliminar esta automatización?"))return;automations=automations.filter(a=>a.id!==id);save();renderTable()}
+
+// TABLE
+function populateFilters(){
+  const rs=[...new Set(automations.map(a=>a.responsible).filter(Boolean))];
+  const el=document.getElementById("fResp");const cv=el.value;
+  el.innerHTML='<option value="">Responsable</option>'+rs.map(r=>`<option ${r===cv?"selected":""}>${r}</option>`).join("");
+}
+
+function getFiltered(){
+  const se=document.getElementById("fSearch").value.toLowerCase(),de=document.getElementById("fDept").value,to=document.getElementById("fTool").value,st=document.getElementById("fStatus").value,re=document.getElementById("fResp").value;
+  return automations.filter(a=>{
+    if(de&&a.department!==de)return false;if(to&&a.tool!==to)return false;if(st&&a.status!==st)return false;if(re&&a.responsible!==re)return false;
+    if(se&&!a.name.toLowerCase().includes(se)&&!(a.process||"").toLowerCase().includes(se))return false;return true;
+  }).map(a=>({...a,m:calcMetrics(a)}));
+}
+
+function renderTable(){
+  populateFilters();let data=getFiltered();
+  data.sort((a,b)=>{let va,vb;
+    if(sortCol==="name"){va=a.name;vb=b.name}else if(sortCol==="department"){va=a.department;vb=b.department}
+    else if(sortCol==="savedHours"){va=a.m.savedHours;vb=b.m.savedHours}else if(sortCol==="monthlySaving"){va=a.m.monthlySaving;vb=b.m.monthlySaving}
+    else if(sortCol==="roi"){va=a.m.roi===Infinity?9999999:a.m.roi;vb=b.m.roi===Infinity?9999999:b.m.roi}
+    else if(sortCol==="accumulated"){va=a.m.accumulated;vb=b.m.accumulated}else{va=a.m.monthlySaving;vb=b.m.monthlySaving}
+    if(typeof va==="string")return sortDir==="asc"?va.localeCompare(vb):vb.localeCompare(va);return sortDir==="asc"?va-vb:vb-va;
+  });
+  const af=[document.getElementById("fSearch").value,document.getElementById("fDept").value,document.getElementById("fTool").value,document.getElementById("fStatus").value,document.getElementById("fResp").value].some(Boolean);
+  document.getElementById("btnClearFilters").classList.toggle("hidden",!af);
+  document.getElementById("filterCount").textContent=data.length+" de "+automations.length;
+  const cols=[{k:"name",l:"Nombre"},{k:"department",l:"Dept."},{k:"savedHours",l:"Horas/mes"},{k:"monthlySaving",l:"€/mes"},{k:"roi",l:"ROI"},{k:"accumulated",l:"Acumulado"}];
+  document.getElementById("tableHead").innerHTML="<tr>"+cols.map(c=>`<th onclick="setSort('${c.k}')">${c.l} ${sortCol===c.k?(sortDir==="desc"?"▼":"▲"):""}</th>`).join("")+"<th>Estado</th><th></th></tr>";
+  if(!data.length){document.getElementById("tableBody").innerHTML='<tr><td colspan="8" class="empty-state">No hay automatizaciones. Pulsa "+ Nueva" para empezar.</td></tr>';return}
+  document.getElementById("tableBody").innerHTML=data.map(a=>`<tr><td><div class="cell-name">${a.name}</div><div class="cell-detail">${a.process||"—"} · ${a.tool}</div></td><td>${a.department}</td><td class="cell-hours">${fmt(a.m.savedHours,1)}h</td><td class="cell-money">${fmtEur(a.m.monthlySaving)}</td><td class="cell-roi">${a.m.roi===Infinity?"∞":fmt(a.m.roi,0)+"%"}</td><td class="cell-accum">${fmtEur(a.m.accumulated)}</td><td><span class="badge ${badgeClass(a.status)}">${a.status}</span></td><td style="white-space:nowrap"><button class="btn-icon" onclick="openForm('${a.id}')" title="Editar">✏️</button><button class="btn-icon" onclick="deleteAutomation('${a.id}')" title="Eliminar">🗑️</button></td></tr>`).join("");
+}
+
+function setSort(c){if(sortCol===c)sortDir=sortDir==="desc"?"asc":"desc";else{sortCol=c;sortDir="desc"}renderTable()}
+function clearFilters(){["fSearch","fDept","fTool","fStatus","fResp"].forEach(i=>document.getElementById(i).value="");renderTable()}
+
+// SCORING
+function openScoreForm(id){
+  editingScoreId=id||null;const s=id?scorings.find(x=>x.id===id):{name:"",department:DEPARTMENTS[0],potentialSavingMin:"",frequency:"",impact:3,ease:3,notes:""};
+  const dO=DEPARTMENTS.map(d=>`<option ${d===s.department?"selected":""}>${d}</option>`).join("");
+  document.getElementById("scoreFormContainer").innerHTML=`<div class="card" style="border:2px solid var(--accent);animation:fadeIn .3s ease"><div class="form-grid"><div class="field span2"><div class="field-label">Nombre del proceso <span class="req">*</span></div><input id="sName" value="${(s.name||"").replace(/"/g,"&quot;")}"></div><div class="field"><div class="field-label">Departamento</div><select id="sDept">${dO}</select></div><div class="field"><div class="field-label">Min. ahorro potencial/ejecución</div><input type="number" id="sSaving" min="0" value="${s.potentialSavingMin}"></div><div class="field"><div class="field-label">Ejecuciones/mes estimadas</div><input type="number" id="sFreq" min="0" value="${s.frequency}"></div><div class="field"><div class="field-label">Impacto (1-5): <b id="sImpactVal">${s.impact}</b></div><input type="range" id="sImpact" min="1" max="5" value="${s.impact}" oninput="document.getElementById('sImpactVal').textContent=this.value"></div><div class="field"><div class="field-label">Facilidad (1-5): <b id="sEaseVal">${s.ease}</b></div><input type="range" id="sEase" min="1" max="5" value="${s.ease}" oninput="document.getElementById('sEaseVal').textContent=this.value"></div></div><div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="sNotes" rows="2">${s.notes||""}</textarea></div><div style="display:flex;gap:10px;margin-top:14px"><button class="btn btn-accent" onclick="saveScore()">💾 Guardar</button><button class="btn btn-ghost" onclick="closeScoreForm()">Cancelar</button></div></div>`;
+  document.getElementById("sName").focus();
+}
+function saveScore(){
+  const name=document.getElementById("sName").value.trim();if(!name)return alert("Nombre obligatorio");
+  const data={id:editingScoreId||uid(),name,department:document.getElementById("sDept").value,potentialSavingMin:document.getElementById("sSaving").value,frequency:document.getElementById("sFreq").value,impact:parseInt(document.getElementById("sImpact").value),ease:parseInt(document.getElementById("sEase").value),notes:document.getElementById("sNotes").value.trim()};
+  if(editingScoreId)scorings=scorings.map(s=>s.id===editingScoreId?data:s);else scorings.push(data);
+  save();closeScoreForm();renderScoring();
+}
+function closeScoreForm(){editingScoreId=null;document.getElementById("scoreFormContainer").innerHTML=""}
+function deleteScoring(id){if(!confirm("¿Eliminar?"))return;scorings=scorings.filter(s=>s.id!==id);save();renderScoring()}
+
+function renderScoring(){
+  const sorted=[...scorings].sort((a,b)=>scoringCalc(b).total-scoringCalc(a).total);
+  if(!sorted.length){document.getElementById("scoreBody").innerHTML='<tr><td colspan="8" class="empty-state">Sin oportunidades registradas</td></tr>';return}
+  document.getElementById("scoreBody").innerHTML=sorted.map(s=>{const sc=scoringCalc(s);const cls=sc.total>=15?"score-high":sc.total>=10?"score-mid":"score-low";
+    return`<tr><td><div class="cell-name">${s.name}</div>${s.notes?`<div class="cell-detail">${s.notes}</div>`:""}</td><td>${s.department}</td><td>${s.potentialSavingMin||"—"} min</td><td>${s.frequency||"—"}/mes</td><td>${"⭐".repeat(num(s.impact))}</td><td>${"🟢".repeat(num(s.ease))}</td><td><span class="score-pill ${cls}">${sc.total}/20</span></td><td style="white-space:nowrap"><button class="btn-icon" onclick="openScoreForm('${s.id}')">✏️</button><button class="btn-icon" onclick="deleteScoring('${s.id}')">🗑️</button></td></tr>`}).join("");
+}
+
+// EXPORT/IMPORT
+function exportCSV(){
+  const h=["Nombre","Departamento","Proceso","Responsable","Herramienta","Estado","Fecha inicio","Min manual","Min actual","Ejecuciones/mes","€/hora","Inversión (h)","Ahorro mensual €","Ahorro anual €","ROI %","Payback (meses)","Acumulado €","Notas"];
+  const r=automations.map(a=>{const m=calcMetrics(a);return[a.name,a.department,a.process,a.responsible,a.tool,a.status,a.startDate,a.manualMinutes,a.currentMinutes,a.monthlyExecutions,a.costPerHour,a.investmentHours,m.monthlySaving.toFixed(2),m.annualSaving.toFixed(2),m.roi===Infinity?"∞":m.roi.toFixed(1),m.paybackMonths===Infinity?"N/A":m.paybackMonths.toFixed(1),m.accumulated.toFixed(2),a.notes]});
+  dl("\uFEFF"+[h,...r].map(x=>x.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(";")).join("\n"),`autotracker_${new Date().toISOString().slice(0,10)}.csv`,"text/csv;charset=utf-8");
+}
+function exportJSON(){dl(JSON.stringify({automations,scorings,exportedAt:new Date().toISOString()},null,2),`autotracker_backup_${new Date().toISOString().slice(0,10)}.json`,"application/json")}
+function importJSON(e){
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=function(ev){try{const d=JSON.parse(ev.target.result);if(!d.automations||!Array.isArray(d.automations))return alert("Formato incorrecto");if(!confirm("Se importarán "+d.automations.length+" automatizaciones y "+(d.scorings||[]).length+" scorings. ¿Reemplazar datos actuales?"))return;automations=d.automations;scorings=d.scorings||[];save();renderDashboard();renderTable();renderScoring();alert("✅ Importación completada")}catch(err){alert("Error: "+err.message)}};
+  r.readAsText(f);e.target.value="";
+}
+function dl(content,name,type){const b=new Blob([content],{type});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+
+// INIT
+(function init(){
+  const fD=document.getElementById("fDept"),fT=document.getElementById("fTool"),fS=document.getElementById("fStatus");
+  DEPARTMENTS.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;fD.appendChild(o)});
+  TOOLS.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;fT.appendChild(o)});
+  STATUSES.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;fS.appendChild(o)});
+  renderDashboard();
+})();
+</script>
+</body>
+</html>
