@@ -34,7 +34,7 @@ body{min-height:100vh;overflow-x:hidden}
 .login-box .btn{width:100%;justify-content:center;padding:12px;font-size:15px}
 .login-error{color:var(--danger);font-size:13px;margin-top:10px;min-height:20px;font-weight:600}
 
-/* LOADING OVERLAY */
+/* LOADING */
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
 .spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -61,6 +61,7 @@ body{min-height:100vh;overflow-x:hidden}
 .btn-icon{background:none;border:none;cursor:pointer;font-size:16px;padding:4px 6px;border-radius:6px;transition:background .15s;color:var(--text)}.btn-icon:hover{background:var(--surface2)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
 
+/* KPIs */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .kpi{background:var(--surface);border-radius:var(--radius-lg);padding:20px;position:relative;overflow:hidden;border:1px solid var(--border);transition:border-color .2s}
 .kpi:hover{border-color:var(--dim)}
@@ -68,6 +69,28 @@ body{min-height:100vh;overflow-x:hidden}
 .kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:6px}
 .kpi-value{font-size:28px;font-weight:900;letter-spacing:-.5px;line-height:1}
 .kpi-sub{font-size:11px;color:var(--dim);margin-top:6px;font-weight:500}
+
+/* DEPT KPI TABLE */
+.dept-kpi-wrap{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
+.dept-kpi-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);padding:16px 20px 8px}
+.dept-kpi-table{width:100%;border-collapse:collapse}
+.dept-kpi-table th{padding:8px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);border-bottom:1px solid var(--border)}
+.dept-kpi-table td{padding:9px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.dept-kpi-table tr:last-child td{border-bottom:none}
+.dept-kpi-table tr:hover td{background:var(--surface2)}
+.dept-bar-bg{background:var(--border);border-radius:99px;height:5px;min-width:60px}
+.dept-bar-fill{background:var(--primary);border-radius:99px;height:5px;transition:width .4s}
+
+/* TOP1 CARD */
+.top1-card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;position:relative;overflow:hidden}
+.top1-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent))}
+.top1-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px}
+.top1-name{font-size:18px;font-weight:900;line-height:1.2;margin-bottom:4px}
+.top1-meta{font-size:12px;color:var(--dim);margin-bottom:14px}
+.top1-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.top1-stat{text-align:center;background:var(--surface2);border-radius:8px;padding:10px 6px}
+.top1-stat-val{font-size:16px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)}
+.top1-stat-lbl{font-size:10px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
 
 .card{background:var(--surface);border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
 .card-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px}
@@ -99,7 +122,6 @@ tr:hover td{background:var(--surface2)}
 .cell-name{font-weight:700;max-width:240px}.cell-detail{font-size:11px;color:var(--dim);margin-top:2px}
 .cell-money{font-weight:800;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:13px}
 .cell-hours{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:13px}
-.cell-roi{font-weight:800;font-family:'JetBrains Mono',monospace}
 .cell-accum{font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:13px}
 
 .badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700}
@@ -121,32 +143,35 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .section{display:flex;flex-direction:column;gap:16px}
 .hidden{display:none!important}
 
-/* SYNC INDICATOR */
 .sync-indicator{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px}
 .sync-ok{background:#22d3a720;color:#22d3a7}
 .sync-saving{background:#f59e0b20;color:#f59e0b}
 .sync-error{background:#ef444420;color:#ef4444}
 
-/* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;font-size:13px;font-weight:600;z-index:10000;animation:fadeIn .3s ease;box-shadow:0 8px 30px #0008}
 .toast-ok{border-left:4px solid var(--primary);color:var(--primary)}
 .toast-err{border-left:4px solid var(--danger);color:var(--danger)}
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.kpi,.card,.table-wrap{animation:fadeIn .4s ease both}
-.kpi:nth-child(2){animation-delay:.05s}.kpi:nth-child(3){animation-delay:.1s}.kpi:nth-child(4){animation-delay:.15s}.kpi:nth-child(5){animation-delay:.2s}.kpi:nth-child(6){animation-delay:.25s}
+.kpi,.card,.table-wrap,.top1-card,.dept-kpi-wrap{animation:fadeIn .4s ease both}
+.kpi:nth-child(2){animation-delay:.05s}.kpi:nth-child(3){animation-delay:.1s}.kpi:nth-child(4){animation-delay:.15s}
+
+/* Dashboard 2-col layout */
+.dash-top{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
+@media(max-width:900px){.dash-top{grid-template-columns:1fr}}
 
 @media(max-width:768px){
   .header{padding:12px 14px}.container{padding:14px 10px 60px}
   .kpi-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.kpi-value{font-size:22px}
   .chart-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.span2{grid-column:span 1}
   .filters{flex-direction:column;align-items:stretch}
+  .top1-stats{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ LOGIN SCREEN ═══ -->
+<!-- LOGIN -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
     <h1>⚡ <em>Auto</em>Tracker</h1>
@@ -158,13 +183,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
   </div>
 </div>
 
-<!-- ═══ LOADING SCREEN ═══ -->
+<!-- LOADING -->
 <div class="loading-overlay hidden" id="loadingOverlay">
   <div class="spinner"></div>
   <div class="loading-text">Cargando datos desde Google Sheets...</div>
 </div>
 
-<!-- ═══ MAIN APP ═══ -->
+<!-- MAIN APP -->
 <div id="mainApp" class="hidden">
 
 <div class="header">
@@ -189,15 +214,34 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 </div>
 
 <div class="container">
+
+  <!-- DASHBOARD -->
   <div id="page-dashboard" class="section">
     <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="dash-top">
+      <!-- Ahorro por departamento -->
+      <div class="dept-kpi-wrap">
+        <div class="dept-kpi-title">📂 Ahorro por departamento</div>
+        <table class="dept-kpi-table">
+          <thead><tr><th>Departamento</th><th>€/mes</th><th>€/año</th><th>%</th><th></th></tr></thead>
+          <tbody id="deptKpiBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Top 1 -->
+      <div class="top1-card">
+        <div class="top1-label">🏆 Top automatización</div>
+        <div id="top1Content"><div class="empty-state" style="padding:20px">Sin datos</div></div>
+      </div>
+    </div>
+
     <div class="chart-grid">
-      <div class="card"><div class="card-title">📊 Ahorro mensual por departamento</div><div class="chart-container"><canvas id="chartDept"></canvas></div></div>
-      <div class="card"><div class="card-title">🏆 Top 10 automatizaciones (€/mes)</div><div class="chart-container"><canvas id="chartTop"></canvas></div></div>
-      <div class="card chart-full"><div class="card-title">📈 Evolución mensual del ahorro</div><div class="chart-container"><canvas id="chartEvol"></canvas></div></div>
+      <div class="card chart-full"><div class="card-title">📈 Evolución del ahorro acumulado · mensual y anual</div><div class="chart-container"><canvas id="chartEvol"></canvas></div></div>
     </div>
   </div>
 
+  <!-- REGISTRO -->
   <div id="page-list" class="section hidden">
     <div id="formContainer"></div>
     <div class="filters">
@@ -212,6 +256,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
     <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
   </div>
 
+  <!-- PRIORIZACIÓN -->
   <div id="page-scoring" class="section hidden">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
       <div>
@@ -223,314 +268,561 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
     <div id="scoreFormContainer"></div>
     <div class="table-wrap"><table><thead><tr><th>Proceso</th><th>Dept.</th><th>Ahorro pot.</th><th>Frec.</th><th>Impacto</th><th>Facilidad</th><th>SCORE</th><th></th></tr></thead><tbody id="scoreBody"></tbody></table></div>
   </div>
+
 </div>
-</div><!-- /mainApp -->
+</div>
 
 <div id="toastContainer"></div>
 
 <script>
 // ═══ CONFIG ═══
 const API_URL = "https://script.google.com/macros/s/AKfycbwtkTBF-EdxFPx_FgDR62WEEai6Tlgy6vOa4HQ7KLQYku0FmsjFknJo7j1EsbsQXyrR/exec";
-const DEPARTMENTS=["IT","Administración","RRHH","Comercial","Logística","Producción","Dirección","Otro"];
-const TOOLS=["n8n","Power Automate","Python","Excel/VBA","Apps Script","Power Apps","Otro"];
-const STATUSES=["En desarrollo","Activa","Pausada","Retirada"];
+const DEPARTMENTS = ["Salidas","Ventas","Administración","Registro","Entradas Macro","Entradas Micro","Facturación","Comercial"];
+const TOOLS = ["n8n","Power Automate","Python","Excel/VBA","Apps Script","Power Apps","Otro"];
+const STATUSES = ["En desarrollo","Activa","Pausada","Retirada"];
 
-let automations=[];
-let scorings=[];
-let currentTab="dashboard",sortCol="monthlySaving",sortDir="desc",editingId=null,editingScoreId=null;
-let chartDept,chartTop,chartEvol;
-let sessionPwd="";
+let automations = [], scorings = [];
+let currentTab = "dashboard", sortCol = "monthlySaving", sortDir = "desc";
+let editingId = null, editingScoreId = null;
+let chartEvol;
+let sessionPwd = "";
 
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const num=v=>parseFloat(v)||0;
-const fmt=(n,d=0)=>n.toLocaleString("es-ES",{minimumFractionDigits:d,maximumFractionDigits:d});
-const fmtEur=n=>fmt(n,2)+" €";
-const fmtH=mins=>{const h=Math.floor(mins/60),m=Math.round(mins%60);return h>0?h+"h "+m+"m":m+"m"};
-const esc=s=>String(s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const num = v => parseFloat(v) || 0;
+const fmt = (n, d=0) => n.toLocaleString("es-ES", {minimumFractionDigits:d, maximumFractionDigits:d});
+const fmtEur = n => fmt(n, 2) + " €";
+const fmtH = mins => { const h = Math.floor(mins/60), m = Math.round(mins%60); return h > 0 ? h+"h "+m+"m" : m+"m" };
+const esc = s => String(s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;");
 
-function calcMetrics(a){
-  const savedMin=(num(a.manualMinutes)-num(a.currentMinutes))*num(a.monthlyExecutions);
-  const savedHours=savedMin/60;const monthlySaving=savedHours*num(a.costPerHour);const annualSaving=monthlySaving*12;
-  const investmentCost=num(a.investmentHours)*num(a.costPerHour);
-  const roi=investmentCost>0?((annualSaving-investmentCost)/investmentCost)*100:(annualSaving>0?Infinity:0);
-  const paybackMonths=monthlySaving>0?investmentCost/monthlySaving:Infinity;
-  const monthsActive=a.startDate?Math.max(1,Math.round((Date.now()-new Date(a.startDate).getTime())/(1e3*60*60*24*30.44))):0;
-  const accumulated=monthlySaving*monthsActive;
-  return{savedMin,savedHours,monthlySaving,annualSaving,investmentCost,roi,paybackMonths,monthsActive,accumulated};
+function calcMetrics(a) {
+  const savedMin = (num(a.manualMinutes) - num(a.currentMinutes)) * num(a.monthlyExecutions);
+  const savedHours = savedMin / 60;
+  const monthlySaving = savedHours * num(a.costPerHour);
+  const annualSaving = monthlySaving * 12;
+  const investmentCost = num(a.investmentHours) * num(a.costPerHour);
+  const monthsActive = a.startDate ? Math.max(1, Math.round((Date.now() - new Date(a.startDate).getTime()) / (1e3*60*60*24*30.44))) : 0;
+  const accumulated = monthlySaving * monthsActive;
+  return { savedMin, savedHours, monthlySaving, annualSaving, investmentCost, monthsActive, accumulated };
 }
-function scoringCalc(s){const sv=Math.min(5,Math.ceil(num(s.potentialSavingMin)/30));const fq=Math.min(5,Math.ceil(num(s.frequency)/20));return{sv,fq,total:sv+fq+num(s.impact)+num(s.ease)}}
-function badgeClass(s){return{Activa:"badge-activa","En desarrollo":"badge-desarrollo",Pausada:"badge-pausada",Retirada:"badge-retirada"}[s]||"badge-retirada"}
 
-// ═══ API CALLS ═══
-async function apiCall(params){
-  const p=new URLSearchParams({...params,pwd:sessionPwd});
-  const url=API_URL+"?"+p.toString();
+function scoringCalc(s) {
+  const sv = Math.min(5, Math.ceil(num(s.potentialSavingMin)/30));
+  const fq = Math.min(5, Math.ceil(num(s.frequency)/20));
+  return { sv, fq, total: sv + fq + num(s.impact) + num(s.ease) };
+}
+
+function badgeClass(s) {
+  return {Activa:"badge-activa","En desarrollo":"badge-desarrollo",Pausada:"badge-pausada",Retirada:"badge-retirada"}[s] || "badge-retirada";
+}
+
+// ═══ API ═══
+async function apiCall(params) {
+  const p = new URLSearchParams({...params, pwd: sessionPwd});
   setSyncStatus("saving");
-  try{
-    const r=await fetch(url);
-    const d=await r.json();
-    if(d.error){setSyncStatus("error");toast(d.error,"err");return null}
+  try {
+    const r = await fetch(API_URL + "?" + p.toString());
+    const d = await r.json();
+    if (d.error) { setSyncStatus("error"); toast(d.error, "err"); return null; }
     setSyncStatus("ok");
     return d;
-  }catch(e){setSyncStatus("error");toast("Error de conexión: "+e.message,"err");return null}
+  } catch(e) { setSyncStatus("error"); toast("Error de conexión: " + e.message, "err"); return null; }
 }
 
-async function loadAllData(){
-  const d=await apiCall({action:"getAll"});
-  if(!d)return false;
-  automations=d.automations||[];
-  scorings=d.scorings||[];
+async function loadAllData() {
+  const d = await apiCall({action:"getAll"});
+  if (!d) return false;
+  automations = d.automations || [];
+  scorings = d.scorings || [];
   return true;
 }
 
-async function apiSaveAutomation(data){
-  return await apiCall({action:"saveAutomation",data:JSON.stringify(data)});
-}
-async function apiDeleteAutomation(id){
-  return await apiCall({action:"deleteAutomation",id});
-}
-async function apiSaveScoring(data){
-  return await apiCall({action:"saveScoring",data:JSON.stringify(data)});
-}
-async function apiDeleteScoring(id){
-  return await apiCall({action:"deleteScoring",id});
+async function apiSaveAutomation(data) { return await apiCall({action:"saveAutomation", data:JSON.stringify(data)}); }
+async function apiDeleteAutomation(id) { return await apiCall({action:"deleteAutomation", id}); }
+async function apiSaveScoring(data) { return await apiCall({action:"saveScoring", data:JSON.stringify(data)}); }
+async function apiDeleteScoring(id) { return await apiCall({action:"deleteScoring", id}); }
+
+function setSyncStatus(state) {
+  const el = document.getElementById("syncStatus");
+  if (state === "ok") { el.className = "sync-indicator sync-ok"; el.textContent = "● Sincronizado"; }
+  else if (state === "saving") { el.className = "sync-indicator sync-saving"; el.textContent = "● Guardando..."; }
+  else { el.className = "sync-indicator sync-error"; el.textContent = "● Error"; }
 }
 
-function setSyncStatus(state){
-  const el=document.getElementById("syncStatus");
-  if(state==="ok"){el.className="sync-indicator sync-ok";el.textContent="● Sincronizado"}
-  else if(state==="saving"){el.className="sync-indicator sync-saving";el.textContent="● Guardando..."}
-  else{el.className="sync-indicator sync-error";el.textContent="● Error"}
-}
-
-function toast(msg,type="ok"){
-  const d=document.createElement("div");
-  d.className="toast toast-"+type;
-  d.textContent=msg;
+function toast(msg, type="ok") {
+  const d = document.createElement("div");
+  d.className = "toast toast-" + type;
+  d.textContent = msg;
   document.getElementById("toastContainer").appendChild(d);
-  setTimeout(()=>d.remove(),3500);
+  setTimeout(() => d.remove(), 3500);
 }
 
 // ═══ LOGIN ═══
-async function doLogin(){
-  const pwd=document.getElementById("loginPwd").value;
-  if(!pwd){document.getElementById("loginError").textContent="Introduce la contraseña";return}
-  const btn=document.getElementById("loginBtn");
-  btn.disabled=true;btn.textContent="Verificando...";
-  document.getElementById("loginError").textContent="";
-  sessionPwd=pwd;
-
-  // Try loading data as password check
+async function doLogin() {
+  const pwd = document.getElementById("loginPwd").value;
+  if (!pwd) { document.getElementById("loginError").textContent = "Introduce la contraseña"; return; }
+  const btn = document.getElementById("loginBtn");
+  btn.disabled = true; btn.textContent = "Verificando...";
+  document.getElementById("loginError").textContent = "";
+  sessionPwd = pwd;
   document.getElementById("loginOverlay").classList.add("hidden");
   document.getElementById("loadingOverlay").classList.remove("hidden");
-
-  const ok=await loadAllData();
-  if(!ok){
+  const ok = await loadAllData();
+  if (!ok) {
     document.getElementById("loadingOverlay").classList.add("hidden");
     document.getElementById("loginOverlay").classList.remove("hidden");
-    document.getElementById("loginError").textContent="Contraseña incorrecta o error de conexión";
-    btn.disabled=false;btn.textContent="Entrar";
-    sessionPwd="";
-    return;
+    document.getElementById("loginError").textContent = "Contraseña incorrecta o error de conexión";
+    btn.disabled = false; btn.textContent = "Entrar";
+    sessionPwd = ""; return;
   }
-
-  // Save password in session
-  sessionStorage.setItem("at_pwd",pwd);
-
+  sessionStorage.setItem("at_pwd", pwd);
   document.getElementById("loadingOverlay").classList.add("hidden");
   document.getElementById("mainApp").classList.remove("hidden");
   initApp();
   toast("✅ Conectado a Google Sheets");
 }
 
-function doLogout(){
-  sessionStorage.removeItem("at_pwd");
-  sessionPwd="";
-  automations=[];scorings=[];
+function doLogout() {
+  sessionStorage.removeItem("at_pwd"); sessionPwd = "";
+  automations = []; scorings = [];
   document.getElementById("mainApp").classList.add("hidden");
   document.getElementById("loginOverlay").classList.remove("hidden");
-  document.getElementById("loginPwd").value="";
+  document.getElementById("loginPwd").value = "";
   document.getElementById("loginPwd").focus();
 }
 
-// Auto-login from session
-(async function autoLogin(){
-  const saved=sessionStorage.getItem("at_pwd");
-  if(saved){
-    sessionPwd=saved;
+(async function autoLogin() {
+  const saved = sessionStorage.getItem("at_pwd");
+  if (saved) {
+    sessionPwd = saved;
     document.getElementById("loginOverlay").classList.add("hidden");
     document.getElementById("loadingOverlay").classList.remove("hidden");
-    const ok=await loadAllData();
-    if(ok){
+    const ok = await loadAllData();
+    if (ok) {
       document.getElementById("loadingOverlay").classList.add("hidden");
       document.getElementById("mainApp").classList.remove("hidden");
       initApp();
-    }else{
-      sessionStorage.removeItem("at_pwd");sessionPwd="";
+    } else {
+      sessionStorage.removeItem("at_pwd"); sessionPwd = "";
       document.getElementById("loadingOverlay").classList.add("hidden");
       document.getElementById("loginOverlay").classList.remove("hidden");
     }
   }
 })();
 
-async function refreshData(){
-  const ok=await loadAllData();
-  if(ok){toast("✅ Datos actualizados");renderAll()}
+async function refreshData() {
+  const ok = await loadAllData();
+  if (ok) { toast("✅ Datos actualizados"); renderAll(); }
 }
 
 // ═══ TABS ═══
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
-  currentTab=t.dataset.tab;
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");
-  document.querySelectorAll("[id^='page-']").forEach(p=>p.classList.add("hidden"));
-  document.getElementById("page-"+currentTab).classList.remove("hidden");
-  if(currentTab==="dashboard")renderDashboard();if(currentTab==="list")renderTable();if(currentTab==="scoring")renderScoring();
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+  currentTab = t.dataset.tab;
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active")); t.classList.add("active");
+  document.querySelectorAll("[id^='page-']").forEach(p => p.classList.add("hidden"));
+  document.getElementById("page-" + currentTab).classList.remove("hidden");
+  if (currentTab === "dashboard") renderDashboard();
+  if (currentTab === "list") renderTable();
+  if (currentTab === "scoring") renderScoring();
 }));
 
-// ═══ RENDER ALL ═══
-function renderAll(){renderDashboard();renderTable();renderScoring()}
+function renderAll() { renderDashboard(); renderTable(); renderScoring(); }
 
 // ═══ DASHBOARD ═══
-function renderDashboard(){
-  const active=automations.filter(a=>a.status==="Activa").map(a=>({...a,m:calcMetrics(a)}));
-  const tM=active.reduce((s,a)=>s+a.m.monthlySaving,0);
-  const tA=active.reduce((s,a)=>s+a.m.annualSaving,0);
-  const tH=active.reduce((s,a)=>s+a.m.savedHours,0);
-  const tAc=active.reduce((s,a)=>s+a.m.accumulated,0);
-  const tI=active.reduce((s,a)=>s+a.m.investmentCost,0);
-  const wr=active.filter(a=>a.m.roi!==Infinity&&a.m.investmentCost>0);
-  const ar=wr.length>0?wr.reduce((s,a)=>s+a.m.roi,0)/wr.length:0;
-  document.getElementById("headerSub").textContent=automations.length+" registradas · "+active.length+" activas";
+function renderDashboard() {
+  const active = automations.filter(a => a.status === "Activa").map(a => ({...a, m: calcMetrics(a)}));
+  const all = automations.map(a => ({...a, m: calcMetrics(a)}));
 
-  const kpis=[
-    {l:"Ahorro mensual",v:fmtEur(tM),c:"var(--primary)"},
-    {l:"Ahorro anual",v:fmtEur(tA),c:"var(--info)"},
-    {l:"Ahorro acumulado",v:fmtEur(tAc),c:"var(--accent)",s:"Desde puesta en marcha"},
-    {l:"Horas/mes ahorradas",v:fmt(tH,1)+"h",c:"var(--warn)"},
-    {l:"ROI medio",v:fmt(ar,0)+"%",c:"#22c55e"},
-    {l:"Inversión total",v:fmtEur(tI),c:"var(--dim)",s:active.length+" activas"}
+  const tM = active.reduce((s,a) => s + a.m.monthlySaving, 0);
+  const tA = active.reduce((s,a) => s + a.m.annualSaving, 0);
+  const tH = active.reduce((s,a) => s + a.m.savedHours, 0);
+  const tAc = active.reduce((s,a) => s + a.m.accumulated, 0);
+
+  document.getElementById("headerSub").textContent = automations.length + " registradas · " + active.length + " activas";
+
+  // KPIs principales
+  const kpis = [
+    {l:"Ahorro mensual", v:fmtEur(tM), c:"var(--primary)", s:"Automatizaciones activas"},
+    {l:"Ahorro anual", v:fmtEur(tA), c:"var(--info)", s:"Proyección a 12 meses"},
+    {l:"Ahorro acumulado", v:fmtEur(tAc), c:"var(--accent)", s:"Desde puesta en marcha"},
+    {l:"Horas/mes ahorradas", v:fmt(tH,1)+"h", c:"var(--warn)", s:active.length+" automatizaciones activas"},
   ];
-  document.getElementById("kpiGrid").innerHTML=kpis.map(k=>`<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div>${k.s?`<div class="kpi-sub">${k.s}</div>`:""}</div>`).join("");
+  document.getElementById("kpiGrid").innerHTML = kpis.map(k =>
+    `<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div>${k.s ? `<div class="kpi-sub">${k.s}</div>` : ""}</div>`
+  ).join("");
 
-  const dm={};active.forEach(a=>{dm[a.department]=(dm[a.department]||0)+a.m.monthlySaving});
-  const dd=Object.entries(dm).sort((a,b)=>b[1]-a[1]);
-  const dc=["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#14b8a6"];
-  if(chartDept)chartDept.destroy();
-  chartDept=new Chart(document.getElementById("chartDept"),{type:"bar",data:{labels:dd.map(d=>d[0]),datasets:[{data:dd.map(d=>Math.round(d[1]*100)/100),backgroundColor:dc.slice(0,dd.length),borderRadius:6,borderSkipped:false}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtEur(c.raw)}}},scales:{x:{ticks:{callback:v=>fmt(v)+"€",color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},y:{ticks:{color:"#7a82a0",font:{size:11,weight:600}},grid:{display:false}}}}});
+  // Ahorro por departamento
+  const dm = {};
+  active.forEach(a => {
+    dm[a.department] = dm[a.department] || {monthly:0, annual:0};
+    dm[a.department].monthly += a.m.monthlySaving;
+    dm[a.department].annual += a.m.annualSaving;
+  });
+  const dArr = Object.entries(dm).sort((a,b) => b[1].monthly - a[1].monthly);
+  const maxM = dArr.length ? dArr[0][1].monthly : 1;
+  const deptColors = ["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#14b8a6"];
+  document.getElementById("deptKpiBody").innerHTML = dArr.length
+    ? dArr.map((d, i) => {
+        const pct = maxM > 0 ? Math.round((d[1].monthly / maxM) * 100) : 0;
+        return `<tr>
+          <td style="font-weight:700;color:${deptColors[i % deptColors.length]}">${esc(d[0])}</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--primary)">${fmtEur(d[1].monthly)}</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">${fmtEur(d[1].annual)}</td>
+          <td style="font-size:11px;color:var(--dim);font-weight:700">${pct}%</td>
+          <td style="min-width:80px"><div class="dept-bar-bg"><div class="dept-bar-fill" style="width:${pct}%;background:${deptColors[i % deptColors.length]}"></div></div></td>
+        </tr>`;
+      }).join("")
+    : `<tr><td colspan="5" class="empty-state">Sin datos activos</td></tr>`;
 
-  const t10=[...active].sort((a,b)=>b.m.monthlySaving-a.m.monthlySaving).slice(0,10);
-  if(chartTop)chartTop.destroy();
-  chartTop=new Chart(document.getElementById("chartTop"),{type:"bar",data:{labels:t10.map(a=>a.name.length>28?a.name.slice(0,28)+"…":a.name),datasets:[{data:t10.map(a=>Math.round(a.m.monthlySaving*100)/100),backgroundColor:"#22d3a7",borderRadius:6,borderSkipped:false}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtEur(c.raw)}}},scales:{x:{ticks:{callback:v=>fmt(v)+"€",color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},y:{ticks:{color:"#7a82a0",font:{size:10,weight:600}},grid:{display:false}}}}});
+  // Top 1
+  const sorted = [...active].sort((a,b) => b.m.monthlySaving - a.m.monthlySaving);
+  const top = sorted[0];
+  document.getElementById("top1Content").innerHTML = top
+    ? `<div class="top1-name">${esc(top.name)}</div>
+       <div class="top1-meta">${esc(top.department)} · ${esc(top.tool)} · ${esc(top.process)||"—"}</div>
+       <div class="top1-stats">
+         <div class="top1-stat"><div class="top1-stat-val">${fmtEur(top.m.monthlySaving)}</div><div class="top1-stat-lbl">€/mes</div></div>
+         <div class="top1-stat"><div class="top1-stat-val" style="color:var(--accent)">${fmtEur(top.m.annualSaving)}</div><div class="top1-stat-lbl">€/año</div></div>
+         <div class="top1-stat"><div class="top1-stat-val" style="color:var(--warn)">${fmt(top.m.savedHours,1)}h</div><div class="top1-stat-lbl">h/mes</div></div>
+       </div>`
+    : `<div class="empty-state" style="padding:20px">Sin automatizaciones activas</div>`;
 
-  const em={};active.forEach(a=>{if(!a.startDate)return;const d=new Date(a.startDate);const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");em[k]=(em[k]||0)+a.m.monthlySaving});
-  const ek=Object.keys(em).sort();let ac=0;const ed=ek.map(k=>{ac+=em[k];return{month:k,n:Math.round(em[k]*100)/100,a:Math.round(ac*100)/100}});
-  if(chartEvol)chartEvol.destroy();
-  chartEvol=new Chart(document.getElementById("chartEvol"),{type:"line",data:{labels:ed.map(d=>d.month),datasets:[{label:"Acumulado",data:ed.map(d=>d.a),borderColor:"#6366f1",backgroundColor:"#6366f120",fill:true,tension:.3,pointRadius:4,borderWidth:3},{label:"Nuevo/mes",data:ed.map(d=>d.n),borderColor:"#22d3a7",borderDash:[5,5],tension:.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+": "+fmtEur(c.raw)}}},scales:{x:{ticks:{color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},y:{ticks:{callback:v=>fmt(v)+"€",color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}}}}});
+  // Evolución mensual + anual acumulada
+  const em = {};
+  active.forEach(a => {
+    if (!a.startDate) return;
+    const d = new Date(a.startDate);
+    const k = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0");
+    em[k] = (em[k] || 0) + a.m.monthlySaving;
+  });
+  const ek = Object.keys(em).sort();
+  let acM = 0;
+  const ed = ek.map(k => { acM += em[k]; return { month: k, n: Math.round(em[k]*100)/100, a: Math.round(acM*100)/100 }; });
+
+  // Añadir proyección 12 meses futuros si hay datos
+  const lastAc = acM;
+  const lastMon = tM;
+  const futureLabels = [];
+  const futureData = [];
+  if (ed.length > 0) {
+    const lastKey = ek[ek.length - 1];
+    let [y, m] = lastKey.split("-").map(Number);
+    for (let i = 1; i <= 6; i++) {
+      m++; if (m > 12) { m = 1; y++; }
+      const lk = y + "-" + String(m).padStart(2,"0");
+      futureLabels.push(lk);
+      futureData.push(Math.round((lastAc + lastMon * i) * 100) / 100);
+    }
+  }
+
+  const allLabels = [...ed.map(d => d.month), ...futureLabels];
+
+  if (chartEvol) chartEvol.destroy();
+  chartEvol = new Chart(document.getElementById("chartEvol"), {
+    type: "line",
+    data: {
+      labels: allLabels,
+      datasets: [
+        {
+          label: "Acumulado real",
+          data: [...ed.map(d => d.a), ...futureLabels.map(() => null)],
+          borderColor: "#6366f1", backgroundColor: "#6366f120",
+          fill: true, tension: .3, pointRadius: 4, borderWidth: 3
+        },
+        {
+          label: "Nuevo/mes",
+          data: [...ed.map(d => d.n), ...futureLabels.map(() => null)],
+          borderColor: "#22d3a7", borderDash: [5,5],
+          tension: .3, pointRadius: 3, borderWidth: 2, fill: false
+        },
+        {
+          label: "Proyección acumulado",
+          data: [...ed.map(() => null), ...(ed.length ? [ed[ed.length-1].a] : []), ...futureData].slice(0, allLabels.length),
+          borderColor: "#6366f1", borderDash: [8,4], backgroundColor: "transparent",
+          tension: .3, pointRadius: 3, borderWidth: 2, fill: false, pointStyle: "circle",
+          pointBorderColor: "#6366f1", pointBackgroundColor: "transparent"
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        tooltip: { callbacks: { label: c => c.dataset.label + ": " + fmtEur(c.raw) } },
+        legend: { labels: { color: "#7a82a0", font: { size: 11, weight: 600 } } }
+      },
+      scales: {
+        x: { ticks: { color: "#7a82a0", font: { size: 11 } }, grid: { color: "#2a305030" } },
+        y: { ticks: { callback: v => fmt(v) + "€", color: "#7a82a0", font: { size: 11 } }, grid: { color: "#2a305030" } }
+      }
+    }
+  });
 }
 
 // ═══ FORM ═══
-function openForm(id){
-  editingId=id||null;
-  const a=id?automations.find(x=>x.id===id):{name:"",department:DEPARTMENTS[0],process:"",responsible:"",tool:TOOLS[0],status:"Activa",startDate:new Date().toISOString().split("T")[0],manualMinutes:"",currentMinutes:"",monthlyExecutions:"",costPerHour:"",investmentHours:"",notes:""};
-  if(currentTab!=="list"){currentTab="list";document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelector('[data-tab="list"]').classList.add("active");document.querySelectorAll("[id^='page-']").forEach(p=>p.classList.add("hidden"));document.getElementById("page-list").classList.remove("hidden");renderTable()}
-  const dO=DEPARTMENTS.map(d=>`<option ${d===a.department?"selected":""}>${d}</option>`).join("");
-  const tO=TOOLS.map(t=>`<option ${t===a.tool?"selected":""}>${t}</option>`).join("");
-  const sO=STATUSES.map(s=>`<option ${s===a.status?"selected":""}>${s}</option>`).join("");
-  document.getElementById("formContainer").innerHTML=`<div class="card form-card" style="animation:fadeIn .3s ease"><h3 style="font-size:16px;font-weight:900;margin-bottom:16px">${id?"✏️ Editar":"➕ Nueva automatización"}</h3><div class="form-grid"><div class="field span2"><div class="field-label">Nombre <span class="req">*</span></div><input id="fName" value="${esc(a.name)}"></div><div class="field"><div class="field-label">Departamento</div><select id="fDepartment">${dO}</select></div><div class="field"><div class="field-label">Proceso</div><input id="fProcess" value="${esc(a.process)}"></div><div class="field"><div class="field-label">Responsable</div><input id="fResponsible" value="${esc(a.responsible)}"></div><div class="field"><div class="field-label">Herramienta</div><select id="fToolSel">${tO}</select></div><div class="field"><div class="field-label">Estado</div><select id="fStatusSel">${sO}</select></div><div class="field"><div class="field-label">Fecha inicio</div><input type="date" id="fStartDate" value="${a.startDate||""}"></div><div class="field"><div class="field-label">Min. manual/ejecución <span class="req">*</span></div><input type="number" id="fManual" min="0" step="0.5" value="${a.manualMinutes}"></div><div class="field"><div class="field-label">Min. actual/ejecución <span class="req">*</span></div><input type="number" id="fCurrent" min="0" step="0.5" value="${a.currentMinutes}"></div><div class="field"><div class="field-label">Ejecuciones/mes <span class="req">*</span></div><input type="number" id="fExec" min="0" value="${a.monthlyExecutions}"></div><div class="field"><div class="field-label">€/hora departamento <span class="req">*</span></div><input type="number" id="fCost" min="0" step="0.5" value="${a.costPerHour}"></div><div class="field"><div class="field-label">Inversión (horas)</div><input type="number" id="fInvest" min="0" step="0.5" value="${a.investmentHours}"></div></div><div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="fNotes" rows="2">${esc(a.notes)}</textarea></div><div id="formPreview" class="preview-box hidden"></div><div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-primary" id="btnSaveForm" onclick="saveForm()">💾 Guardar</button><button class="btn btn-ghost" onclick="closeForm()">Cancelar</button></div></div>`;
-  ["fManual","fCurrent","fExec","fCost","fInvest"].forEach(i=>document.getElementById(i).addEventListener("input",updatePreview));
-  updatePreview();document.getElementById("fName").focus();
+function openForm(id) {
+  editingId = id || null;
+  const a = id ? automations.find(x => x.id === id) : {
+    name:"", department:DEPARTMENTS[0], process:"", responsible:"", tool:TOOLS[0],
+    status:"Activa", startDate:new Date().toISOString().split("T")[0],
+    manualMinutes:"", currentMinutes:"", monthlyExecutions:"", costPerHour:"",
+    investmentHours:"", notes:""
+  };
+  if (currentTab !== "list") {
+    currentTab = "list";
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    document.querySelector('[data-tab="list"]').classList.add("active");
+    document.querySelectorAll("[id^='page-']").forEach(p => p.classList.add("hidden"));
+    document.getElementById("page-list").classList.remove("hidden");
+    renderTable();
+  }
+  const dO = DEPARTMENTS.map(d => `<option ${d===a.department?"selected":""}>${d}</option>`).join("");
+  const tO = TOOLS.map(t => `<option ${t===a.tool?"selected":""}>${t}</option>`).join("");
+  const sO = STATUSES.map(s => `<option ${s===a.status?"selected":""}>${s}</option>`).join("");
+  document.getElementById("formContainer").innerHTML = `
+    <div class="card form-card" style="animation:fadeIn .3s ease">
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:16px">${id ? "✏️ Editar" : "➕ Nueva automatización"}</h3>
+      <div class="form-grid">
+        <div class="field span2"><div class="field-label">Nombre <span class="req">*</span></div><input id="fName" value="${esc(a.name)}"></div>
+        <div class="field"><div class="field-label">Departamento</div><select id="fDepartment">${dO}</select></div>
+        <div class="field"><div class="field-label">Proceso</div><input id="fProcess" value="${esc(a.process)}"></div>
+        <div class="field"><div class="field-label">Responsable</div><input id="fResponsible" value="${esc(a.responsible)}"></div>
+        <div class="field"><div class="field-label">Herramienta</div><select id="fToolSel">${tO}</select></div>
+        <div class="field"><div class="field-label">Estado</div><select id="fStatusSel">${sO}</select></div>
+        <div class="field"><div class="field-label">Fecha inicio</div><input type="date" id="fStartDate" value="${a.startDate||""}"></div>
+        <div class="field"><div class="field-label">Min. manual/ejecución <span class="req">*</span></div><input type="number" id="fManual" min="0" step="0.5" value="${a.manualMinutes}"></div>
+        <div class="field"><div class="field-label">Min. actual/ejecución <span class="req">*</span></div><input type="number" id="fCurrent" min="0" step="0.5" value="${a.currentMinutes}"></div>
+        <div class="field"><div class="field-label">Ejecuciones/mes <span class="req">*</span></div><input type="number" id="fExec" min="0" value="${a.monthlyExecutions}"></div>
+        <div class="field"><div class="field-label">€/hora departamento <span class="req">*</span></div><input type="number" id="fCost" min="0" step="0.5" value="${a.costPerHour}"></div>
+        <div class="field"><div class="field-label">Inversión (horas)</div><input type="number" id="fInvest" min="0" step="0.5" value="${a.investmentHours}"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="fNotes" rows="2">${esc(a.notes)}</textarea></div>
+      <div id="formPreview" class="preview-box hidden"></div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-primary" id="btnSaveForm" onclick="saveForm()">💾 Guardar</button>
+        <button class="btn btn-ghost" onclick="closeForm()">Cancelar</button>
+      </div>
+    </div>`;
+  ["fManual","fCurrent","fExec","fCost","fInvest"].forEach(i => document.getElementById(i).addEventListener("input", updatePreview));
+  updatePreview();
+  document.getElementById("fName").focus();
 }
 
-function updatePreview(){
-  const mm=num(document.getElementById("fManual").value),cm=num(document.getElementById("fCurrent").value),ex=num(document.getElementById("fExec").value),cost=num(document.getElementById("fCost").value),inv=num(document.getElementById("fInvest").value);
-  const box=document.getElementById("formPreview");
-  if(mm>0&&ex>0){const sm=(mm-cm)*ex;const mo=(sm/60)*cost;let h="<b>"+fmtH(sm)+"</b> ahorrados/mes → <b>"+fmtEur(mo)+"/mes</b> · <b>"+fmtEur(mo*12)+"/año</b>";if(inv>0&&mo>0)h+=" · Payback: <b>"+fmt(inv*cost/mo,1)+" meses</b>";box.innerHTML=h;box.classList.remove("hidden")}else box.classList.add("hidden");
+function updatePreview() {
+  const mm=num(document.getElementById("fManual").value), cm=num(document.getElementById("fCurrent").value),
+        ex=num(document.getElementById("fExec").value), cost=num(document.getElementById("fCost").value),
+        inv=num(document.getElementById("fInvest").value);
+  const box = document.getElementById("formPreview");
+  if (mm > 0 && ex > 0) {
+    const sm = (mm-cm)*ex; const mo = (sm/60)*cost;
+    let h = "<b>"+fmtH(sm)+"</b> ahorrados/mes → <b>"+fmtEur(mo)+"/mes</b> · <b>"+fmtEur(mo*12)+"/año</b>";
+    if (inv > 0 && mo > 0) h += " · Payback: <b>"+fmt(inv*cost/mo,1)+" meses</b>";
+    box.innerHTML = h; box.classList.remove("hidden");
+  } else box.classList.add("hidden");
 }
 
-async function saveForm(){
-  const name=document.getElementById("fName").value.trim();if(!name)return alert("El nombre es obligatorio");
-  const btn=document.getElementById("btnSaveForm");btn.disabled=true;btn.textContent="Guardando...";
-  const data={id:editingId||uid(),name,department:document.getElementById("fDepartment").value,process:document.getElementById("fProcess").value.trim(),responsible:document.getElementById("fResponsible").value.trim(),tool:document.getElementById("fToolSel").value,status:document.getElementById("fStatusSel").value,startDate:document.getElementById("fStartDate").value,manualMinutes:document.getElementById("fManual").value,currentMinutes:document.getElementById("fCurrent").value,monthlyExecutions:document.getElementById("fExec").value,costPerHour:document.getElementById("fCost").value,investmentHours:document.getElementById("fInvest").value,notes:document.getElementById("fNotes").value.trim(),updatedAt:new Date().toISOString()};
-  const r=await apiSaveAutomation(data);
-  if(r&&r.success){
-    if(editingId)automations=automations.map(a=>a.id===editingId?data:a);else automations.push(data);
-    toast("✅ Automatización guardada");closeForm();renderAll();
-  }else{btn.disabled=false;btn.textContent="💾 Guardar"}
+async function saveForm() {
+  const name = document.getElementById("fName").value.trim();
+  if (!name) return alert("El nombre es obligatorio");
+  const btn = document.getElementById("btnSaveForm"); btn.disabled = true; btn.textContent = "Guardando...";
+  const data = {
+    id: editingId || uid(), name,
+    department: document.getElementById("fDepartment").value,
+    process: document.getElementById("fProcess").value.trim(),
+    responsible: document.getElementById("fResponsible").value.trim(),
+    tool: document.getElementById("fToolSel").value,
+    status: document.getElementById("fStatusSel").value,
+    startDate: document.getElementById("fStartDate").value,
+    manualMinutes: document.getElementById("fManual").value,
+    currentMinutes: document.getElementById("fCurrent").value,
+    monthlyExecutions: document.getElementById("fExec").value,
+    costPerHour: document.getElementById("fCost").value,
+    investmentHours: document.getElementById("fInvest").value,
+    notes: document.getElementById("fNotes").value.trim(),
+    updatedAt: new Date().toISOString()
+  };
+  const r = await apiSaveAutomation(data);
+  if (r && r.success) {
+    if (editingId) automations = automations.map(a => a.id === editingId ? data : a);
+    else automations.push(data);
+    toast("✅ Automatización guardada"); closeForm(); renderAll();
+  } else { btn.disabled = false; btn.textContent = "💾 Guardar"; }
 }
-function closeForm(){editingId=null;document.getElementById("formContainer").innerHTML=""}
 
-async function deleteAutomation(id){
-  if(!confirm("¿Eliminar esta automatización?"))return;
-  const r=await apiDeleteAutomation(id);
-  if(r&&r.success){automations=automations.filter(a=>a.id!==id);toast("🗑️ Eliminada");renderAll()}
+function closeForm() { editingId = null; document.getElementById("formContainer").innerHTML = ""; }
+
+async function deleteAutomation(id) {
+  if (!confirm("¿Eliminar esta automatización?")) return;
+  const r = await apiDeleteAutomation(id);
+  if (r && r.success) { automations = automations.filter(a => a.id !== id); toast("🗑️ Eliminada"); renderAll(); }
 }
 
 // ═══ TABLE ═══
-function populateFilters(){
-  const rs=[...new Set(automations.map(a=>a.responsible).filter(Boolean))];
-  const el=document.getElementById("fResp");const cv=el.value;
-  el.innerHTML='<option value="">Responsable</option>'+rs.map(r=>`<option ${r===cv?"selected":""}>${r}</option>`).join("");
+function populateFilters() {
+  const rs = [...new Set(automations.map(a => a.responsible).filter(Boolean))];
+  const el = document.getElementById("fResp"); const cv = el.value;
+  el.innerHTML = '<option value="">Responsable</option>' + rs.map(r => `<option ${r===cv?"selected":""}>${r}</option>`).join("");
 }
-function getFiltered(){
-  const se=document.getElementById("fSearch").value.toLowerCase(),de=document.getElementById("fDept").value,to=document.getElementById("fTool").value,st=document.getElementById("fStatus").value,re=document.getElementById("fResp").value;
-  return automations.filter(a=>{if(de&&a.department!==de)return false;if(to&&a.tool!==to)return false;if(st&&a.status!==st)return false;if(re&&a.responsible!==re)return false;if(se&&!a.name.toLowerCase().includes(se)&&!(a.process||"").toLowerCase().includes(se))return false;return true}).map(a=>({...a,m:calcMetrics(a)}));
+
+function getFiltered() {
+  const se=document.getElementById("fSearch").value.toLowerCase(),
+        de=document.getElementById("fDept").value,
+        to=document.getElementById("fTool").value,
+        st=document.getElementById("fStatus").value,
+        re=document.getElementById("fResp").value;
+  return automations.filter(a => {
+    if (de && a.department !== de) return false;
+    if (to && a.tool !== to) return false;
+    if (st && a.status !== st) return false;
+    if (re && a.responsible !== re) return false;
+    if (se && !a.name.toLowerCase().includes(se) && !(a.process||"").toLowerCase().includes(se)) return false;
+    return true;
+  }).map(a => ({...a, m: calcMetrics(a)}));
 }
-function renderTable(){
-  populateFilters();let data=getFiltered();
-  data.sort((a,b)=>{let va,vb;if(sortCol==="name"){va=a.name;vb=b.name}else if(sortCol==="department"){va=a.department;vb=b.department}else if(sortCol==="savedHours"){va=a.m.savedHours;vb=b.m.savedHours}else if(sortCol==="monthlySaving"){va=a.m.monthlySaving;vb=b.m.monthlySaving}else if(sortCol==="roi"){va=a.m.roi===Infinity?9999999:a.m.roi;vb=b.m.roi===Infinity?9999999:b.m.roi}else if(sortCol==="accumulated"){va=a.m.accumulated;vb=b.m.accumulated}else{va=a.m.monthlySaving;vb=b.m.monthlySaving}if(typeof va==="string")return sortDir==="asc"?va.localeCompare(vb):vb.localeCompare(va);return sortDir==="asc"?va-vb:vb-va});
-  const af=[document.getElementById("fSearch").value,document.getElementById("fDept").value,document.getElementById("fTool").value,document.getElementById("fStatus").value,document.getElementById("fResp").value].some(Boolean);
-  document.getElementById("btnClearFilters").classList.toggle("hidden",!af);
-  document.getElementById("filterCount").textContent=data.length+" de "+automations.length;
-  const cols=[{k:"name",l:"Nombre"},{k:"department",l:"Dept."},{k:"savedHours",l:"Horas/mes"},{k:"monthlySaving",l:"€/mes"},{k:"roi",l:"ROI"},{k:"accumulated",l:"Acumulado"}];
-  document.getElementById("tableHead").innerHTML="<tr>"+cols.map(c=>`<th onclick="setSort('${c.k}')">${c.l} ${sortCol===c.k?(sortDir==="desc"?"▼":"▲"):""}</th>`).join("")+"<th>Estado</th><th></th></tr>";
-  if(!data.length){document.getElementById("tableBody").innerHTML='<tr><td colspan="8" class="empty-state">No hay automatizaciones. Pulsa "+ Nueva" para empezar.</td></tr>';return}
-  document.getElementById("tableBody").innerHTML=data.map(a=>`<tr><td><div class="cell-name">${esc(a.name)}</div><div class="cell-detail">${esc(a.process)||"—"} · ${esc(a.tool)}</div></td><td>${esc(a.department)}</td><td class="cell-hours">${fmt(a.m.savedHours,1)}h</td><td class="cell-money">${fmtEur(a.m.monthlySaving)}</td><td class="cell-roi">${a.m.roi===Infinity?"∞":fmt(a.m.roi,0)+"%"}</td><td class="cell-accum">${fmtEur(a.m.accumulated)}</td><td><span class="badge ${badgeClass(a.status)}">${a.status}</span></td><td style="white-space:nowrap"><button class="btn-icon" onclick="openForm('${a.id}')" title="Editar">✏️</button><button class="btn-icon" onclick="deleteAutomation('${a.id}')" title="Eliminar">🗑️</button></td></tr>`).join("");
+
+function renderTable() {
+  populateFilters();
+  let data = getFiltered();
+  data.sort((a,b) => {
+    let va, vb;
+    if (sortCol==="name") { va=a.name; vb=b.name; }
+    else if (sortCol==="department") { va=a.department; vb=b.department; }
+    else if (sortCol==="savedHours") { va=a.m.savedHours; vb=b.m.savedHours; }
+    else if (sortCol==="monthlySaving") { va=a.m.monthlySaving; vb=b.m.monthlySaving; }
+    else if (sortCol==="accumulated") { va=a.m.accumulated; vb=b.m.accumulated; }
+    else { va=a.m.monthlySaving; vb=b.m.monthlySaving; }
+    if (typeof va === "string") return sortDir==="asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+    return sortDir==="asc" ? va-vb : vb-va;
+  });
+  const af = [document.getElementById("fSearch").value, document.getElementById("fDept").value, document.getElementById("fTool").value, document.getElementById("fStatus").value, document.getElementById("fResp").value].some(Boolean);
+  document.getElementById("btnClearFilters").classList.toggle("hidden", !af);
+  document.getElementById("filterCount").textContent = data.length + " de " + automations.length;
+  const cols = [{k:"name",l:"Nombre"},{k:"department",l:"Dept."},{k:"savedHours",l:"Horas/mes"},{k:"monthlySaving",l:"€/mes"},{k:"accumulated",l:"Acumulado"}];
+  document.getElementById("tableHead").innerHTML = "<tr>" + cols.map(c =>
+    `<th onclick="setSort('${c.k}')">${c.l} ${sortCol===c.k?(sortDir==="desc"?"▼":"▲"):""}</th>`
+  ).join("") + "<th>Estado</th><th></th></tr>";
+  if (!data.length) {
+    document.getElementById("tableBody").innerHTML = '<tr><td colspan="7" class="empty-state">No hay automatizaciones. Pulsa "+ Nueva" para empezar.</td></tr>';
+    return;
+  }
+  document.getElementById("tableBody").innerHTML = data.map(a =>
+    `<tr>
+      <td><div class="cell-name">${esc(a.name)}</div><div class="cell-detail">${esc(a.process)||"—"} · ${esc(a.tool)}</div></td>
+      <td>${esc(a.department)}</td>
+      <td class="cell-hours">${fmt(a.m.savedHours,1)}h</td>
+      <td class="cell-money">${fmtEur(a.m.monthlySaving)}</td>
+      <td class="cell-accum">${fmtEur(a.m.accumulated)}</td>
+      <td><span class="badge ${badgeClass(a.status)}">${a.status}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn-icon" onclick="openForm('${a.id}')" title="Editar">✏️</button>
+        <button class="btn-icon" onclick="deleteAutomation('${a.id}')" title="Eliminar">🗑️</button>
+      </td>
+    </tr>`
+  ).join("");
 }
-function setSort(c){if(sortCol===c)sortDir=sortDir==="desc"?"asc":"desc";else{sortCol=c;sortDir="desc"}renderTable()}
-function clearFilters(){["fSearch","fDept","fTool","fStatus","fResp"].forEach(i=>document.getElementById(i).value="");renderTable()}
+
+function setSort(c) { if (sortCol===c) sortDir = sortDir==="desc"?"asc":"desc"; else { sortCol=c; sortDir="desc"; } renderTable(); }
+function clearFilters() { ["fSearch","fDept","fTool","fStatus","fResp"].forEach(i => document.getElementById(i).value=""); renderTable(); }
 
 // ═══ SCORING ═══
-function openScoreForm(id){
-  editingScoreId=id||null;const s=id?scorings.find(x=>x.id===id):{name:"",department:DEPARTMENTS[0],potentialSavingMin:"",frequency:"",impact:3,ease:3,notes:""};
-  const dO=DEPARTMENTS.map(d=>`<option ${d===s.department?"selected":""}>${d}</option>`).join("");
-  document.getElementById("scoreFormContainer").innerHTML=`<div class="card" style="border:2px solid var(--accent);animation:fadeIn .3s ease"><div class="form-grid"><div class="field span2"><div class="field-label">Nombre del proceso <span class="req">*</span></div><input id="sName" value="${esc(s.name)}"></div><div class="field"><div class="field-label">Departamento</div><select id="sDept">${dO}</select></div><div class="field"><div class="field-label">Min. ahorro potencial/ejecución</div><input type="number" id="sSaving" min="0" value="${s.potentialSavingMin}"></div><div class="field"><div class="field-label">Ejecuciones/mes estimadas</div><input type="number" id="sFreq" min="0" value="${s.frequency}"></div><div class="field"><div class="field-label">Impacto (1-5): <b id="sImpactVal">${s.impact}</b></div><input type="range" id="sImpact" min="1" max="5" value="${s.impact}" oninput="document.getElementById('sImpactVal').textContent=this.value"></div><div class="field"><div class="field-label">Facilidad (1-5): <b id="sEaseVal">${s.ease}</b></div><input type="range" id="sEase" min="1" max="5" value="${s.ease}" oninput="document.getElementById('sEaseVal').textContent=this.value"></div></div><div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="sNotes" rows="2">${esc(s.notes)}</textarea></div><div style="display:flex;gap:10px;margin-top:14px"><button class="btn btn-accent" id="btnSaveScore" onclick="saveScore()">💾 Guardar</button><button class="btn btn-ghost" onclick="closeScoreForm()">Cancelar</button></div></div>`;
+function openScoreForm(id) {
+  editingScoreId = id || null;
+  const s = id ? scorings.find(x => x.id === id) : {name:"", department:DEPARTMENTS[0], potentialSavingMin:"", frequency:"", impact:3, ease:3, notes:""};
+  const dO = DEPARTMENTS.map(d => `<option ${d===s.department?"selected":""}>${d}</option>`).join("");
+  document.getElementById("scoreFormContainer").innerHTML = `
+    <div class="card" style="border:2px solid var(--accent);animation:fadeIn .3s ease">
+      <div class="form-grid">
+        <div class="field span2"><div class="field-label">Nombre del proceso <span class="req">*</span></div><input id="sName" value="${esc(s.name)}"></div>
+        <div class="field"><div class="field-label">Departamento</div><select id="sDept">${dO}</select></div>
+        <div class="field"><div class="field-label">Min. ahorro potencial/ejecución</div><input type="number" id="sSaving" min="0" value="${s.potentialSavingMin}"></div>
+        <div class="field"><div class="field-label">Ejecuciones/mes estimadas</div><input type="number" id="sFreq" min="0" value="${s.frequency}"></div>
+        <div class="field"><div class="field-label">Impacto (1-5): <b id="sImpactVal">${s.impact}</b></div><input type="range" id="sImpact" min="1" max="5" value="${s.impact}" oninput="document.getElementById('sImpactVal').textContent=this.value"></div>
+        <div class="field"><div class="field-label">Facilidad (1-5): <b id="sEaseVal">${s.ease}</b></div><input type="range" id="sEase" min="1" max="5" value="${s.ease}" oninput="document.getElementById('sEaseVal').textContent=this.value"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="sNotes" rows="2">${esc(s.notes)}</textarea></div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn btn-accent" id="btnSaveScore" onclick="saveScore()">💾 Guardar</button>
+        <button class="btn btn-ghost" onclick="closeScoreForm()">Cancelar</button>
+      </div>
+    </div>`;
   document.getElementById("sName").focus();
 }
-async function saveScore(){
-  const name=document.getElementById("sName").value.trim();if(!name)return alert("Nombre obligatorio");
-  const btn=document.getElementById("btnSaveScore");btn.disabled=true;btn.textContent="Guardando...";
-  const data={id:editingScoreId||uid(),name,department:document.getElementById("sDept").value,potentialSavingMin:document.getElementById("sSaving").value,frequency:document.getElementById("sFreq").value,impact:parseInt(document.getElementById("sImpact").value),ease:parseInt(document.getElementById("sEase").value),notes:document.getElementById("sNotes").value.trim()};
-  const r=await apiSaveScoring(data);
-  if(r&&r.success){if(editingScoreId)scorings=scorings.map(s=>s.id===editingScoreId?data:s);else scorings.push(data);toast("✅ Oportunidad guardada");closeScoreForm();renderScoring()}else{btn.disabled=false;btn.textContent="💾 Guardar"}
-}
-function closeScoreForm(){editingScoreId=null;document.getElementById("scoreFormContainer").innerHTML=""}
-async function deleteScoring(id){if(!confirm("¿Eliminar?"))return;const r=await apiDeleteScoring(id);if(r&&r.success){scorings=scorings.filter(s=>s.id!==id);toast("🗑️ Eliminada");renderScoring()}}
 
-function renderScoring(){
-  const sorted=[...scorings].sort((a,b)=>scoringCalc(b).total-scoringCalc(a).total);
-  if(!sorted.length){document.getElementById("scoreBody").innerHTML='<tr><td colspan="8" class="empty-state">Sin oportunidades registradas</td></tr>';return}
-  document.getElementById("scoreBody").innerHTML=sorted.map(s=>{const sc=scoringCalc(s);const cls=sc.total>=15?"score-high":sc.total>=10?"score-mid":"score-low";
-    return`<tr><td><div class="cell-name">${esc(s.name)}</div>${s.notes?`<div class="cell-detail">${esc(s.notes)}</div>`:""}</td><td>${esc(s.department)}</td><td>${s.potentialSavingMin||"—"} min</td><td>${s.frequency||"—"}/mes</td><td>${"⭐".repeat(num(s.impact))}</td><td>${"🟢".repeat(num(s.ease))}</td><td><span class="score-pill ${cls}">${sc.total}/20</span></td><td style="white-space:nowrap"><button class="btn-icon" onclick="openScoreForm('${s.id}')">✏️</button><button class="btn-icon" onclick="deleteScoring('${s.id}')">🗑️</button></td></tr>`}).join("");
+async function saveScore() {
+  const name = document.getElementById("sName").value.trim();
+  if (!name) return alert("Nombre obligatorio");
+  const btn = document.getElementById("btnSaveScore"); btn.disabled = true; btn.textContent = "Guardando...";
+  const data = {
+    id: editingScoreId || uid(), name,
+    department: document.getElementById("sDept").value,
+    potentialSavingMin: document.getElementById("sSaving").value,
+    frequency: document.getElementById("sFreq").value,
+    impact: parseInt(document.getElementById("sImpact").value),
+    ease: parseInt(document.getElementById("sEase").value),
+    notes: document.getElementById("sNotes").value.trim()
+  };
+  const r = await apiSaveScoring(data);
+  if (r && r.success) {
+    if (editingScoreId) scorings = scorings.map(s => s.id === editingScoreId ? data : s);
+    else scorings.push(data);
+    toast("✅ Oportunidad guardada"); closeScoreForm(); renderScoring();
+  } else { btn.disabled = false; btn.textContent = "💾 Guardar"; }
 }
 
-// ═══ CSV EXPORT ═══
-function exportCSV(){
-  const h=["Nombre","Departamento","Proceso","Responsable","Herramienta","Estado","Fecha inicio","Min manual","Min actual","Ejecuciones/mes","€/hora","Inversión (h)","Ahorro mensual €","Ahorro anual €","ROI %","Payback (meses)","Acumulado €","Notas"];
-  const r=automations.map(a=>{const m=calcMetrics(a);return[a.name,a.department,a.process,a.responsible,a.tool,a.status,a.startDate,a.manualMinutes,a.currentMinutes,a.monthlyExecutions,a.costPerHour,a.investmentHours,m.monthlySaving.toFixed(2),m.annualSaving.toFixed(2),m.roi===Infinity?"∞":m.roi.toFixed(1),m.paybackMonths===Infinity?"N/A":m.paybackMonths.toFixed(1),m.accumulated.toFixed(2),a.notes]});
-  const csv="\uFEFF"+[h,...r].map(x=>x.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(";")).join("\n");
-  const b=new Blob([csv],{type:"text/csv;charset=utf-8"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=`autotracker_${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(u);
+function closeScoreForm() { editingScoreId = null; document.getElementById("scoreFormContainer").innerHTML = ""; }
+
+async function deleteScoring(id) {
+  if (!confirm("¿Eliminar?")) return;
+  const r = await apiDeleteScoring(id);
+  if (r && r.success) { scorings = scorings.filter(s => s.id !== id); toast("🗑️ Eliminada"); renderScoring(); }
+}
+
+function renderScoring() {
+  const sorted = [...scorings].sort((a,b) => scoringCalc(b).total - scoringCalc(a).total);
+  if (!sorted.length) {
+    document.getElementById("scoreBody").innerHTML = '<tr><td colspan="8" class="empty-state">Sin oportunidades registradas</td></tr>';
+    return;
+  }
+  document.getElementById("scoreBody").innerHTML = sorted.map(s => {
+    const sc = scoringCalc(s);
+    const cls = sc.total >= 15 ? "score-high" : sc.total >= 10 ? "score-mid" : "score-low";
+    return `<tr>
+      <td><div class="cell-name">${esc(s.name)}</div>${s.notes ? `<div class="cell-detail">${esc(s.notes)}</div>` : ""}</td>
+      <td>${esc(s.department)}</td>
+      <td>${s.potentialSavingMin||"—"} min</td>
+      <td>${s.frequency||"—"}/mes</td>
+      <td>${"⭐".repeat(num(s.impact))}</td>
+      <td>${"🟢".repeat(num(s.ease))}</td>
+      <td><span class="score-pill ${cls}">${sc.total}/20</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn-icon" onclick="openScoreForm('${s.id}')">✏️</button>
+        <button class="btn-icon" onclick="deleteScoring('${s.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+// ═══ CSV ═══
+function exportCSV() {
+  const h = ["Nombre","Departamento","Proceso","Responsable","Herramienta","Estado","Fecha inicio","Min manual","Min actual","Ejecuciones/mes","€/hora","Inversión (h)","Ahorro mensual €","Ahorro anual €","Acumulado €","Notas"];
+  const r = automations.map(a => {
+    const m = calcMetrics(a);
+    return [a.name,a.department,a.process,a.responsible,a.tool,a.status,a.startDate,a.manualMinutes,a.currentMinutes,a.monthlyExecutions,a.costPerHour,a.investmentHours,m.monthlySaving.toFixed(2),m.annualSaving.toFixed(2),m.accumulated.toFixed(2),a.notes];
+  });
+  const csv = "\uFEFF" + [h, ...r].map(x => x.map(c => `"${String(c||"").replace(/"/g,'""')}"`).join(";")).join("\n");
+  const b = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const u = URL.createObjectURL(b);
+  const a = document.createElement("a"); a.href = u; a.download = `autotracker_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+  URL.revokeObjectURL(u);
 }
 
 // ═══ INIT ═══
-function initApp(){
-  const fD=document.getElementById("fDept"),fT=document.getElementById("fTool"),fS=document.getElementById("fStatus");
-  // Clear existing options except first
-  while(fD.options.length>1)fD.remove(1);
-  while(fT.options.length>1)fT.remove(1);
-  while(fS.options.length>1)fS.remove(1);
-  DEPARTMENTS.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;fD.appendChild(o)});
-  TOOLS.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;fT.appendChild(o)});
-  STATUSES.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;fS.appendChild(o)});
+function initApp() {
+  const fD = document.getElementById("fDept"), fT = document.getElementById("fTool"), fS = document.getElementById("fStatus");
+  while (fD.options.length > 1) fD.remove(1);
+  while (fT.options.length > 1) fT.remove(1);
+  while (fS.options.length > 1) fS.remove(1);
+  DEPARTMENTS.forEach(d => { const o = document.createElement("option"); o.value = d; o.textContent = d; fD.appendChild(o); });
+  TOOLS.forEach(t => { const o = document.createElement("option"); o.value = t; o.textContent = t; fT.appendChild(o); });
+  STATUSES.forEach(s => { const o = document.createElement("option"); o.value = s; o.textContent = s; fS.appendChild(o); });
   renderAll();
 }
 </script>
