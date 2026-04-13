@@ -279,7 +279,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 // ═══ CONFIG ═══
 const API_URL = "https://script.google.com/macros/s/AKfycbwtkTBF-EdxFPx_FgDR62WEEai6Tlgy6vOa4HQ7KLQYku0FmsjFknJo7j1EsbsQXyrR/exec";
 const DEPARTMENTS = ["Salidas","Ventas","Administración","Registro","Entradas Macro","Entradas Micro","Facturación","Comercial"];
-const TOOLS = ["n8n","Power Automate","Python","Excel/VBA","Apps Script","Power Apps","Otro"];
+const TOOLS = ["n8n","Navision","Power Automate","Scripts","Macro Excel","Power Apps","Otro"];
 const STATUSES = ["En desarrollo","Activa","Pausada","Retirada"];
 
 let automations = [], scorings = [];
@@ -437,14 +437,19 @@ function renderDashboard() {
   const tH  = active.reduce((s,a) => s + a.m.savedHours,    0);
   const tAc = active.reduce((s,a) => s + a.m.accumulated,   0);
 
+  const tHYear = tH * 12;
+  const tHAc   = active.reduce((s,a) => s + (a.m.savedHours * a.m.monthsActive), 0);
+
   document.getElementById("headerSub").textContent = automations.length + " registradas · " + active.length + " activas";
 
   // ── KPIs globales ──
   const kpis = [
-    {l:"Ahorro mensual",   v:fmtEur(tM),      c:"var(--primary)", s:"Automatizaciones activas"},
-    {l:"Ahorro anual",     v:fmtEur(tA),      c:"var(--info)",    s:"Proyección a 12 meses"},
-    {l:"Ahorro acumulado", v:fmtEur(tAc),     c:"var(--accent)",  s:"Desde puesta en marcha"},
-    {l:"Horas/mes ahorradas", v:fmt(tH,1)+"h",c:"var(--warn)",    s:active.length+" activas"},
+    {l:"Ahorro mensual",      v:fmtEur(tM),        c:"var(--primary)", s:"Automatizaciones activas"},
+    {l:"Ahorro anual",        v:fmtEur(tA),         c:"var(--info)",    s:"Proyección a 12 meses"},
+    {l:"Ahorro acumulado",    v:fmtEur(tAc),        c:"var(--accent)",  s:"Desde puesta en marcha"},
+    {l:"Horas/mes ahorradas", v:fmt(tH,1)+"h",      c:"var(--warn)",    s:active.length+" activas"},
+    {l:"Horas/año ahorradas", v:fmt(tHYear,1)+"h",  c:"#ec4899",        s:"Proyección a 12 meses"},
+    {l:"Horas acumuladas",    v:fmt(tHAc,1)+"h",    c:"#8b5cf6",        s:"Desde puesta en marcha"},
   ];
   document.getElementById("kpiGrid").innerHTML = kpis.map(k =>
     `<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div>${k.s?`<div class="kpi-sub">${k.s}</div>`:""}</div>`
@@ -593,7 +598,7 @@ function openForm(id) {
     name:"", department:DEPARTMENTS[0], process:"", responsible:"", tool:TOOLS[0],
     status:"Activa", startDate:new Date().toISOString().split("T")[0],
     manualMinutes:"", currentMinutes:"", monthlyExecutions:"", costPerHour:"",
-    investmentHours:"", notes:""
+    notes:""
   };
   if (currentTab !== "list") {
     currentTab = "list";
@@ -621,7 +626,6 @@ function openForm(id) {
         <div class="field"><div class="field-label">Min. actual/ejecución <span class="req">*</span></div><input type="number" id="fCurrent" min="0" step="0.5" value="${a.currentMinutes}"></div>
         <div class="field"><div class="field-label">Ejecuciones/mes <span class="req">*</span></div><input type="number" id="fExec" min="0" value="${a.monthlyExecutions}"></div>
         <div class="field"><div class="field-label">€/hora departamento <span class="req">*</span></div><input type="number" id="fCost" min="0" step="0.5" value="${a.costPerHour}"></div>
-        <div class="field"><div class="field-label">Inversión (horas)</div><input type="number" id="fInvest" min="0" step="0.5" value="${a.investmentHours}"></div>
       </div>
       <div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="fNotes" rows="2">${esc(a.notes)}</textarea></div>
       <div id="formPreview" class="preview-box hidden"></div>
@@ -630,21 +634,19 @@ function openForm(id) {
         <button class="btn btn-ghost" onclick="closeForm()">Cancelar</button>
       </div>
     </div>`;
-  ["fManual","fCurrent","fExec","fCost","fInvest"].forEach(i => document.getElementById(i).addEventListener("input", updatePreview));
+  ["fManual","fCurrent","fExec","fCost"].forEach(i => document.getElementById(i).addEventListener("input", updatePreview));
   updatePreview();
   document.getElementById("fName").focus();
 }
 
 function updatePreview() {
   const mm=num(document.getElementById("fManual").value), cm=num(document.getElementById("fCurrent").value),
-        ex=num(document.getElementById("fExec").value), cost=num(document.getElementById("fCost").value),
-        inv=num(document.getElementById("fInvest").value);
+        ex=num(document.getElementById("fExec").value), cost=num(document.getElementById("fCost").value);
   const box = document.getElementById("formPreview");
   if (mm > 0 && ex > 0) {
     const sm = (mm-cm)*ex; const mo = (sm/60)*cost;
-    let h = "<b>"+fmtH(sm)+"</b> ahorrados/mes → <b>"+fmtEur(mo)+"/mes</b> · <b>"+fmtEur(mo*12)+"/año</b>";
-    if (inv > 0 && mo > 0) h += " · Payback: <b>"+fmt(inv*cost/mo,1)+" meses</b>";
-    box.innerHTML = h; box.classList.remove("hidden");
+    box.innerHTML = "<b>"+fmtH(sm)+"</b> ahorrados/mes → <b>"+fmtEur(mo)+"/mes</b> · <b>"+fmtEur(mo*12)+"/año</b>";
+    box.classList.remove("hidden");
   } else box.classList.add("hidden");
 }
 
@@ -664,7 +666,6 @@ async function saveForm() {
     currentMinutes: document.getElementById("fCurrent").value,
     monthlyExecutions: document.getElementById("fExec").value,
     costPerHour: document.getElementById("fCost").value,
-    investmentHours: document.getElementById("fInvest").value,
     notes: document.getElementById("fNotes").value.trim(),
     updatedAt: new Date().toISOString()
   };
