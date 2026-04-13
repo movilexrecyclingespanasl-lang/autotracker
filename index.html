@@ -217,6 +217,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
   <!-- DASHBOARD -->
   <div id="page-dashboard" class="section">
 
+    <!-- Filtro departamento -->
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Filtrar por departamento</span>
+      <select id="dashDeptFilter" onchange="renderDashboard()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">
+        <option value="">Todos los departamentos</option>
+      </select>
+      <button class="btn btn-sm btn-ghost" id="btnClearDashFilter" onclick="clearDashFilter()" style="display:none">✕ Limpiar</button>
+    </div>
+
     <!-- KPIs globales -->
     <div class="kpi-grid" id="kpiGrid"></div>
 
@@ -430,7 +439,20 @@ function renderAll() { renderDashboard(); renderTable(); renderScoring(); }
 
 // ═══ DASHBOARD ═══
 function renderDashboard() {
-  const active = automations.filter(a => a.status === "Activa").map(a => ({...a, m: calcMetrics(a)}));
+  const allActive = automations.filter(a => a.status === "Activa").map(a => ({...a, m: calcMetrics(a)}));
+
+  // ── Filtro departamento ──
+  const sel = document.getElementById("dashDeptFilter");
+  const activeDepts = [...new Set(allActive.map(a => a.department))].sort();
+  // Actualizar opciones sin resetear selección
+  const currentVal = sel.value;
+  sel.innerHTML = '<option value="">Todos los departamentos</option>' +
+    activeDepts.map(d => `<option value="${esc(d)}" ${d===currentVal?"selected":""}>${d}</option>`).join("");
+  sel.value = currentVal && activeDepts.includes(currentVal) ? currentVal : "";
+  const filterDept = sel.value;
+  document.getElementById("btnClearDashFilter").style.display = filterDept ? "inline-flex" : "none";
+
+  const active = filterDept ? allActive.filter(a => a.department === filterDept) : allActive;
 
   const tM  = active.reduce((s,a) => s + a.m.monthlySaving, 0);
   const tA  = active.reduce((s,a) => s + a.m.annualSaving,  0);
@@ -440,11 +462,11 @@ function renderDashboard() {
   const tHYear = tH * 12;
   const tHAc   = active.reduce((s,a) => s + (a.m.savedHours * a.m.monthsActive), 0);
 
-  document.getElementById("headerSub").textContent = automations.length + " registradas · " + active.length + " activas";
+  document.getElementById("headerSub").textContent = automations.length + " registradas · " + allActive.length + " activas" + (filterDept ? ` · Filtrando: ${filterDept}` : "");
 
   // ── KPIs globales ──
   const kpis = [
-    {l:"Ahorro mensual",      v:fmtEur(tM),        c:"var(--primary)", s:"Automatizaciones activas"},
+    {l:"Ahorro mensual",      v:fmtEur(tM),        c:"var(--primary)", s: filterDept || "Automatizaciones activas"},
     {l:"Ahorro anual",        v:fmtEur(tA),         c:"var(--info)",    s:"Proyección a 12 meses"},
     {l:"Ahorro acumulado",    v:fmtEur(tAc),        c:"var(--accent)",  s:"Desde puesta en marcha"},
     {l:"Horas/mes ahorradas", v:fmt(tH,1)+"h",      c:"var(--warn)",    s:active.length+" activas"},
@@ -533,35 +555,47 @@ function renderDashboard() {
   const allMonths = [...months, ...futMonths];
 
   const lineDatasets = (metric) => allDepts.map((dept, i) => {
-    // Datos reales acumulados mes a mes
+    // Acumulado real mes a mes
     let acc = 0;
-    const real = months.map(m => {
-      acc += (monthMap[m][dept]?.[metric] || 0);
-      return +acc.toFixed(metric==="eur"?2:1);
+    const realByMonth = months.map(m => {
+      acc += (monthMap[m]?.[dept]?.[metric] || 0);
+      return +(acc.toFixed(metric === "eur" ? 2 : 1));
     });
-    // Proyección: extender con la tasa mensual del dpto
-    const deptRate = active.filter(a=>a.department===dept).reduce((s,a)=>s+(metric==="eur"?a.m.monthlySaving:a.m.savedHours),0);
-    const proj = futMonths.map((_,j) => +((acc + deptRate*(j+1)).toFixed(metric==="eur"?2:1)));
-    // Conectar: último real + proyección
-    const projData = [...months.map(()=>null)];
-    if (months.length>0) projData[months.length-1] = real[real.length-1]; // punto de empalme
-    const projFull = [...projData, ...proj];
+
+    // Tasa mensual actual del dpto (automatizaciones activas)
+    const deptRate = active
+      .filter(a => a.department === dept)
+      .reduce((s, a) => s + (metric === "eur" ? a.m.monthlySaving : a.m.savedHours), 0);
+
+    // Proyección: parte desde el último valor real acumulado
+    const lastReal = realByMonth.length > 0 ? realByMonth[realByMonth.length - 1] : 0;
+    const projValues = futMonths.map((_, j) => +((lastReal + deptRate * (j + 1)).toFixed(metric === "eur" ? 2 : 1)));
+
+    // Dataset real: cubre todos los meses (reales + null para los futuros)
+    const realData = [...realByMonth, ...futMonths.map(() => null)];
+
+    // Dataset proyección: null en meses reales excepto el último (punto de empalme) + valores futuros
+    const projData = [
+      ...months.map((_, idx) => idx === months.length - 1 ? lastReal : null),
+      ...projValues
+    ];
 
     return [
       {
         label: dept,
-        data: [...real, ...futMonths.map(()=>null)],
-        borderColor: dColors[i%dColors.length],
-        backgroundColor: dColors[i%dColors.length]+"25",
-        fill: false, tension:.3, pointRadius:3, borderWidth:2
+        data: realData,
+        borderColor: dColors[i % dColors.length],
+        backgroundColor: dColors[i % dColors.length] + "25",
+        fill: false, tension: .3, pointRadius: 4, borderWidth: 2,
+        spanGaps: false
       },
       {
-        label: dept+" (proj.)",
-        data: projFull,
-        borderColor: dColors[i%dColors.length],
-        borderDash: [6,4], backgroundColor:"transparent",
-        fill: false, tension:.3, pointRadius:2, borderWidth:1.5,
-        pointStyle:"circle", pointBorderColor: dColors[i%dColors.length], pointBackgroundColor:"transparent"
+        label: dept + " (proj.)",
+        data: projData,
+        borderColor: dColors[i % dColors.length],
+        borderDash: [6, 4], backgroundColor: "transparent",
+        fill: false, tension: .3, pointRadius: 3, borderWidth: 1.5,
+        spanGaps: false
       }
     ];
   }).flat();
@@ -828,6 +862,12 @@ function renderScoring() {
       </td>
     </tr>`;
   }).join("");
+}
+
+// ═══ DASH FILTER ═══
+function clearDashFilter() {
+  document.getElementById("dashDeptFilter").value = "";
+  renderDashboard();
 }
 
 // ═══ CSV ═══
