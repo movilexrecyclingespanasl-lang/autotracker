@@ -216,21 +216,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 
   <!-- DASHBOARD -->
   <div id="page-dashboard" class="section">
+
+    <!-- KPIs globales -->
     <div class="kpi-grid" id="kpiGrid"></div>
 
-    <div>
-      <div class="dept-section-title">📂 Ahorro por departamento</div>
-      <div class="dept-kpi-grid" id="deptKpiGrid"></div>
-    </div>
-
+    <!-- Top 1 -->
     <div class="top1-card">
       <div class="top1-label">🏆 Top automatización</div>
       <div id="top1Content"><div class="empty-state" style="padding:20px">Sin datos</div></div>
     </div>
 
+    <!-- 4 gráficas de barras por departamento (2x2) -->
     <div class="chart-grid">
-      <div class="card chart-full"><div class="card-title">📈 Evolución del ahorro acumulado · mensual y anual</div><div class="chart-container"><canvas id="chartEvol"></canvas></div></div>
+      <div class="card"><div class="card-title">💶 Ahorro mensual por departamento (€)</div><div class="chart-container"><canvas id="chartDeptMonthEur"></canvas></div></div>
+      <div class="card"><div class="card-title">💶 Ahorro anual por departamento (€)</div><div class="chart-container"><canvas id="chartDeptYearEur"></canvas></div></div>
+      <div class="card"><div class="card-title">⏱️ Horas ahorradas al mes por departamento</div><div class="chart-container"><canvas id="chartDeptMonthH"></canvas></div></div>
+      <div class="card"><div class="card-title">⏱️ Horas ahorradas al año por departamento</div><div class="chart-container"><canvas id="chartDeptYearH"></canvas></div></div>
     </div>
+
+    <!-- 2 gráficas de evolución -->
+    <div class="chart-grid">
+      <div class="card chart-full"><div class="card-title">📈 Evolución del ahorro mensual por departamento (€)</div><div class="chart-container" style="height:300px"><canvas id="chartEvolEur"></canvas></div></div>
+      <div class="card chart-full"><div class="card-title">📈 Evolución del ahorro mensual por departamento (horas)</div><div class="chart-container" style="height:300px"><canvas id="chartEvolH"></canvas></div></div>
+    </div>
+
   </div>
 
   <!-- REGISTRO -->
@@ -276,7 +285,7 @@ const STATUSES = ["En desarrollo","Activa","Pausada","Retirada"];
 let automations = [], scorings = [];
 let currentTab = "dashboard", sortCol = "monthlySaving", sortDir = "desc";
 let editingId = null, editingScoreId = null;
-let chartEvol;
+let chartDeptMonthEur, chartDeptYearEur, chartDeptMonthH, chartDeptYearH, chartEvolEur, chartEvolH;
 let sessionPwd = "";
 
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
@@ -422,48 +431,26 @@ function renderAll() { renderDashboard(); renderTable(); renderScoring(); }
 // ═══ DASHBOARD ═══
 function renderDashboard() {
   const active = automations.filter(a => a.status === "Activa").map(a => ({...a, m: calcMetrics(a)}));
-  const all = automations.map(a => ({...a, m: calcMetrics(a)}));
 
-  const tM = active.reduce((s,a) => s + a.m.monthlySaving, 0);
-  const tA = active.reduce((s,a) => s + a.m.annualSaving, 0);
-  const tH = active.reduce((s,a) => s + a.m.savedHours, 0);
-  const tAc = active.reduce((s,a) => s + a.m.accumulated, 0);
+  const tM  = active.reduce((s,a) => s + a.m.monthlySaving, 0);
+  const tA  = active.reduce((s,a) => s + a.m.annualSaving,  0);
+  const tH  = active.reduce((s,a) => s + a.m.savedHours,    0);
+  const tAc = active.reduce((s,a) => s + a.m.accumulated,   0);
 
   document.getElementById("headerSub").textContent = automations.length + " registradas · " + active.length + " activas";
 
-  // KPIs principales
+  // ── KPIs globales ──
   const kpis = [
-    {l:"Ahorro mensual", v:fmtEur(tM), c:"var(--primary)", s:"Automatizaciones activas"},
-    {l:"Ahorro anual", v:fmtEur(tA), c:"var(--info)", s:"Proyección a 12 meses"},
-    {l:"Ahorro acumulado", v:fmtEur(tAc), c:"var(--accent)", s:"Desde puesta en marcha"},
-    {l:"Horas/mes ahorradas", v:fmt(tH,1)+"h", c:"var(--warn)", s:active.length+" automatizaciones activas"},
+    {l:"Ahorro mensual",   v:fmtEur(tM),      c:"var(--primary)", s:"Automatizaciones activas"},
+    {l:"Ahorro anual",     v:fmtEur(tA),      c:"var(--info)",    s:"Proyección a 12 meses"},
+    {l:"Ahorro acumulado", v:fmtEur(tAc),     c:"var(--accent)",  s:"Desde puesta en marcha"},
+    {l:"Horas/mes ahorradas", v:fmt(tH,1)+"h",c:"var(--warn)",    s:active.length+" activas"},
   ];
   document.getElementById("kpiGrid").innerHTML = kpis.map(k =>
-    `<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div>${k.s ? `<div class="kpi-sub">${k.s}</div>` : ""}</div>`
+    `<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div>${k.s?`<div class="kpi-sub">${k.s}</div>`:""}</div>`
   ).join("");
 
-  // Cajitas KPI por departamento
-  const dm = {};
-  active.forEach(a => {
-    dm[a.department] = dm[a.department] || {monthly:0, annual:0};
-    dm[a.department].monthly += a.m.monthlySaving;
-    dm[a.department].annual += a.m.annualSaving;
-  });
-  const dArr = Object.entries(dm).sort((a,b) => b[1].monthly - a[1].monthly);
-  const deptColors = ["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#14b8a6"];
-  document.getElementById("deptKpiGrid").innerHTML = dArr.length
-    ? dArr.map((d, i) => {
-        const c = deptColors[i % deptColors.length];
-        return `<div class="dept-kpi">
-          <div class="dept-kpi-bar" style="background:${c}"></div>
-          <div class="dept-kpi-name" style="color:${c}">${esc(d[0])}</div>
-          <div class="dept-kpi-monthly" style="color:${c}">${fmtEur(d[1].monthly)}</div>
-          <div class="dept-kpi-annual" style="color:var(--muted)">${fmtEur(d[1].annual)} / año</div>
-        </div>`;
-      }).join("")
-    : `<div style="color:var(--dim);font-size:13px;padding:10px">Sin automatizaciones activas</div>`;
-
-  // Top 1
+  // ── Top 1 ──
   const sorted = [...active].sort((a,b) => b.m.monthlySaving - a.m.monthlySaving);
   const top = sorted[0];
   document.getElementById("top1Content").innerHTML = top
@@ -476,74 +463,126 @@ function renderDashboard() {
        </div>`
     : `<div class="empty-state" style="padding:20px">Sin automatizaciones activas</div>`;
 
-  // Evolución mensual + anual acumulada
-  const em = {};
+  // ── Datos por departamento ──
+  const dm = {};
+  active.forEach(a => {
+    if (!dm[a.department]) dm[a.department] = {monthly:0, annual:0, monthlyH:0, annualH:0};
+    dm[a.department].monthly  += a.m.monthlySaving;
+    dm[a.department].annual   += a.m.annualSaving;
+    dm[a.department].monthlyH += a.m.savedHours;
+    dm[a.department].annualH  += a.m.savedHours * 12;
+  });
+  const dArr = Object.entries(dm).sort((a,b) => b[1].monthly - a[1].monthly);
+  const dLabels = dArr.map(d => d[0]);
+  const dColors = ["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#14b8a6"];
+  const colors  = dLabels.map((_,i) => dColors[i % dColors.length]);
+
+  const barOpts = (suffix, decimals=0) => ({
+    indexAxis: "y",
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: {display:false}, tooltip: { callbacks: { label: c => fmt(c.raw, decimals) + suffix } } },
+    scales: {
+      x: { ticks: { callback: v => fmt(v, decimals)+suffix, color:"#7a82a0", font:{size:11} }, grid:{color:"#2a305030"} },
+      y: { ticks: { color:"#7a82a0", font:{size:11,weight:600} }, grid:{display:false} }
+    }
+  });
+
+  const mkBar = (ref, canvasId, data, suffix, decimals=0) => {
+    if (ref) ref.destroy();
+    return new Chart(document.getElementById(canvasId), {
+      type: "bar",
+      data: { labels: dLabels, datasets: [{ data, backgroundColor: colors, borderRadius:6, borderSkipped:false }] },
+      options: barOpts(suffix, decimals)
+    });
+  };
+
+  chartDeptMonthEur  = mkBar(chartDeptMonthEur,  "chartDeptMonthEur",  dArr.map(d=>+d[1].monthly.toFixed(2)),  "€", 2);
+  chartDeptYearEur   = mkBar(chartDeptYearEur,   "chartDeptYearEur",   dArr.map(d=>+d[1].annual.toFixed(2)),   "€", 2);
+  chartDeptMonthH    = mkBar(chartDeptMonthH,    "chartDeptMonthH",    dArr.map(d=>+d[1].monthlyH.toFixed(1)), "h", 1);
+  chartDeptYearH     = mkBar(chartDeptYearH,     "chartDeptYearH",     dArr.map(d=>+d[1].annualH.toFixed(1)),  "h", 1);
+
+  // ── Evolución mensual por departamento ──
+  // Construir meses únicos ordenados
+  const allDepts = [...new Set(active.map(a => a.department))];
+  const monthMap = {}; // mes -> { dept -> {eur, h} }
   active.forEach(a => {
     if (!a.startDate) return;
     const d = new Date(a.startDate);
     const k = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0");
-    em[k] = (em[k] || 0) + a.m.monthlySaving;
+    if (!monthMap[k]) monthMap[k] = {};
+    if (!monthMap[k][a.department]) monthMap[k][a.department] = {eur:0, h:0};
+    monthMap[k][a.department].eur += a.m.monthlySaving;
+    monthMap[k][a.department].h   += a.m.savedHours;
   });
-  const ek = Object.keys(em).sort();
-  let acM = 0;
-  const ed = ek.map(k => { acM += em[k]; return { month: k, n: Math.round(em[k]*100)/100, a: Math.round(acM*100)/100 }; });
+  const months = Object.keys(monthMap).sort();
 
-  // Añadir proyección 12 meses futuros si hay datos
-  const lastAc = acM;
-  const lastMon = tM;
-  const futureLabels = [];
-  const futureData = [];
-  if (ed.length > 0) {
-    const lastKey = ek[ek.length - 1];
-    let [y, m] = lastKey.split("-").map(Number);
-    for (let i = 1; i <= 6; i++) {
-      m++; if (m > 12) { m = 1; y++; }
-      const lk = y + "-" + String(m).padStart(2,"0");
-      futureLabels.push(lk);
-      futureData.push(Math.round((lastAc + lastMon * i) * 100) / 100);
+  // Proyección: añadir 6 meses futuros
+  const futMonths = [];
+  if (months.length > 0) {
+    let [fy, fm] = months[months.length-1].split("-").map(Number);
+    for (let i=1; i<=6; i++) {
+      fm++; if (fm>12){fm=1;fy++;}
+      futMonths.push(fy+"-"+String(fm).padStart(2,"0"));
     }
   }
+  const allMonths = [...months, ...futMonths];
 
-  const allLabels = [...ed.map(d => d.month), ...futureLabels];
+  const lineDatasets = (metric) => allDepts.map((dept, i) => {
+    // Datos reales acumulados mes a mes
+    let acc = 0;
+    const real = months.map(m => {
+      acc += (monthMap[m][dept]?.[metric] || 0);
+      return +acc.toFixed(metric==="eur"?2:1);
+    });
+    // Proyección: extender con la tasa mensual del dpto
+    const deptRate = active.filter(a=>a.department===dept).reduce((s,a)=>s+(metric==="eur"?a.m.monthlySaving:a.m.savedHours),0);
+    const proj = futMonths.map((_,j) => +((acc + deptRate*(j+1)).toFixed(metric==="eur"?2:1)));
+    // Conectar: último real + proyección
+    const projData = [...months.map(()=>null)];
+    if (months.length>0) projData[months.length-1] = real[real.length-1]; // punto de empalme
+    const projFull = [...projData, ...proj];
 
-  if (chartEvol) chartEvol.destroy();
-  chartEvol = new Chart(document.getElementById("chartEvol"), {
-    type: "line",
-    data: {
-      labels: allLabels,
-      datasets: [
-        {
-          label: "Acumulado real",
-          data: [...ed.map(d => d.a), ...futureLabels.map(() => null)],
-          borderColor: "#6366f1", backgroundColor: "#6366f120",
-          fill: true, tension: .3, pointRadius: 4, borderWidth: 3
-        },
-        {
-          label: "Nuevo/mes",
-          data: [...ed.map(d => d.n), ...futureLabels.map(() => null)],
-          borderColor: "#22d3a7", borderDash: [5,5],
-          tension: .3, pointRadius: 3, borderWidth: 2, fill: false
-        },
-        {
-          label: "Proyección acumulado",
-          data: [...ed.map(() => null), ...(ed.length ? [ed[ed.length-1].a] : []), ...futureData].slice(0, allLabels.length),
-          borderColor: "#6366f1", borderDash: [8,4], backgroundColor: "transparent",
-          tension: .3, pointRadius: 3, borderWidth: 2, fill: false, pointStyle: "circle",
-          pointBorderColor: "#6366f1", pointBackgroundColor: "transparent"
-        }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        tooltip: { callbacks: { label: c => c.dataset.label + ": " + fmtEur(c.raw) } },
-        legend: { labels: { color: "#7a82a0", font: { size: 11, weight: 600 } } }
+    return [
+      {
+        label: dept,
+        data: [...real, ...futMonths.map(()=>null)],
+        borderColor: dColors[i%dColors.length],
+        backgroundColor: dColors[i%dColors.length]+"25",
+        fill: false, tension:.3, pointRadius:3, borderWidth:2
       },
-      scales: {
-        x: { ticks: { color: "#7a82a0", font: { size: 11 } }, grid: { color: "#2a305030" } },
-        y: { ticks: { callback: v => fmt(v) + "€", color: "#7a82a0", font: { size: 11 } }, grid: { color: "#2a305030" } }
+      {
+        label: dept+" (proj.)",
+        data: projFull,
+        borderColor: dColors[i%dColors.length],
+        borderDash: [6,4], backgroundColor:"transparent",
+        fill: false, tension:.3, pointRadius:2, borderWidth:1.5,
+        pointStyle:"circle", pointBorderColor: dColors[i%dColors.length], pointBackgroundColor:"transparent"
       }
+    ];
+  }).flat();
+
+  const lineOpts = (suffix, decimals=0) => ({
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      tooltip:{callbacks:{label:c=>c.dataset.label+": "+fmt(c.raw,decimals)+suffix}},
+      legend:{labels:{color:"#7a82a0",font:{size:11,weight:600},boxWidth:12,filter:item=>!item.text.includes("(proj.)")}}
+    },
+    scales:{
+      x:{ticks:{color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},
+      y:{ticks:{callback:v=>fmt(v,decimals)+suffix,color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}}
     }
+  });
+
+  if (chartEvolEur) chartEvolEur.destroy();
+  chartEvolEur = new Chart(document.getElementById("chartEvolEur"), {
+    type:"line", data:{labels:allMonths, datasets:lineDatasets("eur")},
+    options: lineOpts("€", 2)
+  });
+
+  if (chartEvolH) chartEvolH.destroy();
+  chartEvolH = new Chart(document.getElementById("chartEvolH"), {
+    type:"line", data:{labels:allMonths, datasets:lineDatasets("h")},
+    options: lineOpts("h", 1)
   });
 }
 
