@@ -70,16 +70,15 @@ body{min-height:100vh;overflow-x:hidden}
 .kpi-value{font-size:28px;font-weight:900;letter-spacing:-.5px;line-height:1}
 .kpi-sub{font-size:11px;color:var(--dim);margin-top:6px;font-weight:500}
 
-/* DEPT KPI TABLE */
-.dept-kpi-wrap{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
-.dept-kpi-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);padding:16px 20px 8px}
-.dept-kpi-table{width:100%;border-collapse:collapse}
-.dept-kpi-table th{padding:8px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);border-bottom:1px solid var(--border)}
-.dept-kpi-table td{padding:9px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
-.dept-kpi-table tr:last-child td{border-bottom:none}
-.dept-kpi-table tr:hover td{background:var(--surface2)}
-.dept-bar-bg{background:var(--border);border-radius:99px;height:5px;min-width:60px}
-.dept-bar-fill{background:var(--primary);border-radius:99px;height:5px;transition:width .4s}
+/* DEPT KPI SECTION */
+.dept-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
+.dept-kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.dept-kpi{background:var(--surface);border-radius:var(--radius-lg);padding:16px 18px;border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .2s}
+.dept-kpi:hover{border-color:var(--dim)}
+.dept-kpi-bar{position:absolute;top:0;left:0;right:0;height:3px}
+.dept-kpi-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.dept-kpi-monthly{font-size:22px;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:-.5px;line-height:1}
+.dept-kpi-annual{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-top:4px}
 
 /* TOP1 CARD */
 .top1-card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;position:relative;overflow:hidden}
@@ -219,21 +218,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
   <div id="page-dashboard" class="section">
     <div class="kpi-grid" id="kpiGrid"></div>
 
-    <div class="dash-top">
-      <!-- Ahorro por departamento -->
-      <div class="dept-kpi-wrap">
-        <div class="dept-kpi-title">📂 Ahorro por departamento</div>
-        <table class="dept-kpi-table">
-          <thead><tr><th>Departamento</th><th>€/mes</th><th>€/año</th><th>%</th><th></th></tr></thead>
-          <tbody id="deptKpiBody"></tbody>
-        </table>
-      </div>
+    <div>
+      <div class="dept-section-title">📂 Ahorro por departamento</div>
+      <div class="dept-kpi-grid" id="deptKpiGrid"></div>
+    </div>
 
-      <!-- Top 1 -->
-      <div class="top1-card">
-        <div class="top1-label">🏆 Top automatización</div>
-        <div id="top1Content"><div class="empty-state" style="padding:20px">Sin datos</div></div>
-      </div>
+    <div class="top1-card">
+      <div class="top1-label">🏆 Top automatización</div>
+      <div id="top1Content"><div class="empty-state" style="padding:20px">Sin datos</div></div>
     </div>
 
     <div class="chart-grid">
@@ -300,7 +292,7 @@ function calcMetrics(a) {
   const monthlySaving = savedHours * num(a.costPerHour);
   const annualSaving = monthlySaving * 12;
   const investmentCost = num(a.investmentHours) * num(a.costPerHour);
-  const monthsActive = a.startDate ? Math.max(1, Math.round((Date.now() - new Date(a.startDate).getTime()) / (1e3*60*60*24*30.44))) : 0;
+  const monthsActive = a.startDate ? Math.max(1, Math.round((Date.now() - new Date(a.startDate).getTime()) / (1e3*60*60*24*30.44))) : 1;
   const accumulated = monthlySaving * monthsActive;
   return { savedMin, savedHours, monthlySaving, annualSaving, investmentCost, monthsActive, accumulated };
 }
@@ -450,7 +442,7 @@ function renderDashboard() {
     `<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div>${k.s ? `<div class="kpi-sub">${k.s}</div>` : ""}</div>`
   ).join("");
 
-  // Ahorro por departamento
+  // Cajitas KPI por departamento
   const dm = {};
   active.forEach(a => {
     dm[a.department] = dm[a.department] || {monthly:0, annual:0};
@@ -458,20 +450,18 @@ function renderDashboard() {
     dm[a.department].annual += a.m.annualSaving;
   });
   const dArr = Object.entries(dm).sort((a,b) => b[1].monthly - a[1].monthly);
-  const maxM = dArr.length ? dArr[0][1].monthly : 1;
   const deptColors = ["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#14b8a6"];
-  document.getElementById("deptKpiBody").innerHTML = dArr.length
+  document.getElementById("deptKpiGrid").innerHTML = dArr.length
     ? dArr.map((d, i) => {
-        const pct = maxM > 0 ? Math.round((d[1].monthly / maxM) * 100) : 0;
-        return `<tr>
-          <td style="font-weight:700;color:${deptColors[i % deptColors.length]}">${esc(d[0])}</td>
-          <td style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--primary)">${fmtEur(d[1].monthly)}</td>
-          <td style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">${fmtEur(d[1].annual)}</td>
-          <td style="font-size:11px;color:var(--dim);font-weight:700">${pct}%</td>
-          <td style="min-width:80px"><div class="dept-bar-bg"><div class="dept-bar-fill" style="width:${pct}%;background:${deptColors[i % deptColors.length]}"></div></div></td>
-        </tr>`;
+        const c = deptColors[i % deptColors.length];
+        return `<div class="dept-kpi">
+          <div class="dept-kpi-bar" style="background:${c}"></div>
+          <div class="dept-kpi-name" style="color:${c}">${esc(d[0])}</div>
+          <div class="dept-kpi-monthly" style="color:${c}">${fmtEur(d[1].monthly)}</div>
+          <div class="dept-kpi-annual" style="color:var(--muted)">${fmtEur(d[1].annual)} / año</div>
+        </div>`;
       }).join("")
-    : `<tr><td colspan="5" class="empty-state">Sin datos activos</td></tr>`;
+    : `<div style="color:var(--dim);font-size:13px;padding:10px">Sin automatizaciones activas</div>`;
 
   // Top 1
   const sorted = [...active].sort((a,b) => b.m.monthlySaving - a.m.monthlySaving);
