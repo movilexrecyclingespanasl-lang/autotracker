@@ -223,14 +223,13 @@ body.committee .container{padding:24px 40px 60px!important}
 .kpi,.card,.top3-card,.stage-card{animation:fadeIn .4s ease both}
 
 @media(max-width:900px){
-  .pipeline-flow{grid-template-columns:repeat(3,1fr)}
   .form-grid{grid-template-columns:1fr}.span2,.span3{grid-column:span 1}
   .chart-grid{grid-template-columns:1fr}
   .top3-grid{grid-template-columns:1fr}
   .filters{flex-direction:column;align-items:stretch}
 }
 @media(max-width:600px){
-  .pipeline-flow{grid-template-columns:repeat(2,1fr)}
+  .kanban-col{flex:0 0 170px}
   .kpi-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 }
 </style>
@@ -270,6 +269,7 @@ body.committee .container{padding:24px 40px 60px!important}
     <button class="tab" data-tab="pipeline">🔄 Pipeline</button>
     <button class="tab" data-tab="registro">📋 Registro</button>
     <button class="tab" data-tab="resultados">📈 Resultados</button>
+    <button class="tab" data-tab="guia">❓ Guía</button>
   </div>
   <div style="display:flex;gap:8px;flex-wrap:wrap" class="header-actions">
     <button class="btn btn-committee" onclick="toggleCommittee()" id="btnCommittee">🎯 Modo Comité</button>
@@ -343,6 +343,13 @@ body.committee .container{padding:24px 40px 60px!important}
 
   <!-- ═══ REGISTRO ═══ -->
   <div id="page-registro" class="section hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <h2 style="font-size:18px;font-weight:900">📋 Registro de automatizaciones</h2>
+        <p style="color:var(--muted);font-size:13px;margin-top:2px">Todas las automatizaciones y su impacto real medido</p>
+      </div>
+      <button class="btn btn-primary edit-btn" onclick="openForm()">+ Nueva automatización</button>
+    </div>
     <div id="autoFormContainer"></div>
     <div class="filters">
       <input type="text" id="rSearch" placeholder="🔍 Buscar..." oninput="renderTable()">
@@ -355,6 +362,82 @@ body.committee .container{padding:24px 40px 60px!important}
     </div>
     <div class="table-wrap">
       <table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table>
+    </div>
+  </div>
+
+  <!-- ═══ GUÍA ═══ -->
+  <div id="page-guia" class="section hidden">
+    <div style="max-width:860px;margin:0 auto">
+      <h2 style="font-size:22px;font-weight:900;margin-bottom:4px">❓ Guía de uso — AutoTracker Pro</h2>
+      <p style="color:var(--muted);margin-bottom:28px">Todo lo que necesitas saber para usar la herramienta desde el primer día.</p>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <div class="card">
+          <div style="font-size:16px;font-weight:900;margin-bottom:12px;color:var(--primary)">📊 Dashboard</div>
+          <p style="color:var(--muted);margin-bottom:10px">Vista global del impacto de todas las automatizaciones activas.</p>
+          <ul style="color:var(--text);font-size:13px;display:flex;flex-direction:column;gap:6px;padding-left:16px">
+            <li><b>KPIs superiores</b> — ahorro mensual, anual, acumulado, horas recuperadas e inversión total.</li>
+            <li><b>Filtro por departamento</b> — el selector de arriba filtra todos los KPIs y gráficas al departamento elegido.</li>
+            <li><b>Top 3</b> — las automatizaciones que más ahorran. Haz clic en cualquiera para ver su detalle completo.</li>
+            <li><b>Alertas</b> — aparecen automáticamente si hay items bloqueados en pipeline demasiado tiempo o automatizaciones pausadas.</li>
+            <li><b>Modo Comité</b> — oculta los botones de edición y amplía los KPIs. Ideal para presentar en reuniones.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div style="font-size:16px;font-weight:900;margin-bottom:12px;color:var(--accent)">🔄 Pipeline</div>
+          <p style="color:var(--muted);margin-bottom:10px">Gestiona todo el ciclo de vida de una automatización desde que se solicita hasta que está activa.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+            <div style="display:flex;gap:10px;align-items:center"><span style="background:#f59e0b20;color:#f59e0b;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap">🆕 Solicitud</span><span style="font-size:13px;color:var(--muted)">Un departamento pide automatizar un proceso. Se anota el tiempo actual y las ejecuciones/mes.</span></div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="background:#3b82f620;color:#3b82f6;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap">🔍 Análisis</span><span style="font-size:13px;color:var(--muted)">El equipo analiza si es viable, estima los minutos post-automatización, coste de plataforma y horas de implementación.</span></div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="background:#8b5cf620;color:#8b5cf6;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap">✅ Aprobada</span><span style="font-size:13px;color:var(--muted)">Se aprueba la implementación. Se registra quién la aprueba.</span></div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="background:#6366f120;color:#6366f1;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap">🚀 Desarrollo</span><span style="font-size:13px;color:var(--muted)">Se asigna responsable y fechas de inicio y objetivo de entrega.</span></div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="background:#22d3a720;color:#22d3a7;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap">⚡ Activa</span><span style="font-size:13px;color:var(--muted)">Se activa y <b>se crea automáticamente un registro</b> en la pestaña Registro con los datos del análisis.</span></div>
+            <div style="display:flex;gap:10px;align-items:center"><span style="background:#64748b20;color:#94a3b8;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap">❌ Descartada</span><span style="font-size:13px;color:var(--muted)">Se descarta con motivo. Siempre recuperable con el botón 🔄.</span></div>
+          </div>
+          <ul style="color:var(--text);font-size:13px;display:flex;flex-direction:column;gap:6px;padding-left:16px">
+            <li><b>▶ Avanzar etapa</b> — mueve el item a la siguiente fase. Cada avance pide los datos de esa etapa.</li>
+            <li><b>📋 Actividad</b> — abre el historial de notas del item. Puedes añadir actualizaciones con fecha y marcar como 🔴 Bloqueado.</li>
+            <li><b>🔴 Bloqueado</b> — marca que el item está parado esperando algo. Aparece en rojo en el kanban y genera alerta en el Dashboard.</li>
+            <li><b>🔄 Recuperar</b> — solo aparece en items descartados. Permite volver a cualquier etapa anterior.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div style="font-size:16px;font-weight:900;margin-bottom:12px;color:var(--warn)">📋 Registro</div>
+          <p style="color:var(--muted);margin-bottom:10px">Todas las automatizaciones activas (y pausadas o retiradas). Es la fuente de verdad del ahorro real.</p>
+          <ul style="color:var(--text);font-size:13px;display:flex;flex-direction:column;gap:6px;padding-left:16px">
+            <li><b>+ Nueva automatización</b> — añade un registro manualmente sin pasar por el pipeline.</li>
+            <li><b>👁️ Ver detalle</b> — abre un panel con todas las métricas: ahorro mensual/anual/acumulado, horas recuperadas, progreso de ROI y comparativa de tiempo manual vs automatizado.</li>
+            <li><b>Filtros</b> — filtra por departamento, herramienta, estado y responsable. Puedes combinarlos.</li>
+            <li><b>Campos clave</b>: <b>Min. manual</b> = tiempo antes de automatizar por ejecución · <b>Min. real</b> = tiempo actual con la automatización · <b>Ejecuciones/mes</b> = cuántas veces ocurre al mes · <b>€/hora</b> = coste hora del departamento.</li>
+            <li><b>⬇ CSV</b> — exporta todos los registros desde el botón de la cabecera.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div style="font-size:16px;font-weight:900;margin-bottom:12px;color:var(--info)">📈 Resultados</div>
+          <p style="color:var(--muted);margin-bottom:10px">Comparativa entre lo que se estimó en el análisis y lo que realmente está ahorrando cada automatización.</p>
+          <ul style="color:var(--text);font-size:13px;display:flex;flex-direction:column;gap:6px;padding-left:16px">
+            <li>Solo aparecen automatizaciones que <b>se activaron a través del Pipeline</b> con un análisis previo (donde se definió el estimado).</li>
+            <li>Si añadiste automatizaciones directamente al Registro sin pasar por Pipeline, no aparecerán aquí.</li>
+            <li><b>Precisión</b> = Real ÷ Estimado × 100. Por encima del 85% se considera buena estimación.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div style="font-size:16px;font-weight:900;margin-bottom:12px;color:var(--purple)">⚙️ Configuración y datos</div>
+          <ul style="color:var(--text);font-size:13px;display:flex;flex-direction:column;gap:6px;padding-left:16px">
+            <li>Los datos se guardan en <b>Google Sheets</b> — hay tres hojas: <b>Automatizaciones</b>, <b>Pipeline</b> y <b>Actividad</b>.</li>
+            <li>Todos los miembros del equipo comparten la misma URL y contraseña.</li>
+            <li><b>🔄 Refrescar</b> — recarga los datos de Google Sheets sin recargar la página.</li>
+            <li><b>● Sincronizado</b> — el indicador en la cabecera muestra si el último guardado fue correcto.</li>
+            <li>Si el indicador se pone en rojo (error), revisa la conexión o que el Apps Script sigue activo.</li>
+          </ul>
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -591,6 +674,7 @@ function switchTab(tab) {
   if (tab === "pipeline") renderPipeline();
   if (tab === "registro") renderTable();
   if (tab === "resultados") renderResultados();
+  // "guia" tab is static HTML, no render needed
 }
 
 function renderAll() { renderDashboard(); renderPipeline(); renderTable(); renderResultados(); }
@@ -1037,11 +1121,15 @@ async function deleteLogEntry(logId, pipeId) {
 }
 
 async function toggleBlocked(pipeId, blocked) {
-  await _setBlocked(pipeId, blocked);
-  const type = blocked ? "bloqueado" : "desbloqueado";
   const text = document.getElementById("logText")?.value?.trim();
-  if (text) await addLogEntry(pipeId);
-  else { toast(blocked ? "🔴 Marcado como bloqueado" : "✅ Desbloqueado"); openActivityLog(pipeId); }
+  if (text) {
+    document.getElementById("logType").value = blocked ? "bloqueado" : "desbloqueado";
+    await addLogEntry(pipeId); // addLogEntry calls _setBlocked internally
+  } else {
+    await _setBlocked(pipeId, blocked);
+    toast(blocked ? "🔴 Marcado como bloqueado" : "✅ Desbloqueado");
+    openActivityLog(pipeId);
+  }
 }
 
 async function _setBlocked(pipeId, blocked) {
@@ -1192,6 +1280,8 @@ async function savePipelineItem() {
     activationDate: existing?.activationDate || "",
     automationId: existing?.automationId || "",
     discardReason: existing?.discardReason || "",
+    discardNotes: existing?.discardNotes || "",
+    blocked: existing?.blocked || "0",
     createdAt: existing?.createdAt || now,
     stageUpdatedAt: existing?.stageUpdatedAt || now,
     updatedAt: now,
@@ -1836,9 +1926,6 @@ function populateRespFilter() {
   el.innerHTML = '<option value="">Responsable</option>' + rs.map(r=>`<option ${r===cv?"selected":""}>${r}</option>`).join("");
   el.value = cv;
 }
-const _origRenderTable = renderTable;
-// Wrap renderTable to also update responsible filter
-const _renderTableOrig = renderTable;
 </script>
 </body>
 </html>
