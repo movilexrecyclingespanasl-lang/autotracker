@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoTracker · Impacto de Automatizaciones</title>
+<title>AutoTracker Pro · Sistema de Automatizaciones</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -12,8 +12,8 @@
 :root{
   --bg:#0c0f1a;--surface:#151929;--surface2:#1c2137;--border:#2a3050;
   --text:#e8eaf0;--muted:#7a82a0;--dim:#4a5270;
-  --primary:#22d3a7;--primary-dim:#22d3a740;--accent:#6366f1;--accent-dim:#6366f130;
-  --warn:#f59e0b;--danger:#ef4444;--info:#3b82f6;
+  --primary:#22d3a7;--accent:#6366f1;--warn:#f59e0b;--danger:#ef4444;--info:#3b82f6;
+  --purple:#8b5cf6;--pink:#ec4899;
   --radius:10px;--radius-lg:16px;
 }
 html{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
@@ -23,7 +23,7 @@ body{min-height:100vh;overflow-x:hidden}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--dim);border-radius:9px}
 
-/* LOGIN */
+/* ── LOGIN ── */
 .login-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
 .login-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;width:360px;max-width:90vw;text-align:center}
 .login-box h1{font-size:28px;font-weight:900;margin-bottom:4px}
@@ -31,70 +31,86 @@ body{min-height:100vh;overflow-x:hidden}
 .login-box p{color:var(--muted);font-size:13px;margin-bottom:24px}
 .login-box input{width:100%;padding:12px 16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:15px;text-align:center;margin-bottom:16px;letter-spacing:2px}
 .login-box input:focus{outline:none;border-color:var(--primary)}
-.login-box .btn{width:100%;justify-content:center;padding:12px;font-size:15px}
 .login-error{color:var(--danger);font-size:13px;margin-top:10px;min-height:20px;font-weight:600}
 
-/* LOADING */
+/* ── LOADING ── */
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
 .spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{color:var(--muted);font-size:14px;font-weight:600}
 
-/* LAYOUT */
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px)}
+/* ── LAYOUT ── */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:200;backdrop-filter:blur(20px)}
 .header h1{font-size:20px;font-weight:900;letter-spacing:-.5px}
 .header h1 em{color:var(--primary);font-style:normal}
 .header-sub{font-size:11px;color:var(--muted);font-weight:500}
-.container{max-width:1440px;margin:0 auto;padding:20px 20px 60px}
+.container{max-width:1600px;margin:0 auto;padding:20px 20px 60px}
 
-.tabs{display:flex;gap:4px;background:var(--surface);border-radius:var(--radius);padding:4px}
-.tab{padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:700;font-size:12px;border:none;background:transparent;color:var(--muted);transition:all .2s;text-transform:uppercase;letter-spacing:.8px;font-family:inherit}
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;background:var(--surface2);border-radius:var(--radius);padding:4px}
+.tab{padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;font-size:12px;border:none;background:transparent;color:var(--muted);transition:all .2s;text-transform:uppercase;letter-spacing:.8px;font-family:inherit}
 .tab:hover{color:var(--text)}
 .tab.active{background:var(--primary);color:var(--bg)}
 
-.btn{padding:8px 18px;border-radius:var(--radius);border:none;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+/* ── BUTTONS ── */
+.btn{padding:8px 16px;border-radius:var(--radius);border:none;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
 .btn-primary{background:var(--primary);color:var(--bg)}.btn-primary:hover{filter:brightness(1.15);transform:translateY(-1px)}
 .btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{filter:brightness(1.15)}
+.btn-warn{background:var(--warn);color:var(--bg)}.btn-warn:hover{filter:brightness(1.1)}
 .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-ghost:hover{border-color:var(--muted);background:var(--surface2)}
-.btn-danger-outline{background:transparent;border:1px solid var(--danger);color:var(--danger)}.btn-danger-outline:hover{background:var(--danger);color:#fff}
+.btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-committee{background:linear-gradient(135deg,var(--purple),var(--accent));color:#fff;border:none}
 .btn-sm{padding:5px 12px;font-size:12px}
-.btn-icon{background:none;border:none;cursor:pointer;font-size:16px;padding:4px 6px;border-radius:6px;transition:background .15s;color:var(--text)}.btn-icon:hover{background:var(--surface2)}
+.btn-icon{background:none;border:none;cursor:pointer;font-size:15px;padding:4px 6px;border-radius:6px;transition:background .15s;color:var(--text)}.btn-icon:hover{background:var(--surface2)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
 
-/* KPIs */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+/* ── KPIs ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
 .kpi{background:var(--surface);border-radius:var(--radius-lg);padding:20px;position:relative;overflow:hidden;border:1px solid var(--border);transition:border-color .2s}
 .kpi:hover{border-color:var(--dim)}
 .kpi-bar{position:absolute;top:0;left:0;right:0;height:3px}
 .kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:6px}
-.kpi-value{font-size:28px;font-weight:900;letter-spacing:-.5px;line-height:1}
+.kpi-value{font-size:26px;font-weight:900;letter-spacing:-.5px;line-height:1}
 .kpi-sub{font-size:11px;color:var(--dim);margin-top:6px;font-weight:500}
 
-/* DEPT KPI SECTION */
-.dept-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
-.dept-kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
-.dept-kpi{background:var(--surface);border-radius:var(--radius-lg);padding:16px 18px;border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .2s}
-.dept-kpi:hover{border-color:var(--dim)}
-.dept-kpi-bar{position:absolute;top:0;left:0;right:0;height:3px}
-.dept-kpi-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
-.dept-kpi-monthly{font-size:22px;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:-.5px;line-height:1}
-.dept-kpi-annual{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-top:4px}
+/* ── ALERTS ── */
+.alert-bar{display:flex;flex-direction:column;gap:6px}
+.alert-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:600;animation:fadeIn .3s ease}
+.alert-warn{background:#f59e0b18;border-left:3px solid var(--warn);color:var(--warn)}
+.alert-danger{background:#ef444418;border-left:3px solid var(--danger);color:var(--danger)}
+.alert-info{background:#3b82f618;border-left:3px solid var(--info);color:var(--info)}
+.alert-success{background:#22d3a718;border-left:3px solid var(--primary);color:var(--primary)}
 
-/* TOP1 CARD */
-.top1-card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;position:relative;overflow:hidden}
-.top1-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent))}
-.top1-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px}
-.top1-name{font-size:18px;font-weight:900;line-height:1.2;margin-bottom:4px}
-.top1-meta{font-size:12px;color:var(--dim);margin-bottom:14px}
-.top1-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.top1-stat{text-align:center;background:var(--surface2);border-radius:8px;padding:10px 6px}
-.top1-stat-val{font-size:16px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)}
-.top1-stat-lbl{font-size:10px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+/* ── TOP 3 ── */
+.top3-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.top3-card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);border-top-width:3px;padding:18px;transition:border-color .2s}
+.top3-card:hover{border-color:var(--dim)}
+.top3-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.top3-stat{text-align:center;background:var(--surface2);border-radius:8px;padding:8px 4px}
+.top3-stat-val{font-size:13px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--primary)}
+.top3-stat-lbl{font-size:9px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
 
+/* ── PIPELINE ── */
+.pipeline-flow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.stage-card{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius-lg);padding:14px 12px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.stage-card.active{border-width:2px}
+.stage-card:hover{border-color:var(--dim)}
+.stage-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px}
+.stage-card .sc-icon{font-size:20px;line-height:1;margin-bottom:6px}
+.stage-card .sc-count{font-size:28px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px}
+.stage-card .sc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.stage-card .sc-days{font-size:10px;color:var(--dim);margin-top:4px;font-weight:600}
+
+.stage-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.days-badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.days-ok{background:#22d3a720;color:#22d3a7}
+.days-warn{background:#f59e0b20;color:#f59e0b}
+.days-danger{background:#ef444420;color:#ef4444}
+
+/* ── CARDS / FORMS ── */
 .card{background:var(--surface);border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
-.card-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px}
-
+.card-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px}
 .form-card{border:2px solid var(--primary)!important}
+.form-card-accent{border:2px solid var(--accent)!important}
 .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .field{display:flex;flex-direction:column;gap:4px}
 .field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
@@ -102,69 +118,92 @@ body{min-height:100vh;overflow-x:hidden}
 .field input,.field select,.field textarea{padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:13px;transition:border-color .15s}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary)}
 .field textarea{resize:vertical}
-.preview-box{margin-top:14px;padding:14px;background:var(--bg);border-radius:var(--radius);font-size:13px;border:1px dashed var(--border)}
-.preview-box b{color:var(--primary)}
 .span2{grid-column:span 2}
+.span3{grid-column:span 3}
+.preview-box{padding:14px;background:var(--bg);border-radius:var(--radius);font-size:13px;border:1px dashed var(--border)}
+.preview-box b{color:var(--primary)}
 
+/* ── FILTERS ── */
 .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .filters input,.filters select{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:13px}
 .filters input:focus,.filters select:focus{outline:none;border-color:var(--primary)}
 .filter-count{font-size:12px;color:var(--dim);margin-left:auto;font-weight:600}
 
+/* ── TABLE ── */
 .table-wrap{overflow-x:auto;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse}
-th{padding:12px 14px;text-align:left;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);border-bottom:2px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;transition:color .15s;font-family:inherit}
+th{padding:11px 14px;text-align:left;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);border-bottom:2px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;transition:color .15s}
 th:hover{color:var(--text)}
+th.no-sort{cursor:default}th.no-sort:hover{color:var(--dim)}
 td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--surface2)}
-.cell-name{font-weight:700;max-width:240px}.cell-detail{font-size:11px;color:var(--dim);margin-top:2px}
-.cell-money{font-weight:800;color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:13px}
-.cell-hours{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:13px}
-.cell-accum{font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:13px}
+.cell-name{font-weight:700}.cell-detail{font-size:11px;color:var(--dim);margin-top:2px}
+.cell-mono{font-weight:800;font-family:'JetBrains Mono',monospace;font-size:13px}
+.cell-green{color:var(--primary)}.cell-blue{color:var(--info)}.cell-purple{color:var(--accent)}.cell-warn{color:var(--warn)}
 
+/* ── BADGES ── */
 .badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700}
 .badge-activa{background:#22d3a720;color:#22d3a7}
 .badge-desarrollo{background:#3b82f620;color:#3b82f6}
 .badge-pausada{background:#f59e0b20;color:#f59e0b}
 .badge-retirada{background:#64748b20;color:#64748b}
-
-.score-pill{display:inline-block;padding:4px 14px;border-radius:99px;font-weight:900;font-size:15px;font-family:'JetBrains Mono',monospace}
+.score-pill{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:900;font-size:14px;font-family:'JetBrains Mono',monospace}
 .score-high{background:#22d3a720;color:#22d3a7}.score-mid{background:#6366f120;color:#6366f1}.score-low{background:#64748b20;color:#64748b}
 
+/* ── ACCURACY ── */
+.acc-good{background:#22d3a720;color:#22d3a7;padding:2px 10px;border-radius:99px;font-weight:700;font-size:12px;font-family:'JetBrains Mono',monospace}
+.acc-ok{background:#f59e0b20;color:#f59e0b;padding:2px 10px;border-radius:99px;font-weight:700;font-size:12px;font-family:'JetBrains Mono',monospace}
+.acc-poor{background:#ef444420;color:#ef4444;padding:2px 10px;border-radius:99px;font-weight:700;font-size:12px;font-family:'JetBrains Mono',monospace}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:#000c;z-index:500;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s ease}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px #000a}
+.modal-title{font-size:18px;font-weight:900;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+
+/* ── SYNC / TOAST ── */
+.sync-indicator{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px}
+.sync-ok{background:#22d3a720;color:#22d3a7}.sync-saving{background:#f59e0b20;color:#f59e0b}.sync-error{background:#ef444420;color:#ef4444}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;font-size:13px;font-weight:600;z-index:10000;animation:fadeIn .3s ease;box-shadow:0 8px 30px #0008}
+.toast-ok{border-left:4px solid var(--primary);color:var(--primary)}.toast-err{border-left:4px solid var(--danger);color:var(--danger)}
+
+/* ── CHARTS ── */
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px}
+.chart-full{grid-column:1/-1}
+.chart-container{position:relative;height:260px}
+
+/* ── MISC ── */
+.section{display:flex;flex-direction:column;gap:16px}
+.hidden{display:none!important}
+.empty-state{text-align:center;padding:50px 20px;color:var(--dim);font-weight:500}
+.sep{height:1px;background:var(--border);margin:4px 0}
 input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--border);border-radius:9px;outline:none;border:none;padding:0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--primary);cursor:pointer}
 
-.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:16px;margin-top:16px}
-.chart-full{grid-column:1/-1}
-.chart-container{position:relative;height:260px}
-.empty-state{text-align:center;padding:50px 20px;color:var(--dim);font-weight:500}
-.section{display:flex;flex-direction:column;gap:16px}
-.hidden{display:none!important}
-
-.sync-indicator{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px}
-.sync-ok{background:#22d3a720;color:#22d3a7}
-.sync-saving{background:#f59e0b20;color:#f59e0b}
-.sync-error{background:#ef444420;color:#ef4444}
-
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;font-size:13px;font-weight:600;z-index:10000;animation:fadeIn .3s ease;box-shadow:0 8px 30px #0008}
-.toast-ok{border-left:4px solid var(--primary);color:var(--primary)}
-.toast-err{border-left:4px solid var(--danger);color:var(--danger)}
+/* ── COMMITTEE MODE ── */
+body.committee .edit-btn{display:none!important}
+body.committee .header-actions{display:none!important}
+body.committee .tabs{display:none!important}
+body.committee .kpi-value{font-size:38px!important}
+body.committee .kpi-grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))!important}
+body.committee .committee-hide{display:none!important}
+body.committee .header{padding:20px 40px!important}
+body.committee .container{padding:24px 40px 60px!important}
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.kpi,.card,.table-wrap,.top1-card,.dept-kpi-wrap{animation:fadeIn .4s ease both}
-.kpi:nth-child(2){animation-delay:.05s}.kpi:nth-child(3){animation-delay:.1s}.kpi:nth-child(4){animation-delay:.15s}
+.kpi,.card,.top3-card,.stage-card{animation:fadeIn .4s ease both}
 
-/* Dashboard 2-col layout */
-.dash-top{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
-@media(max-width:900px){.dash-top{grid-template-columns:1fr}}
-
-@media(max-width:768px){
-  .header{padding:12px 14px}.container{padding:14px 10px 60px}
-  .kpi-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.kpi-value{font-size:22px}
-  .chart-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.span2{grid-column:span 1}
+@media(max-width:900px){
+  .pipeline-flow{grid-template-columns:repeat(3,1fr)}
+  .form-grid{grid-template-columns:1fr}.span2,.span3{grid-column:span 1}
+  .chart-grid{grid-template-columns:1fr}
+  .top3-grid{grid-template-columns:1fr}
   .filters{flex-direction:column;align-items:stretch}
-  .top1-stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .pipeline-flow{grid-template-columns:repeat(2,1fr)}
+  .kpi-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 }
 </style>
 </head>
@@ -173,11 +212,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 <!-- LOGIN -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
-    <h1>⚡ <em>Auto</em>Tracker</h1>
-    <p>Impacto de automatizaciones</p>
-    <input type="password" id="loginPwd" placeholder="Contraseña" autofocus
-      onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="btn btn-primary" onclick="doLogin()" id="loginBtn">Entrar</button>
+    <h1>⚡ <em>Auto</em>Tracker <span style="font-size:14px;color:var(--muted);font-weight:500">Pro</span></h1>
+    <p>Sistema de gestión de automatizaciones</p>
+    <input type="password" id="loginPwd" placeholder="Contraseña" autofocus onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-primary" onclick="doLogin()" id="loginBtn" style="width:100%;justify-content:center;padding:12px;font-size:15px">Entrar</button>
     <div class="login-error" id="loginError"></div>
   </div>
 </div>
@@ -185,7 +223,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 <!-- LOADING -->
 <div class="loading-overlay hidden" id="loadingOverlay">
   <div class="spinner"></div>
-  <div class="loading-text">Cargando datos desde Google Sheets...</div>
+  <div style="color:var(--muted);font-size:14px;font-weight:600">Cargando datos desde Google Sheets...</div>
 </div>
 
 <!-- MAIN APP -->
@@ -193,143 +231,227 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 
 <div class="header">
   <div>
-    <h1>⚡ <em>Auto</em>Tracker</h1>
-    <div style="display:flex;align-items:center;gap:8px">
+    <h1>⚡ <em>Auto</em>Tracker <span style="font-size:13px;color:var(--muted);font-weight:500">Pro</span></h1>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:2px">
       <div class="header-sub" id="headerSub">Cargando...</div>
       <span class="sync-indicator sync-ok" id="syncStatus">● Sincronizado</span>
     </div>
   </div>
-  <div class="tabs">
-    <button class="tab active" data-tab="dashboard">Dashboard</button>
-    <button class="tab" data-tab="list">Registro</button>
-    <button class="tab" data-tab="scoring">Priorización</button>
+  <div class="tabs" id="mainTabs">
+    <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
+    <button class="tab" data-tab="pipeline">🔄 Pipeline</button>
+    <button class="tab" data-tab="registro">📋 Registro</button>
+    <button class="tab" data-tab="resultados">📈 Resultados</button>
   </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn btn-primary" onclick="openForm()">+ Nueva</button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap" class="header-actions">
+    <button class="btn btn-committee" onclick="toggleCommittee()" id="btnCommittee">🎯 Modo Comité</button>
     <button class="btn btn-ghost" onclick="refreshData()">🔄 Refrescar</button>
     <button class="btn btn-ghost" onclick="exportCSV()">⬇ CSV</button>
     <button class="btn btn-ghost" onclick="doLogout()">🚪 Salir</button>
   </div>
+  <button class="btn btn-danger hidden" id="btnExitCommittee" onclick="toggleCommittee()">✕ Salir del modo comité</button>
 </div>
 
 <div class="container">
 
-  <!-- DASHBOARD -->
+  <!-- ═══ DASHBOARD ═══ -->
   <div id="page-dashboard" class="section">
-
-    <!-- Filtro departamento -->
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Filtrar por departamento</span>
+    <div id="alertSection"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px" class="committee-hide">
       <select id="dashDeptFilter" onchange="renderDashboard()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">
         <option value="">Todos los departamentos</option>
       </select>
-      <button class="btn btn-sm btn-ghost" id="btnClearDashFilter" onclick="clearDashFilter()" style="display:none">✕ Limpiar</button>
+      <button class="btn btn-sm btn-ghost hidden" id="btnClearDashFilter" onclick="document.getElementById('dashDeptFilter').value='';renderDashboard()">✕ Limpiar filtro</button>
     </div>
-
-    <!-- KPIs globales -->
     <div class="kpi-grid" id="kpiGrid"></div>
-
-    <!-- Top 1 -->
-    <div class="top1-card">
-      <div class="top1-label">🏆 Top automatización</div>
-      <div id="top1Content"><div class="empty-state" style="padding:20px">Sin datos</div></div>
+    <div>
+      <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">🏆 Top automatizaciones activas</div>
+      <div class="top3-grid" id="top3Grid"></div>
     </div>
-
-    <!-- 4 gráficas de barras por departamento (2x2) -->
     <div class="chart-grid">
-      <div class="card"><div class="card-title">💶 Ahorro mensual por departamento (€)</div><div class="chart-container"><canvas id="chartDeptMonthEur"></canvas></div></div>
-      <div class="card"><div class="card-title">💶 Ahorro anual por departamento (€)</div><div class="chart-container"><canvas id="chartDeptYearEur"></canvas></div></div>
-      <div class="card"><div class="card-title">⏱️ Horas ahorradas al mes por departamento</div><div class="chart-container"><canvas id="chartDeptMonthH"></canvas></div></div>
-      <div class="card"><div class="card-title">⏱️ Horas ahorradas al año por departamento</div><div class="chart-container"><canvas id="chartDeptYearH"></canvas></div></div>
+      <div class="card"><div class="card-title">💶 Ahorro mensual por departamento (€)</div><div class="chart-container"><canvas id="cDeptMonthEur"></canvas></div></div>
+      <div class="card"><div class="card-title">⏱️ Horas ahorradas al mes por departamento</div><div class="chart-container"><canvas id="cDeptMonthH"></canvas></div></div>
+      <div class="card"><div class="card-title">🔧 Ahorro por herramienta (€/mes)</div><div class="chart-container"><canvas id="cToolDist"></canvas></div></div>
+      <div class="card"><div class="card-title">📊 Automatizaciones por estado</div><div class="chart-container"><canvas id="cStatusDist"></canvas></div></div>
     </div>
-
-    <!-- 2 gráficas de evolución -->
     <div class="chart-grid">
-      <div class="card chart-full"><div class="card-title">📈 Evolución del ahorro mensual por departamento (€)</div><div class="chart-container" style="height:300px"><canvas id="chartEvolEur"></canvas></div></div>
-      <div class="card chart-full"><div class="card-title">📈 Evolución del ahorro mensual por departamento (horas)</div><div class="chart-container" style="height:300px"><canvas id="chartEvolH"></canvas></div></div>
+      <div class="card chart-full"><div class="card-title">📈 Evolución acumulada del ahorro mensual por departamento (€)</div><div class="chart-container" style="height:300px"><canvas id="cEvolEur"></canvas></div></div>
     </div>
-
   </div>
 
-  <!-- REGISTRO -->
-  <div id="page-list" class="section hidden">
-    <div id="formContainer"></div>
+  <!-- ═══ PIPELINE ═══ -->
+  <div id="page-pipeline" class="section hidden">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+      <div>
+        <h2 style="font-size:18px;font-weight:900">🔄 Pipeline de automatizaciones</h2>
+        <p style="color:var(--muted);font-size:13px;margin-top:4px">Desde la solicitud hasta la puesta en marcha</p>
+      </div>
+      <button class="btn btn-primary edit-btn" onclick="openPipelineForm()">+ Nueva solicitud</button>
+    </div>
+    <div class="pipeline-flow" id="pipelineFlow"></div>
+    <div id="pipelineFormContainer"></div>
     <div class="filters">
-      <input type="text" id="fSearch" placeholder="🔍 Buscar..." oninput="renderTable()">
-      <select id="fDept" onchange="renderTable()"><option value="">Departamento</option></select>
-      <select id="fTool" onchange="renderTable()"><option value="">Herramienta</option></select>
-      <select id="fStatus" onchange="renderTable()"><option value="">Estado</option></select>
-      <select id="fResp" onchange="renderTable()"><option value="">Responsable</option></select>
-      <button class="btn btn-sm btn-danger-outline hidden" id="btnClearFilters" onclick="clearFilters()">✕ Limpiar</button>
+      <input type="text" id="pSearch" placeholder="🔍 Buscar..." oninput="renderPipelineTable()">
+      <select id="pDept" onchange="renderPipelineTable()"><option value="">Departamento</option></select>
+      <select id="pStage" onchange="renderPipelineTable()">
+        <option value="">Todas las etapas</option>
+        <option value="solicitud">🆕 Solicitud</option>
+        <option value="analisis">🔍 En análisis</option>
+        <option value="aprobada">✅ Aprobada</option>
+        <option value="desarrollo">🚀 En desarrollo</option>
+        <option value="activa">⚡ Activa</option>
+        <option value="descartada">❌ Descartada</option>
+      </select>
+      <button class="btn btn-sm btn-danger hidden" id="btnClearPipeFilters" onclick="clearPipeFilters()">✕ Limpiar</button>
+      <span class="filter-count" id="pipeFilterCount"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead id="pipelineHead"></thead>
+        <tbody id="pipelineBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ REGISTRO ═══ -->
+  <div id="page-registro" class="section hidden">
+    <div id="autoFormContainer"></div>
+    <div class="filters">
+      <input type="text" id="rSearch" placeholder="🔍 Buscar..." oninput="renderTable()">
+      <select id="rDept" onchange="renderTable()"><option value="">Departamento</option></select>
+      <select id="rTool" onchange="renderTable()"><option value="">Herramienta</option></select>
+      <select id="rStatus" onchange="renderTable()"><option value="">Estado</option></select>
+      <select id="rResp" onchange="renderTable()"><option value="">Responsable</option></select>
+      <button class="btn btn-sm btn-danger hidden" id="btnClearFilters" onclick="clearFilters()">✕ Limpiar</button>
       <span class="filter-count" id="filterCount"></span>
     </div>
-    <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
-  </div>
-
-  <!-- PRIORIZACIÓN -->
-  <div id="page-scoring" class="section hidden">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-      <div>
-        <h2 style="font-size:18px;font-weight:900">🎯 Priorización de futuras automatizaciones</h2>
-        <p style="color:var(--muted);font-size:13px;margin-top:4px">Ahorro potencial + frecuencia + impacto + facilidad → score /20</p>
-      </div>
-      <button class="btn btn-accent" onclick="openScoreForm()">+ Añadir oportunidad</button>
+    <div class="table-wrap">
+      <table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table>
     </div>
-    <div id="scoreFormContainer"></div>
-    <div class="table-wrap"><table><thead><tr><th>Proceso</th><th>Dept.</th><th>Ahorro pot.</th><th>Frec.</th><th>Impacto</th><th>Facilidad</th><th>SCORE</th><th></th></tr></thead><tbody id="scoreBody"></tbody></table></div>
   </div>
 
-</div>
+  <!-- ═══ RESULTADOS ═══ -->
+  <div id="page-resultados" class="section hidden">
+    <div>
+      <h2 style="font-size:18px;font-weight:900">📈 Estimado vs Real</h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:4px">Comparativa entre el ahorro que estimamos al analizar y el ahorro real medido</p>
+    </div>
+    <div class="kpi-grid" id="resultKpiGrid"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th class="no-sort">Automatización</th>
+          <th class="no-sort">Dept.</th>
+          <th class="no-sort">Ahorro estimado</th>
+          <th class="no-sort">Ahorro real</th>
+          <th class="no-sort">Diferencia</th>
+          <th class="no-sort">Precisión</th>
+          <th class="no-sort">Meses activa</th>
+        </tr></thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+    </div>
+    <div class="chart-grid">
+      <div class="card chart-full"><div class="card-title">📊 Estimado vs Real por automatización (€/mes)</div><div class="chart-container" style="height:320px"><canvas id="cResultComp"></canvas></div></div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+</div><!-- /mainApp -->
+
+<!-- MODAL -->
+<div class="modal-overlay hidden" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div id="modalContent"></div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="modalSave()">Confirmar</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
 </div>
 
 <div id="toastContainer"></div>
 
 <script>
-// ═══ CONFIG ═══
-const API_URL = "https://script.google.com/macros/s/AKfycbwtkTBF-EdxFPx_FgDR62WEEai6Tlgy6vOa4HQ7KLQYku0FmsjFknJo7j1EsbsQXyrR/exec";
+// ═══════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════
+const API_URL = "https://script.google.com/macros/s/AKfycbxPT4jq6ibyg47ThgFC_gIwqmASPrqLqPbLF0vINQD5AG1nyd6Bz-ymvykahOV2hQ3v/exec";
 const DEPARTMENTS = ["Logística de Salidas","Ventas","Administración","Medioambiente","Logistica de Entrada","Organización Interna - Seguridad","Organización Interna - RRHH","Organización Interna - Sistemas","Facturación y SCRAPS","Compras"];
 const TOOLS = ["n8n","Navision","Power Automate","Scripts","Macro Excel","Power Apps","Otro"];
-const STATUSES = ["En desarrollo","Activa","Pausada","Retirada"];
+const STATUSES = ["Activa","Pausada","Retirada"];
+const PIPELINE_STAGES = [
+  { id:"solicitud",  label:"Solicitud",     color:"#f59e0b", icon:"🆕" },
+  { id:"analisis",   label:"En análisis",   color:"#3b82f6", icon:"🔍" },
+  { id:"aprobada",   label:"Aprobada",      color:"#8b5cf6", icon:"✅" },
+  { id:"desarrollo", label:"En desarrollo", color:"#6366f1", icon:"🚀" },
+  { id:"activa",     label:"Activa",        color:"#22d3a7", icon:"⚡" },
+  { id:"descartada", label:"Descartada",    color:"#64748b", icon:"❌" },
+];
+const STAGE_NEXT = { solicitud:"analisis", analisis:"aprobada", aprobada:"desarrollo", desarrollo:"activa" };
+const D_COLORS = ["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#14b8a6","#f97316","#06b6d4"];
 
-let automations = [], scorings = [];
-let currentTab = "dashboard", sortCol = "monthlySaving", sortDir = "desc";
-let editingId = null, editingScoreId = null;
-let chartDeptMonthEur, chartDeptYearEur, chartDeptMonthH, chartDeptYearH, chartEvolEur, chartEvolH;
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let automations = [], pipeline = [];
+let currentTab = "dashboard", committeeMode = false;
+let sortCol = "monthlySaving", sortDir = "desc";
+let editingAutoId = null, editingPipeId = null;
+let modalAction = null;
 let sessionPwd = "";
+let charts = {};
 
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 const num = v => parseFloat(v) || 0;
-const fmt = (n, d=0) => n.toLocaleString("es-ES", {minimumFractionDigits:d, maximumFractionDigits:d});
-const fmtEur = n => fmt(n, 2) + " €";
-const fmtH = mins => { const h = Math.floor(mins/60), m = Math.round(mins%60); return h > 0 ? h+"h "+m+"m" : m+"m" };
-const esc = s => String(s||"").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+const fmt = (n,d=0) => n.toLocaleString("es-ES",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtEur = n => fmt(n,2) + " €";
+const fmtH = m => { const h=Math.floor(m/60),mi=Math.round(m%60); return h>0?h+"h "+mi+"m":mi+"m"; };
+const esc = s => String(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const today = () => new Date().toISOString().split("T")[0];
+const daysSince = d => d ? Math.max(0,Math.floor((Date.now()-new Date(d).getTime())/86400000)) : 0;
+const stageInfo = id => PIPELINE_STAGES.find(s=>s.id===id) || PIPELINE_STAGES[0];
+const daysColor = d => d < 8 ? "days-ok" : d < 22 ? "days-warn" : "days-danger";
 
 function calcMetrics(a) {
   const savedMin = (num(a.manualMinutes) - num(a.currentMinutes)) * num(a.monthlyExecutions);
   const savedHours = savedMin / 60;
   const monthlySaving = savedHours * num(a.costPerHour);
   const annualSaving = monthlySaving * 12;
+  const platformCost = num(a.platformCostMonthly);
+  const netMonthlySaving = monthlySaving - platformCost;
   const investmentCost = num(a.investmentHours) * num(a.costPerHour);
-  const monthsActive = a.startDate ? Math.max(1, Math.round((Date.now() - new Date(a.startDate).getTime()) / (1e3*60*60*24*30.44))) : 1;
-  const accumulated = monthlySaving * monthsActive;
-  return { savedMin, savedHours, monthlySaving, annualSaving, investmentCost, monthsActive, accumulated };
+  const monthsActive = a.startDate ? Math.max(1, Math.round((Date.now()-new Date(a.startDate).getTime())/(1e3*60*60*24*30.44))) : 1;
+  const accumulated = netMonthlySaving * monthsActive;
+  const estimatedNet = a.estimatedMinutes != null && a.estimatedMinutes !== ""
+    ? ((num(a.manualMinutes) - num(a.estimatedMinutes)) * num(a.monthlyExecutions) / 60 * num(a.costPerHour)) - platformCost
+    : null;
+  return { savedMin, savedHours, monthlySaving, netMonthlySaving, annualSaving, investmentCost, monthsActive, accumulated, estimatedNet };
 }
 
-function scoringCalc(s) {
-  const sv = Math.min(5, Math.ceil(num(s.potentialSavingMin)/30));
-  const fq = Math.min(5, Math.ceil(num(s.frequency)/20));
-  return { sv, fq, total: sv + fq + num(s.impact) + num(s.ease) };
+function calcPipelineEstimate(p) {
+  if (!p.estimatedMinutes || !p.costPerHour || !p.currentMinutes) return null;
+  const savedMin = (num(p.currentMinutes) - num(p.estimatedMinutes)) * num(p.monthlyExecutions);
+  const savedHours = savedMin / 60;
+  const gross = savedHours * num(p.costPerHour);
+  const net = gross - num(p.platformCostMonthly);
+  const investmentCost = num(p.implementationHours) * num(p.costPerHour);
+  const monthsROI = net > 0 ? Math.ceil(investmentCost / net) : null;
+  return { savedMin, savedHours, gross, net, investmentCost, monthsROI, annual: net * 12 };
 }
 
-function badgeClass(s) {
-  return {Activa:"badge-activa","En desarrollo":"badge-desarrollo",Pausada:"badge-pausada",Retirada:"badge-retirada"}[s] || "badge-retirada";
-}
-
-// ═══ API ═══
+// ═══════════════════════════════════════════════
+// API
+// ═══════════════════════════════════════════════
 async function apiCall(params) {
-  const p = new URLSearchParams({...params, pwd: sessionPwd});
   setSyncStatus("saving");
   try {
+    const p = new URLSearchParams({...params, pwd: sessionPwd});
     const r = await fetch(API_URL + "?" + p.toString());
     const d = await r.json();
     if (d.error) { setSyncStatus("error"); toast(d.error, "err"); return null; }
@@ -342,20 +464,20 @@ async function loadAllData() {
   const d = await apiCall({action:"getAll"});
   if (!d) return false;
   automations = d.automations || [];
-  scorings = d.scorings || [];
+  pipeline = d.pipeline || [];
   return true;
 }
 
-async function apiSaveAutomation(data) { return await apiCall({action:"saveAutomation", data:JSON.stringify(data)}); }
-async function apiDeleteAutomation(id) { return await apiCall({action:"deleteAutomation", id}); }
-async function apiSaveScoring(data) { return await apiCall({action:"saveScoring", data:JSON.stringify(data)}); }
-async function apiDeleteScoring(id) { return await apiCall({action:"deleteScoring", id}); }
+const apiSaveAuto = data => apiCall({action:"saveAutomation", data:JSON.stringify(data)});
+const apiDeleteAuto = id => apiCall({action:"deleteAutomation", id});
+const apiSavePipe = data => apiCall({action:"savePipeline", data:JSON.stringify(data)});
+const apiDeletePipe = id => apiCall({action:"deletePipeline", id});
 
-function setSyncStatus(state) {
+function setSyncStatus(s) {
   const el = document.getElementById("syncStatus");
-  if (state === "ok") { el.className = "sync-indicator sync-ok"; el.textContent = "● Sincronizado"; }
-  else if (state === "saving") { el.className = "sync-indicator sync-saving"; el.textContent = "● Guardando..."; }
-  else { el.className = "sync-indicator sync-error"; el.textContent = "● Error"; }
+  if (s==="ok")      { el.className="sync-indicator sync-ok";    el.textContent="● Sincronizado"; }
+  else if(s==="saving"){ el.className="sync-indicator sync-saving"; el.textContent="● Guardando..."; }
+  else               { el.className="sync-indicator sync-error"; el.textContent="● Error"; }
 }
 
 function toast(msg, type="ok") {
@@ -366,7 +488,9 @@ function toast(msg, type="ok") {
   setTimeout(() => d.remove(), 3500);
 }
 
-// ═══ LOGIN ═══
+// ═══════════════════════════════════════════════
+// LOGIN / SESSION
+// ═══════════════════════════════════════════════
 async function doLogin() {
   const pwd = document.getElementById("loginPwd").value;
   if (!pwd) { document.getElementById("loginError").textContent = "Introduce la contraseña"; return; }
@@ -381,19 +505,17 @@ async function doLogin() {
     document.getElementById("loadingOverlay").classList.add("hidden");
     document.getElementById("loginOverlay").classList.remove("hidden");
     document.getElementById("loginError").textContent = "Contraseña incorrecta o error de conexión";
-    btn.disabled = false; btn.textContent = "Entrar";
-    sessionPwd = ""; return;
+    btn.disabled = false; btn.textContent = "Entrar"; sessionPwd = ""; return;
   }
   sessionStorage.setItem("at_pwd", pwd);
   document.getElementById("loadingOverlay").classList.add("hidden");
   document.getElementById("mainApp").classList.remove("hidden");
-  initApp();
-  toast("✅ Conectado a Google Sheets");
+  initApp(); toast("✅ Conectado a Google Sheets");
 }
 
 function doLogout() {
   sessionStorage.removeItem("at_pwd"); sessionPwd = "";
-  automations = []; scorings = [];
+  automations = []; pipeline = [];
   document.getElementById("mainApp").classList.add("hidden");
   document.getElementById("loginOverlay").classList.remove("hidden");
   document.getElementById("loginPwd").value = "";
@@ -402,20 +524,19 @@ function doLogout() {
 
 (async function autoLogin() {
   const saved = sessionStorage.getItem("at_pwd");
-  if (saved) {
-    sessionPwd = saved;
-    document.getElementById("loginOverlay").classList.add("hidden");
-    document.getElementById("loadingOverlay").classList.remove("hidden");
-    const ok = await loadAllData();
-    if (ok) {
-      document.getElementById("loadingOverlay").classList.add("hidden");
-      document.getElementById("mainApp").classList.remove("hidden");
-      initApp();
-    } else {
-      sessionStorage.removeItem("at_pwd"); sessionPwd = "";
-      document.getElementById("loadingOverlay").classList.add("hidden");
-      document.getElementById("loginOverlay").classList.remove("hidden");
-    }
+  if (!saved) return;
+  sessionPwd = saved;
+  document.getElementById("loginOverlay").classList.add("hidden");
+  document.getElementById("loadingOverlay").classList.remove("hidden");
+  const ok = await loadAllData();
+  if (ok) {
+    document.getElementById("loadingOverlay").classList.add("hidden");
+    document.getElementById("mainApp").classList.remove("hidden");
+    initApp();
+  } else {
+    sessionStorage.removeItem("at_pwd"); sessionPwd = "";
+    document.getElementById("loadingOverlay").classList.add("hidden");
+    document.getElementById("loginOverlay").classList.remove("hidden");
   }
 })();
 
@@ -424,477 +545,1042 @@ async function refreshData() {
   if (ok) { toast("✅ Datos actualizados"); renderAll(); }
 }
 
-// ═══ TABS ═══
-document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
-  currentTab = t.dataset.tab;
-  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active")); t.classList.add("active");
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => switchTab(t.dataset.tab)));
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add("active");
   document.querySelectorAll("[id^='page-']").forEach(p => p.classList.add("hidden"));
-  document.getElementById("page-" + currentTab).classList.remove("hidden");
-  if (currentTab === "dashboard") renderDashboard();
-  if (currentTab === "list") renderTable();
-  if (currentTab === "scoring") renderScoring();
-}));
+  document.getElementById("page-" + tab).classList.remove("hidden");
+  if (tab === "dashboard") renderDashboard();
+  if (tab === "pipeline") renderPipeline();
+  if (tab === "registro") renderTable();
+  if (tab === "resultados") renderResultados();
+}
 
-function renderAll() { renderDashboard(); renderTable(); renderScoring(); }
+function renderAll() { renderDashboard(); renderPipeline(); renderTable(); renderResultados(); }
 
-// ═══ DASHBOARD ═══
+// ═══════════════════════════════════════════════
+// COMMITTEE MODE
+// ═══════════════════════════════════════════════
+function toggleCommittee() {
+  committeeMode = !committeeMode;
+  document.body.classList.toggle("committee", committeeMode);
+  document.getElementById("btnCommittee").classList.toggle("hidden", committeeMode);
+  document.getElementById("btnExitCommittee").classList.toggle("hidden", !committeeMode);
+  if (committeeMode) {
+    switchTab("dashboard");
+    toast("🎯 Modo Comité activado — controles ocultos");
+  } else {
+    toast("✅ Modo normal restaurado");
+  }
+}
+
+// ═══════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════
 function renderDashboard() {
   const allActive = automations.filter(a => a.status === "Activa").map(a => ({...a, m: calcMetrics(a)}));
 
-  // ── Filtro departamento ──
+  // Dept filter
   const sel = document.getElementById("dashDeptFilter");
-  const activeDepts = [...new Set(allActive.map(a => a.department))].sort();
-  // Actualizar opciones sin resetear selección
-  const currentVal = sel.value;
+  const depts = [...new Set(allActive.map(a => a.department))].sort();
+  const cur = sel.value;
   sel.innerHTML = '<option value="">Todos los departamentos</option>' +
-    activeDepts.map(d => `<option value="${esc(d)}" ${d===currentVal?"selected":""}>${d}</option>`).join("");
-  sel.value = currentVal && activeDepts.includes(currentVal) ? currentVal : "";
+    depts.map(d => `<option value="${esc(d)}" ${d===cur?"selected":""}>${d}</option>`).join("");
+  sel.value = cur && depts.includes(cur) ? cur : "";
   const filterDept = sel.value;
-  document.getElementById("btnClearDashFilter").style.display = filterDept ? "inline-flex" : "none";
+  document.getElementById("btnClearDashFilter").classList.toggle("hidden", !filterDept);
 
   const active = filterDept ? allActive.filter(a => a.department === filterDept) : allActive;
 
-  const tM  = active.reduce((s,a) => s + a.m.monthlySaving, 0);
-  const tA  = active.reduce((s,a) => s + a.m.annualSaving,  0);
-  const tH  = active.reduce((s,a) => s + a.m.savedHours,    0);
-  const tAc = active.reduce((s,a) => s + a.m.accumulated,   0);
+  const tM   = active.reduce((s,a) => s + a.m.netMonthlySaving, 0);
+  const tA   = active.reduce((s,a) => s + a.m.annualSaving,     0);
+  const tH   = active.reduce((s,a) => s + a.m.savedHours,       0);
+  const tAc  = active.reduce((s,a) => s + a.m.accumulated,      0);
+  const tInv = active.reduce((s,a) => s + a.m.investmentCost,   0);
+  const amortized = active.filter(a => a.m.investmentCost > 0 && a.m.accumulated >= a.m.investmentCost).length;
+  const withInv   = active.filter(a => a.m.investmentCost > 0).length;
+  const pipeActive = pipeline.filter(p => !["activa","descartada"].includes(p.stage)).length;
 
-  const tHYear = tH * 12;
-  const tHAc   = active.reduce((s,a) => s + (a.m.savedHours * a.m.monthsActive), 0);
+  document.getElementById("headerSub").textContent =
+    `${automations.length} registradas · ${allActive.length} activas · ${pipeline.length} en pipeline`;
 
-  document.getElementById("headerSub").textContent = automations.length + " registradas · " + allActive.length + " activas" + (filterDept ? ` · Filtrando: ${filterDept}` : "");
+  // Alerts
+  renderAlerts();
 
-  // ── KPIs globales ──
+  // KPIs
   const kpis = [
-    {l:"Ahorro mensual",      v:fmtEur(tM),        c:"var(--primary)", s: filterDept || "Automatizaciones activas"},
-    {l:"Ahorro anual",        v:fmtEur(tA),         c:"var(--info)",    s:"Proyección a 12 meses"},
-    {l:"Ahorro acumulado",    v:fmtEur(tAc),        c:"var(--accent)",  s:"Desde puesta en marcha"},
-    {l:"Horas/mes ahorradas", v:fmt(tH,1)+"h",      c:"var(--warn)",    s:active.length+" activas"},
-    {l:"Horas/año ahorradas", v:fmt(tHYear,1)+"h",  c:"#ec4899",        s:"Proyección a 12 meses"},
-    {l:"Horas acumuladas",    v:fmt(tHAc,1)+"h",    c:"#8b5cf6",        s:"Desde puesta en marcha"},
+    {l:"Ahorro mensual neto",  v:fmtEur(tM),        c:"var(--primary)", s:"(tras coste plataformas)"},
+    {l:"Ahorro anual estimado",v:fmtEur(tA),         c:"var(--info)",    s:"Proyección a 12 meses"},
+    {l:"Ahorro acumulado",     v:fmtEur(tAc),        c:"var(--accent)",  s:"Desde puesta en marcha"},
+    {l:"Horas/mes ahorradas",  v:fmt(tH,1)+"h",      c:"var(--warn)",    s:active.length+" activas"},
+    {l:"Horas/año ahorradas",  v:fmt(tH*12,1)+"h",   c:"var(--pink)",    s:"Proyección anual"},
+    {l:"Inversión total",      v:tInv > 0 ? fmtEur(tInv) : "—", c:"#f97316", s:"Coste de implantación"},
+    {l:"Amortizadas",          v:withInv > 0 ? amortized+"/"+withInv : "—", c:"#10b981", s:"Recuperaron su inversión"},
+    {l:"Pipeline en curso",    v:String(pipeActive), c:"var(--purple)",  s:"Solicitudes activas"},
   ];
   document.getElementById("kpiGrid").innerHTML = kpis.map(k =>
-    `<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div>${k.s?`<div class="kpi-sub">${k.s}</div>`:""}</div>`
+    `<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div>
+     <div class="kpi-label">${k.l}</div>
+     <div class="kpi-value" style="color:${k.c}">${k.v}</div>
+     <div class="kpi-sub">${k.s||""}</div></div>`
   ).join("");
 
-  // ── Top 1 ──
-  const sorted = [...active].sort((a,b) => b.m.monthlySaving - a.m.monthlySaving);
-  const top = sorted[0];
-  document.getElementById("top1Content").innerHTML = top
-    ? `<div class="top1-name">${esc(top.name)}</div>
-       <div class="top1-meta">${esc(top.department)} · ${esc(top.tool)} · ${esc(top.process)||"—"}</div>
-       <div class="top1-stats">
-         <div class="top1-stat"><div class="top1-stat-val">${fmtEur(top.m.monthlySaving)}</div><div class="top1-stat-lbl">€/mes</div></div>
-         <div class="top1-stat"><div class="top1-stat-val" style="color:var(--accent)">${fmtEur(top.m.annualSaving)}</div><div class="top1-stat-lbl">€/año</div></div>
-         <div class="top1-stat"><div class="top1-stat-val" style="color:var(--warn)">${fmt(top.m.savedHours,1)}h</div><div class="top1-stat-lbl">h/mes</div></div>
-       </div>`
-    : `<div class="empty-state" style="padding:20px">Sin automatizaciones activas</div>`;
+  // Top 3
+  const top3 = [...active].sort((a,b) => b.m.netMonthlySaving - a.m.netMonthlySaving).slice(0,3);
+  const ranks = ["🥇","🥈","🥉"];
+  const rankColors = ["var(--primary)","var(--accent)","var(--info)"];
+  document.getElementById("top3Grid").innerHTML = top3.length
+    ? top3.map((t,i) => `
+      <div class="top3-card" style="border-top-color:${rankColors[i]}">
+        <div style="font-size:18px;margin-bottom:6px">${ranks[i]}</div>
+        <div style="font-size:15px;font-weight:900;margin-bottom:4px">${esc(t.name)}</div>
+        <div style="font-size:11px;color:var(--dim);margin-bottom:0">${esc(t.department)} · ${esc(t.tool)}</div>
+        <div class="top3-stats">
+          <div class="top3-stat"><div class="top3-stat-val">${fmtEur(t.m.netMonthlySaving)}</div><div class="top3-stat-lbl">€/mes</div></div>
+          <div class="top3-stat"><div class="top3-stat-val" style="color:var(--accent)">${fmtEur(t.m.annualSaving)}</div><div class="top3-stat-lbl">€/año</div></div>
+          <div class="top3-stat"><div class="top3-stat-val" style="color:var(--warn)">${fmt(t.m.savedHours,1)}h</div><div class="top3-stat-lbl">h/mes</div></div>
+        </div>
+      </div>`).join("")
+    : `<div class="empty-state">Sin automatizaciones activas</div>`;
 
-  // ── Datos por departamento ──
+  // Charts
   const dm = {};
   active.forEach(a => {
-    if (!dm[a.department]) dm[a.department] = {monthly:0, annual:0, monthlyH:0, annualH:0};
-    dm[a.department].monthly  += a.m.monthlySaving;
-    dm[a.department].annual   += a.m.annualSaving;
-    dm[a.department].monthlyH += a.m.savedHours;
-    dm[a.department].annualH  += a.m.savedHours * 12;
+    if (!dm[a.department]) dm[a.department] = {monthly:0, hours:0};
+    dm[a.department].monthly += a.m.netMonthlySaving;
+    dm[a.department].hours   += a.m.savedHours;
   });
   const dArr = Object.entries(dm).sort((a,b) => b[1].monthly - a[1].monthly);
   const dLabels = dArr.map(d => d[0]);
-  const dColors = ["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#14b8a6"];
-  const colors  = dLabels.map((_,i) => dColors[i % dColors.length]);
+  const dColors = dLabels.map((_,i) => D_COLORS[i % D_COLORS.length]);
 
-  const barOpts = (suffix, decimals=0) => ({
-    indexAxis: "y",
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: {display:false}, tooltip: { callbacks: { label: c => fmt(c.raw, decimals) + suffix } } },
-    scales: {
-      x: { ticks: { callback: v => fmt(v, decimals)+suffix, color:"#7a82a0", font:{size:11} }, grid:{color:"#2a305030"} },
-      y: { ticks: { color:"#7a82a0", font:{size:11,weight:600} }, grid:{display:false} }
+  const barOpts = (suffix, dec=0) => ({
+    indexAxis:"y", responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>fmt(c.raw,dec)+suffix}}},
+    scales:{
+      x:{ticks:{callback:v=>fmt(v,dec)+suffix, color:"#7a82a0", font:{size:11}}, grid:{color:"#2a305030"}},
+      y:{ticks:{color:"#7a82a0", font:{size:11,weight:600}}, grid:{display:false}}
     }
   });
 
-  const mkBar = (ref, canvasId, data, suffix, decimals=0) => {
-    if (ref) ref.destroy();
-    return new Chart(document.getElementById(canvasId), {
-      type: "bar",
-      data: { labels: dLabels, datasets: [{ data, backgroundColor: colors, borderRadius:6, borderSkipped:false }] },
-      options: barOpts(suffix, decimals)
+  const mkBar = (key, canvasId, data, suffix, dec=0) => {
+    if (charts[key]) charts[key].destroy();
+    charts[key] = new Chart(document.getElementById(canvasId), {
+      type:"bar",
+      data:{labels:dLabels, datasets:[{data, backgroundColor:dColors, borderRadius:6, borderSkipped:false}]},
+      options:barOpts(suffix, dec)
     });
   };
+  mkBar("deptMonthEur", "cDeptMonthEur", dArr.map(d=>+d[1].monthly.toFixed(2)), "€", 2);
+  mkBar("deptMonthH",   "cDeptMonthH",   dArr.map(d=>+d[1].hours.toFixed(1)),   "h", 1);
 
-  chartDeptMonthEur  = mkBar(chartDeptMonthEur,  "chartDeptMonthEur",  dArr.map(d=>+d[1].monthly.toFixed(2)),  "€", 2);
-  chartDeptYearEur   = mkBar(chartDeptYearEur,   "chartDeptYearEur",   dArr.map(d=>+d[1].annual.toFixed(2)),   "€", 2);
-  chartDeptMonthH    = mkBar(chartDeptMonthH,    "chartDeptMonthH",    dArr.map(d=>+d[1].monthlyH.toFixed(1)), "h", 1);
-  chartDeptYearH     = mkBar(chartDeptYearH,     "chartDeptYearH",     dArr.map(d=>+d[1].annualH.toFixed(1)),  "h", 1);
+  // Tool donut
+  const toolMap = {};
+  active.forEach(a => { toolMap[a.tool] = (toolMap[a.tool]||0) + a.m.netMonthlySaving; });
+  const toolArr = Object.entries(toolMap).sort((a,b)=>b[1]-a[1]);
+  const mkDonut = (key, canvasId, labels, data, labelsPos="bottom", fmtFn=v=>fmt(v,2)+"€/mes") => {
+    if (charts[key]) charts[key].destroy();
+    charts[key] = new Chart(document.getElementById(canvasId), {
+      type:"doughnut",
+      data:{labels, datasets:[{data, backgroundColor:D_COLORS, borderWidth:2, borderColor:"#151929"}]},
+      options:{responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{position:labelsPos, labels:{color:"#7a82a0", font:{size:11}, boxWidth:12}},
+          tooltip:{callbacks:{label:c=>c.label+": "+fmtFn(c.raw)}}
+        }
+      }
+    });
+  };
+  mkDonut("toolDist",  "cToolDist",  toolArr.map(t=>t[0]), toolArr.map(t=>+t[1].toFixed(2)));
+  const statusCount = {};
+  automations.forEach(a => { statusCount[a.status] = (statusCount[a.status]||0)+1; });
+  const sArr = Object.entries(statusCount);
+  mkDonut("statusDist","cStatusDist", sArr.map(s=>s[0]), sArr.map(s=>s[1]), "bottom", v=>v+" autos");
 
-  // ── Evolución mensual por departamento ──
-  // Construir meses únicos ordenados
+  // Evolution line
   const allDepts = [...new Set(active.map(a => a.department))];
-  const monthMap = {}; // mes -> { dept -> {eur, h} }
+  const monthMap = {};
   active.forEach(a => {
     if (!a.startDate) return;
     const d = new Date(a.startDate);
     const k = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0");
     if (!monthMap[k]) monthMap[k] = {};
-    if (!monthMap[k][a.department]) monthMap[k][a.department] = {eur:0, h:0};
-    monthMap[k][a.department].eur += a.m.monthlySaving;
-    monthMap[k][a.department].h   += a.m.savedHours;
+    if (!monthMap[k][a.department]) monthMap[k][a.department] = 0;
+    monthMap[k][a.department] += a.m.netMonthlySaving;
   });
   const months = Object.keys(monthMap).sort();
-
-  // Proyección: añadir 6 meses futuros
   const futMonths = [];
   if (months.length > 0) {
-    let [fy, fm] = months[months.length-1].split("-").map(Number);
-    for (let i=1; i<=6; i++) {
-      fm++; if (fm>12){fm=1;fy++;}
-      futMonths.push(fy+"-"+String(fm).padStart(2,"0"));
-    }
+    let [fy,fm] = months[months.length-1].split("-").map(Number);
+    for (let i=1;i<=6;i++){fm++;if(fm>12){fm=1;fy++;}futMonths.push(fy+"-"+String(fm).padStart(2,"0"));}
   }
   const allMonths = [...months, ...futMonths];
-
-  const lineDatasets = (metric) => allDepts.map((dept, i) => {
-    // Acumulado real mes a mes
+  const lineDS = allDepts.map((dept,i) => {
     let acc = 0;
-    const realByMonth = months.map(m => {
-      acc += (monthMap[m]?.[dept]?.[metric] || 0);
-      return +(acc.toFixed(metric === "eur" ? 2 : 1));
-    });
-
-    // Tasa mensual actual del dpto (automatizaciones activas)
-    const deptRate = active
-      .filter(a => a.department === dept)
-      .reduce((s, a) => s + (metric === "eur" ? a.m.monthlySaving : a.m.savedHours), 0);
-
-    // Proyección: parte desde el último valor real acumulado
-    const lastReal = realByMonth.length > 0 ? realByMonth[realByMonth.length - 1] : 0;
-    const projValues = futMonths.map((_, j) => +((lastReal + deptRate * (j + 1)).toFixed(metric === "eur" ? 2 : 1)));
-
-    // Dataset real: cubre todos los meses (reales + null para los futuros)
-    const realData = [...realByMonth, ...futMonths.map(() => null)];
-
-    // Dataset proyección: null en meses reales excepto el último (punto de empalme) + valores futuros
-    const projData = [
-      ...months.map((_, idx) => idx === months.length - 1 ? lastReal : null),
-      ...projValues
-    ];
-
+    const real = months.map(m => { acc += (monthMap[m]?.[dept]||0); return +acc.toFixed(2); });
+    const rate = active.filter(a=>a.department===dept).reduce((s,a)=>s+a.m.netMonthlySaving,0);
+    const lastR = real.length > 0 ? real[real.length-1] : 0;
+    const proj = futMonths.map((_,j) => +((lastR + rate*(j+1)).toFixed(2)));
     return [
-      {
-        label: dept,
-        data: realData,
-        borderColor: dColors[i % dColors.length],
-        backgroundColor: dColors[i % dColors.length] + "25",
-        fill: false, tension: .3, pointRadius: 4, borderWidth: 2,
-        spanGaps: false
-      },
-      {
-        label: dept + " (proj.)",
-        data: projData,
-        borderColor: dColors[i % dColors.length],
-        borderDash: [6, 4], backgroundColor: "transparent",
-        fill: false, tension: .3, pointRadius: 3, borderWidth: 1.5,
-        spanGaps: false
-      }
+      {label:dept, data:[...real, ...futMonths.map(()=>null)], borderColor:D_COLORS[i%D_COLORS.length], backgroundColor:D_COLORS[i%D_COLORS.length]+"25", fill:false, tension:.3, pointRadius:4, borderWidth:2, spanGaps:false},
+      {label:dept+" (proy.)", data:[...months.map((_,idx)=>idx===months.length-1?lastR:null),...proj], borderColor:D_COLORS[i%D_COLORS.length], borderDash:[6,4], backgroundColor:"transparent", fill:false, tension:.3, pointRadius:3, borderWidth:1.5, spanGaps:false}
     ];
   }).flat();
 
-  const lineOpts = (suffix, decimals=0) => ({
-    responsive:true, maintainAspectRatio:false,
-    plugins:{
-      tooltip:{callbacks:{label:c=>c.dataset.label+": "+fmt(c.raw,decimals)+suffix}},
-      legend:{labels:{color:"#7a82a0",font:{size:11,weight:600},boxWidth:12,filter:item=>!item.text.includes("(proj.)")}}
-    },
-    scales:{
-      x:{ticks:{color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},
-      y:{ticks:{callback:v=>fmt(v,decimals)+suffix,color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}}
+  if (charts["evolEur"]) charts["evolEur"].destroy();
+  charts["evolEur"] = new Chart(document.getElementById("cEvolEur"), {
+    type:"line", data:{labels:allMonths, datasets:lineDS},
+    options:{responsive:true, maintainAspectRatio:false,
+      plugins:{
+        tooltip:{callbacks:{label:c=>c.dataset.label+": "+fmt(c.raw,2)+"€"}},
+        legend:{labels:{color:"#7a82a0", font:{size:11,weight:600}, boxWidth:12, filter:i=>!i.text.includes("(proy.)")}}
+      },
+      scales:{
+        x:{ticks:{color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}},
+        y:{ticks:{callback:v=>fmt(v,0)+"€",color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}}
+      }
     }
   });
-
-  if (chartEvolEur) chartEvolEur.destroy();
-  chartEvolEur = new Chart(document.getElementById("chartEvolEur"), {
-    type:"line", data:{labels:allMonths, datasets:lineDatasets("eur")},
-    options: lineOpts("€", 2)
-  });
-
-  if (chartEvolH) chartEvolH.destroy();
-  chartEvolH = new Chart(document.getElementById("chartEvolH"), {
-    type:"line", data:{labels:allMonths, datasets:lineDatasets("h")},
-    options: lineOpts("h", 1)
-  });
 }
 
-// ═══ FORM ═══
-function openForm(id) {
-  editingId = id || null;
-  const a = id ? automations.find(x => x.id === id) : {
-    name:"", department:DEPARTMENTS[0], process:"", responsible:"", tool:TOOLS[0],
-    status:"Activa", startDate:new Date().toISOString().split("T")[0],
-    manualMinutes:"", currentMinutes:"", monthlyExecutions:"", costPerHour:"",
-    notes:""
-  };
-  if (currentTab !== "list") {
-    currentTab = "list";
-    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-    document.querySelector('[data-tab="list"]').classList.add("active");
-    document.querySelectorAll("[id^='page-']").forEach(p => p.classList.add("hidden"));
-    document.getElementById("page-list").classList.remove("hidden");
-    renderTable();
+function renderAlerts() {
+  const alerts = [];
+  const now = Date.now();
+
+  pipeline.filter(p => !["activa","descartada"].includes(p.stage)).forEach(p => {
+    const days = daysSince(p.stageUpdatedAt || p.updatedAt || p.createdAt);
+    if (p.stage === "solicitud" && days > 21)
+      alerts.push({type:"warn", msg:`"${p.processName}" lleva ${days} días sin analizar`, action:`switchTab('pipeline')`, lbl:"Ver pipeline"});
+    if (p.stage === "analisis" && days > 14)
+      alerts.push({type:"warn", msg:`"${p.processName}" lleva ${days} días en análisis`, action:`switchTab('pipeline')`, lbl:"Ver pipeline"});
+    if (p.stage === "desarrollo" && days > 60)
+      alerts.push({type:"danger", msg:`"${p.processName}" lleva ${days} días en desarrollo sin activar`, action:`switchTab('pipeline')`, lbl:"Ver"});
+  });
+
+  automations.filter(a => a.status === "Pausada").forEach(a =>
+    alerts.push({type:"warn", msg:`La automatización "${a.name}" está Pausada`, action:`switchTab('registro')`, lbl:"Ver registro"})
+  );
+
+  // High value unsanalyzed
+  pipeline.filter(p => p.stage === "solicitud").forEach(p => {
+    const potential = num(p.monthlyExecutions) * num(p.currentMinutes);
+    if (potential > 600)
+      alerts.push({type:"info", msg:`"${p.processName}" tiene alto potencial (${fmtH(potential)} al mes sin automatizar)`, action:null, lbl:null});
+  });
+
+  // Wins
+  if (alerts.length === 0 && automations.filter(a=>a.status==="Activa").length > 0) {
+    alerts.push({type:"success", msg:"✅ Todo en orden — sin alertas pendientes", action:null, lbl:null});
   }
-  const dO = DEPARTMENTS.map(d => `<option ${d===a.department?"selected":""}>${d}</option>`).join("");
-  const tO = TOOLS.map(t => `<option ${t===a.tool?"selected":""}>${t}</option>`).join("");
-  const sO = STATUSES.map(s => `<option ${s===a.status?"selected":""}>${s}</option>`).join("");
-  document.getElementById("formContainer").innerHTML = `
-    <div class="card form-card" style="animation:fadeIn .3s ease">
-      <h3 style="font-size:16px;font-weight:900;margin-bottom:16px">${id ? "✏️ Editar" : "➕ Nueva automatización"}</h3>
-      <div class="form-grid">
-        <div class="field span2"><div class="field-label">Nombre <span class="req">*</span></div><input id="fName" value="${esc(a.name)}"></div>
-        <div class="field"><div class="field-label">Departamento</div><select id="fDepartment">${dO}</select></div>
-        <div class="field"><div class="field-label">Proceso</div><input id="fProcess" value="${esc(a.process)}"></div>
-        <div class="field"><div class="field-label">Responsable</div><input id="fResponsible" value="${esc(a.responsible)}"></div>
-        <div class="field"><div class="field-label">Herramienta</div><select id="fToolSel">${tO}</select></div>
-        <div class="field"><div class="field-label">Estado</div><select id="fStatusSel">${sO}</select></div>
-        <div class="field"><div class="field-label">Fecha inicio</div><input type="date" id="fStartDate" value="${a.startDate||""}"></div>
-        <div class="field"><div class="field-label">Min. manual/ejecución <span class="req">*</span></div><input type="number" id="fManual" min="0" step="0.5" value="${a.manualMinutes}"></div>
-        <div class="field"><div class="field-label">Min. actual/ejecución <span class="req">*</span></div><input type="number" id="fCurrent" min="0" step="0.5" value="${a.currentMinutes}"></div>
-        <div class="field"><div class="field-label">Ejecuciones/mes <span class="req">*</span></div><input type="number" id="fExec" min="0" value="${a.monthlyExecutions}"></div>
-        <div class="field"><div class="field-label">€/hora departamento <span class="req">*</span></div><input type="number" id="fCost" min="0" step="0.5" value="${a.costPerHour}"></div>
-      </div>
-      <div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="fNotes" rows="2">${esc(a.notes)}</textarea></div>
-      <div id="formPreview" class="preview-box hidden"></div>
-      <div style="display:flex;gap:10px;margin-top:16px">
-        <button class="btn btn-primary" id="btnSaveForm" onclick="saveForm()">💾 Guardar</button>
-        <button class="btn btn-ghost" onclick="closeForm()">Cancelar</button>
-      </div>
+
+  document.getElementById("alertSection").innerHTML = alerts.length
+    ? `<div class="alert-bar">${alerts.map(a =>
+        `<div class="alert-item alert-${a.type}">
+          <span>${a.msg}</span>
+          ${a.action ? `<button class="btn btn-sm btn-ghost" onclick="${a.action}" style="white-space:nowrap;flex-shrink:0">${a.lbl}</button>` : ""}
+        </div>`).join("")}</div>`
+    : "";
+}
+
+// ═══════════════════════════════════════════════
+// PIPELINE
+// ═══════════════════════════════════════════════
+function renderPipeline() {
+  // Stage count cards
+  const counts = {};
+  pipeline.forEach(p => { counts[p.stage] = (counts[p.stage]||0)+1; });
+  const totalInPipe = pipeline.filter(p=>!["activa","descartada"].includes(p.stage)).length;
+
+  document.getElementById("pipelineFlow").innerHTML = PIPELINE_STAGES.map(s => {
+    const n = counts[s.id]||0;
+    const avgDays = pipeline.filter(p=>p.stage===s.id)
+      .reduce((sum,p,_,arr) => sum + daysSince(p.stageUpdatedAt||p.updatedAt||p.createdAt) / arr.length, 0);
+    return `<div class="stage-card" style="border-color:${n>0?s.color+"60":""}" onclick="filterPipelineByStage('${s.id}')">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${s.color}"></div>
+      <div class="sc-icon">${s.icon}</div>
+      <div class="sc-count" style="color:${s.color}">${n}</div>
+      <div class="sc-label">${s.label}</div>
+      ${n>0?`<div class="sc-days">~${Math.round(avgDays)}d promedio</div>`:""}
     </div>`;
-  ["fManual","fCurrent","fExec","fCost"].forEach(i => document.getElementById(i).addEventListener("input", updatePreview));
-  updatePreview();
-  document.getElementById("fName").focus();
+  }).join("");
+
+  // Populate dept filter
+  const depts = [...new Set(pipeline.map(p => p.department).filter(Boolean))].sort();
+  const pDept = document.getElementById("pDept");
+  const curDept = pDept.value;
+  pDept.innerHTML = '<option value="">Departamento</option>' + depts.map(d=>`<option ${d===curDept?"selected":""}>${d}</option>`).join("");
+  pDept.value = curDept;
+
+  renderPipelineTable();
 }
 
-function updatePreview() {
-  const mm=num(document.getElementById("fManual").value), cm=num(document.getElementById("fCurrent").value),
-        ex=num(document.getElementById("fExec").value), cost=num(document.getElementById("fCost").value);
-  const box = document.getElementById("formPreview");
-  if (mm > 0 && ex > 0) {
-    const sm = (mm-cm)*ex; const mo = (sm/60)*cost;
-    box.innerHTML = "<b>"+fmtH(sm)+"</b> ahorrados/mes → <b>"+fmtEur(mo)+"/mes</b> · <b>"+fmtEur(mo*12)+"/año</b>";
-    box.classList.remove("hidden");
-  } else box.classList.add("hidden");
+function filterPipelineByStage(stageId) {
+  document.getElementById("pStage").value = stageId;
+  renderPipelineTable();
 }
 
-async function saveForm() {
-  const name = document.getElementById("fName").value.trim();
-  if (!name) return alert("El nombre es obligatorio");
-  const btn = document.getElementById("btnSaveForm"); btn.disabled = true; btn.textContent = "Guardando...";
-  const data = {
-    id: editingId || uid(), name,
-    department: document.getElementById("fDepartment").value,
-    process: document.getElementById("fProcess").value.trim(),
-    responsible: document.getElementById("fResponsible").value.trim(),
-    tool: document.getElementById("fToolSel").value,
-    status: document.getElementById("fStatusSel").value,
-    startDate: document.getElementById("fStartDate").value,
-    manualMinutes: document.getElementById("fManual").value,
-    currentMinutes: document.getElementById("fCurrent").value,
-    monthlyExecutions: document.getElementById("fExec").value,
-    costPerHour: document.getElementById("fCost").value,
-    notes: document.getElementById("fNotes").value.trim(),
-    updatedAt: new Date().toISOString()
-  };
-  const r = await apiSaveAutomation(data);
-  if (r && r.success) {
-    if (editingId) automations = automations.map(a => a.id === editingId ? data : a);
-    else automations.push(data);
-    toast("✅ Automatización guardada"); closeForm(); renderAll();
-  } else { btn.disabled = false; btn.textContent = "💾 Guardar"; }
-}
+function renderPipelineTable() {
+  const se = document.getElementById("pSearch").value.toLowerCase();
+  const dept = document.getElementById("pDept").value;
+  const stage = document.getElementById("pStage").value;
+  const hasFilter = !!(se || dept || stage);
+  document.getElementById("btnClearPipeFilters").classList.toggle("hidden", !hasFilter);
 
-function closeForm() { editingId = null; document.getElementById("formContainer").innerHTML = ""; }
-
-async function deleteAutomation(id) {
-  if (!confirm("¿Eliminar esta automatización?")) return;
-  const r = await apiDeleteAutomation(id);
-  if (r && r.success) { automations = automations.filter(a => a.id !== id); toast("🗑️ Eliminada"); renderAll(); }
-}
-
-// ═══ TABLE ═══
-function populateFilters() {
-  const rs = [...new Set(automations.map(a => a.responsible).filter(Boolean))];
-  const el = document.getElementById("fResp"); const cv = el.value;
-  el.innerHTML = '<option value="">Responsable</option>' + rs.map(r => `<option ${r===cv?"selected":""}>${r}</option>`).join("");
-}
-
-function getFiltered() {
-  const se=document.getElementById("fSearch").value.toLowerCase(),
-        de=document.getElementById("fDept").value,
-        to=document.getElementById("fTool").value,
-        st=document.getElementById("fStatus").value,
-        re=document.getElementById("fResp").value;
-  return automations.filter(a => {
-    if (de && a.department !== de) return false;
-    if (to && a.tool !== to) return false;
-    if (st && a.status !== st) return false;
-    if (re && a.responsible !== re) return false;
-    if (se && !a.name.toLowerCase().includes(se) && !(a.process||"").toLowerCase().includes(se)) return false;
+  let data = pipeline.filter(p => {
+    if (dept && p.department !== dept) return false;
+    if (stage && p.stage !== stage) return false;
+    if (se && !p.processName?.toLowerCase().includes(se) && !p.requestedBy?.toLowerCase().includes(se) && !p.department?.toLowerCase().includes(se)) return false;
     return true;
-  }).map(a => ({...a, m: calcMetrics(a)}));
-}
-
-function renderTable() {
-  populateFilters();
-  let data = getFiltered();
-  data.sort((a,b) => {
-    let va, vb;
-    if (sortCol==="name") { va=a.name; vb=b.name; }
-    else if (sortCol==="department") { va=a.department; vb=b.department; }
-    else if (sortCol==="savedHours") { va=a.m.savedHours; vb=b.m.savedHours; }
-    else if (sortCol==="monthlySaving") { va=a.m.monthlySaving; vb=b.m.monthlySaving; }
-    else if (sortCol==="accumulated") { va=a.m.accumulated; vb=b.m.accumulated; }
-    else { va=a.m.monthlySaving; vb=b.m.monthlySaving; }
-    if (typeof va === "string") return sortDir==="asc" ? va.localeCompare(vb) : vb.localeCompare(va);
-    return sortDir==="asc" ? va-vb : vb-va;
+  }).sort((a,b) => {
+    const order = ["solicitud","analisis","aprobada","desarrollo","activa","descartada"];
+    return order.indexOf(a.stage) - order.indexOf(b.stage);
   });
-  const af = [document.getElementById("fSearch").value, document.getElementById("fDept").value, document.getElementById("fTool").value, document.getElementById("fStatus").value, document.getElementById("fResp").value].some(Boolean);
-  document.getElementById("btnClearFilters").classList.toggle("hidden", !af);
-  document.getElementById("filterCount").textContent = data.length + " de " + automations.length;
-  const cols = [{k:"name",l:"Nombre"},{k:"department",l:"Dept."},{k:"savedHours",l:"Horas/mes"},{k:"monthlySaving",l:"€/mes"},{k:"accumulated",l:"Acumulado"}];
-  document.getElementById("tableHead").innerHTML = "<tr>" + cols.map(c =>
-    `<th onclick="setSort('${c.k}')">${c.l} ${sortCol===c.k?(sortDir==="desc"?"▼":"▲"):""}</th>`
-  ).join("") + "<th>Estado</th><th></th></tr>";
+
+  document.getElementById("pipeFilterCount").textContent = data.length + " de " + pipeline.length;
+
+  document.getElementById("pipelineHead").innerHTML = `<tr>
+    <th class="no-sort">Proceso</th>
+    <th class="no-sort">Dept. / Solicitado por</th>
+    <th class="no-sort">Tiempo actual</th>
+    <th class="no-sort">Ahorro estimado</th>
+    <th class="no-sort">Días en etapa</th>
+    <th class="no-sort">Etapa</th>
+    <th class="no-sort edit-btn"></th>
+  </tr>`;
+
   if (!data.length) {
-    document.getElementById("tableBody").innerHTML = '<tr><td colspan="7" class="empty-state">No hay automatizaciones. Pulsa "+ Nueva" para empezar.</td></tr>';
+    document.getElementById("pipelineBody").innerHTML = `<tr><td colspan="7" class="empty-state">No hay items${hasFilter?" que coincidan con el filtro":""}.${!hasFilter?' Pulsa "+ Nueva solicitud" para empezar.':""}</td></tr>`;
     return;
   }
-  document.getElementById("tableBody").innerHTML = data.map(a =>
-    `<tr>
-      <td><div class="cell-name">${esc(a.name)}</div><div class="cell-detail">${esc(a.process)||"—"} · ${esc(a.tool)}</div></td>
-      <td>${esc(a.department)}</td>
-      <td class="cell-hours">${fmt(a.m.savedHours,1)}h</td>
-      <td class="cell-money">${fmtEur(a.m.monthlySaving)}</td>
-      <td class="cell-accum">${fmtEur(a.m.accumulated)}</td>
-      <td><span class="badge ${badgeClass(a.status)}">${a.status}</span></td>
-      <td style="white-space:nowrap">
-        <button class="btn-icon" onclick="openForm('${a.id}')" title="Editar">✏️</button>
-        <button class="btn-icon" onclick="deleteAutomation('${a.id}')" title="Eliminar">🗑️</button>
-      </td>
-    </tr>`
-  ).join("");
-}
 
-function setSort(c) { if (sortCol===c) sortDir = sortDir==="desc"?"asc":"desc"; else { sortCol=c; sortDir="desc"; } renderTable(); }
-function clearFilters() { ["fSearch","fDept","fTool","fStatus","fResp"].forEach(i => document.getElementById(i).value=""); renderTable(); }
-
-// ═══ SCORING ═══
-function openScoreForm(id) {
-  editingScoreId = id || null;
-  const s = id ? scorings.find(x => x.id === id) : {name:"", department:DEPARTMENTS[0], potentialSavingMin:"", frequency:"", impact:3, ease:3, notes:""};
-  const dO = DEPARTMENTS.map(d => `<option ${d===s.department?"selected":""}>${d}</option>`).join("");
-  document.getElementById("scoreFormContainer").innerHTML = `
-    <div class="card" style="border:2px solid var(--accent);animation:fadeIn .3s ease">
-      <div class="form-grid">
-        <div class="field span2"><div class="field-label">Nombre del proceso <span class="req">*</span></div><input id="sName" value="${esc(s.name)}"></div>
-        <div class="field"><div class="field-label">Departamento</div><select id="sDept">${dO}</select></div>
-        <div class="field"><div class="field-label">Min. ahorro potencial/ejecución</div><input type="number" id="sSaving" min="0" value="${s.potentialSavingMin}"></div>
-        <div class="field"><div class="field-label">Ejecuciones/mes estimadas</div><input type="number" id="sFreq" min="0" value="${s.frequency}"></div>
-        <div class="field"><div class="field-label">Impacto (1-5): <b id="sImpactVal">${s.impact}</b></div><input type="range" id="sImpact" min="1" max="5" value="${s.impact}" oninput="document.getElementById('sImpactVal').textContent=this.value"></div>
-        <div class="field"><div class="field-label">Facilidad (1-5): <b id="sEaseVal">${s.ease}</b></div><input type="range" id="sEase" min="1" max="5" value="${s.ease}" oninput="document.getElementById('sEaseVal').textContent=this.value"></div>
-      </div>
-      <div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="sNotes" rows="2">${esc(s.notes)}</textarea></div>
-      <div style="display:flex;gap:10px;margin-top:14px">
-        <button class="btn btn-accent" id="btnSaveScore" onclick="saveScore()">💾 Guardar</button>
-        <button class="btn btn-ghost" onclick="closeScoreForm()">Cancelar</button>
-      </div>
-    </div>`;
-  document.getElementById("sName").focus();
-}
-
-async function saveScore() {
-  const name = document.getElementById("sName").value.trim();
-  if (!name) return alert("Nombre obligatorio");
-  const btn = document.getElementById("btnSaveScore"); btn.disabled = true; btn.textContent = "Guardando...";
-  const data = {
-    id: editingScoreId || uid(), name,
-    department: document.getElementById("sDept").value,
-    potentialSavingMin: document.getElementById("sSaving").value,
-    frequency: document.getElementById("sFreq").value,
-    impact: parseInt(document.getElementById("sImpact").value),
-    ease: parseInt(document.getElementById("sEase").value),
-    notes: document.getElementById("sNotes").value.trim()
-  };
-  const r = await apiSaveScoring(data);
-  if (r && r.success) {
-    if (editingScoreId) scorings = scorings.map(s => s.id === editingScoreId ? data : s);
-    else scorings.push(data);
-    toast("✅ Oportunidad guardada"); closeScoreForm(); renderScoring();
-  } else { btn.disabled = false; btn.textContent = "💾 Guardar"; }
-}
-
-function closeScoreForm() { editingScoreId = null; document.getElementById("scoreFormContainer").innerHTML = ""; }
-
-async function deleteScoring(id) {
-  if (!confirm("¿Eliminar?")) return;
-  const r = await apiDeleteScoring(id);
-  if (r && r.success) { scorings = scorings.filter(s => s.id !== id); toast("🗑️ Eliminada"); renderScoring(); }
-}
-
-function renderScoring() {
-  const sorted = [...scorings].sort((a,b) => scoringCalc(b).total - scoringCalc(a).total);
-  if (!sorted.length) {
-    document.getElementById("scoreBody").innerHTML = '<tr><td colspan="8" class="empty-state">Sin oportunidades registradas</td></tr>';
-    return;
-  }
-  document.getElementById("scoreBody").innerHTML = sorted.map(s => {
-    const sc = scoringCalc(s);
-    const cls = sc.total >= 15 ? "score-high" : sc.total >= 10 ? "score-mid" : "score-low";
+  document.getElementById("pipelineBody").innerHTML = data.map(p => {
+    const est = calcPipelineEstimate(p);
+    const si = stageInfo(p.stage);
+    const days = daysSince(p.stageUpdatedAt || p.updatedAt || p.createdAt);
+    const totalMin = num(p.currentMinutes) * num(p.monthlyExecutions);
+    const hasNext = !!STAGE_NEXT[p.stage];
     return `<tr>
-      <td><div class="cell-name">${esc(s.name)}</div>${s.notes ? `<div class="cell-detail">${esc(s.notes)}</div>` : ""}</td>
-      <td>${esc(s.department)}</td>
-      <td>${s.potentialSavingMin||"—"} min</td>
-      <td>${s.frequency||"—"}/mes</td>
-      <td>${"⭐".repeat(num(s.impact))}</td>
-      <td>${"🟢".repeat(num(s.ease))}</td>
-      <td><span class="score-pill ${cls}">${sc.total}/20</span></td>
-      <td style="white-space:nowrap">
-        <button class="btn-icon" onclick="openScoreForm('${s.id}')">✏️</button>
-        <button class="btn-icon" onclick="deleteScoring('${s.id}')">🗑️</button>
+      <td>
+        <div class="cell-name">${esc(p.processName)}</div>
+        <div class="cell-detail">${esc(p.description||"")}</div>
+      </td>
+      <td>
+        <div style="font-weight:600">${esc(p.department)}</div>
+        <div class="cell-detail">${esc(p.requestedBy||"—")}</div>
+      </td>
+      <td class="cell-mono" style="color:var(--warn)">${totalMin > 0 ? fmtH(totalMin)+"/mes" : "—"}</td>
+      <td class="cell-mono" style="color:${est&&est.net>0?"var(--primary)":"var(--dim)"}">
+        ${est ? (est.net >= 0 ? fmtEur(est.net)+"/mes" : `<span style="color:var(--danger)">Negativo</span>`) : "Pendiente"}
+        ${est && est.monthsROI ? `<div class="cell-detail">ROI en ${est.monthsROI}m</div>` : ""}
+      </td>
+      <td><span class="days-badge ${daysColor(days)}">${days}d</span></td>
+      <td>
+        <span class="stage-badge" style="background:${si.color}20;color:${si.color}">
+          ${si.icon} ${si.label}
+        </span>
+      </td>
+      <td style="white-space:nowrap" class="edit-btn">
+        ${hasNext ? `<button class="btn-icon" onclick="openAdvanceModal('${p.id}')" title="Avanzar etapa">▶</button>` : ""}
+        <button class="btn-icon" onclick="openPipelineForm('${p.id}')" title="Editar">✏️</button>
+        ${p.stage !== "descartada" && p.stage !== "activa" ? `<button class="btn-icon" onclick="openDiscardModal('${p.id}')" title="Descartar">🚫</button>` : ""}
+        <button class="btn-icon" onclick="deletePipelineItem('${p.id}')" title="Eliminar">🗑️</button>
       </td>
     </tr>`;
   }).join("");
 }
 
-// ═══ DASH FILTER ═══
-function clearDashFilter() {
-  document.getElementById("dashDeptFilter").value = "";
-  renderDashboard();
+function clearPipeFilters() {
+  document.getElementById("pSearch").value = "";
+  document.getElementById("pDept").value = "";
+  document.getElementById("pStage").value = "";
+  renderPipelineTable();
 }
 
-// ═══ CSV ═══
-function exportCSV() {
-  const h = ["Nombre","Departamento","Proceso","Responsable","Herramienta","Estado","Fecha inicio","Min manual","Min actual","Ejecuciones/mes","€/hora","Inversión (h)","Ahorro mensual €","Ahorro anual €","Acumulado €","Notas"];
-  const r = automations.map(a => {
-    const m = calcMetrics(a);
-    return [a.name,a.department,a.process,a.responsible,a.tool,a.status,a.startDate,a.manualMinutes,a.currentMinutes,a.monthlyExecutions,a.costPerHour,a.investmentHours,m.monthlySaving.toFixed(2),m.annualSaving.toFixed(2),m.accumulated.toFixed(2),a.notes];
+// ── Pipeline form (new / edit solicitud) ──
+function openPipelineForm(id) {
+  editingPipeId = id || null;
+  const p = id ? pipeline.find(x=>x.id===id) : {
+    processName:"", requestedBy:"", department:DEPARTMENTS[0], description:"",
+    currentMinutes:"", monthlyExecutions:"", requestDate:today(),
+    automatable:"", tool:TOOLS[0], estimatedMinutes:"",
+    platformCostMonthly:"", implementationHours:"", costPerHour:"",
+    analystNotes:"", responsible:"", developmentStartDate:"", targetDate:""
+  };
+  if (!p) return;
+  const dO = DEPARTMENTS.map(d=>`<option ${d===p.department?"selected":""}>${d}</option>`).join("");
+  const tO = TOOLS.map(t=>`<option ${t===p.tool?"selected":""}>${t}</option>`).join("");
+  const isEditing = !!id;
+  const curStage = id ? stageInfo(p.stage) : null;
+
+  const analysisSection = (p.stage === "analisis" || p.stage === "aprobada" || p.stage === "desarrollo" || p.stage === "activa" || !id)
+    ? "" : "";
+
+  document.getElementById("pipelineFormContainer").innerHTML = `
+    <div class="card form-card" style="animation:fadeIn .3s ease">
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:16px">${isEditing ? "✏️ Editar — " + esc(p.processName) : "🆕 Nueva solicitud de automatización"}</h3>
+      <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:12px">📋 Datos de la solicitud</div>
+      <div class="form-grid">
+        <div class="field span2"><div class="field-label">Nombre del proceso <span class="req">*</span></div><input id="pf_name" value="${esc(p.processName)}"></div>
+        <div class="field"><div class="field-label">Departamento</div><select id="pf_dept">${dO}</select></div>
+        <div class="field"><div class="field-label">Solicitado por</div><input id="pf_requestedBy" value="${esc(p.requestedBy||"")}"></div>
+        <div class="field span2"><div class="field-label">Descripción del proceso</div><textarea id="pf_desc" rows="2">${esc(p.description||"")}</textarea></div>
+        <div class="field"><div class="field-label">Minutos actuales/ejecución <span class="req">*</span></div><input type="number" id="pf_curMin" min="0" value="${p.currentMinutes}" oninput="updatePipePreview()"></div>
+        <div class="field"><div class="field-label">Ejecuciones/mes <span class="req">*</span></div><input type="number" id="pf_exec" min="0" value="${p.monthlyExecutions}" oninput="updatePipePreview()"></div>
+        <div class="field"><div class="field-label">Fecha solicitud</div><input type="date" id="pf_reqDate" value="${p.requestDate||today()}"></div>
+      </div>
+      <div id="pf_currentPreview" class="preview-box hidden" style="margin-top:14px"></div>
+      ${isEditing && (p.stage === "analisis" || p.stage === "aprobada" || p.stage === "desarrollo" || p.stage === "activa") ? `
+      <div class="sep" style="margin:20px 0"></div>
+      <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:12px">🔍 Datos del análisis</div>
+      <div class="form-grid">
+        <div class="field"><div class="field-label">¿Automatizable?</div>
+          <select id="pf_auto" onchange="updatePipePreview()">
+            <option value="">—</option>
+            <option value="si" ${p.automatable==="si"?"selected":""}>✅ Sí</option>
+            <option value="parcial" ${p.automatable==="parcial"?"selected":""}>⚡ Parcialmente</option>
+            <option value="no" ${p.automatable==="no"?"selected":""}>❌ No</option>
+          </select>
+        </div>
+        <div class="field"><div class="field-label">Herramienta</div><select id="pf_tool">${tO}</select></div>
+        <div class="field"><div class="field-label">Min. estimados post-auto</div><input type="number" id="pf_estMin" min="0" value="${p.estimatedMinutes||""}" oninput="updatePipePreview()"></div>
+        <div class="field"><div class="field-label">Coste plataforma (€/mes)</div><input type="number" id="pf_platCost" min="0" step="0.5" value="${p.platformCostMonthly||""}" oninput="updatePipePreview()"></div>
+        <div class="field"><div class="field-label">Horas de implementación</div><input type="number" id="pf_implHours" min="0" value="${p.implementationHours||""}"></div>
+        <div class="field"><div class="field-label">€/hora departamento</div><input type="number" id="pf_cph" min="0" step="0.5" value="${p.costPerHour||""}" oninput="updatePipePreview()"></div>
+        <div class="field span2"><div class="field-label">Notas del análisis</div><textarea id="pf_analystNotes" rows="2">${esc(p.analystNotes||"")}</textarea></div>
+      </div>
+      <div id="pf_estPreview" class="preview-box hidden" style="margin-top:14px"></div>
+      ` : ""}
+      ${isEditing && (p.stage === "desarrollo" || p.stage === "activa") ? `
+      <div class="sep" style="margin:20px 0"></div>
+      <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:12px">🚀 Desarrollo</div>
+      <div class="form-grid">
+        <div class="field"><div class="field-label">Responsable</div><input id="pf_responsible" value="${esc(p.responsible||"")}"></div>
+        <div class="field"><div class="field-label">Fecha inicio</div><input type="date" id="pf_devStart" value="${p.developmentStartDate||""}"></div>
+        <div class="field"><div class="field-label">Fecha objetivo</div><input type="date" id="pf_target" value="${p.targetDate||""}"></div>
+      </div>` : ""}
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="btn btn-primary" id="btnSavePipe" onclick="savePipelineItem()">💾 Guardar</button>
+        <button class="btn btn-ghost" onclick="closePipelineForm()">Cancelar</button>
+      </div>
+    </div>`;
+
+  document.getElementById("pf_name").focus();
+  updatePipePreview();
+  document.getElementById("page-pipeline").scrollTo?.({top:0,behavior:"smooth"});
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function updatePipePreview() {
+  const curMin = num(document.getElementById("pf_curMin")?.value);
+  const exec   = num(document.getElementById("pf_exec")?.value);
+  const curBox = document.getElementById("pf_currentPreview");
+  if (curBox) {
+    if (curMin > 0 && exec > 0) {
+      curBox.innerHTML = `Carga actual: <b>${fmtH(curMin * exec)}/mes</b> (${exec} ejecuciones × ${curMin} min)`;
+      curBox.classList.remove("hidden");
+    } else curBox.classList.add("hidden");
+  }
+
+  const estMin  = num(document.getElementById("pf_estMin")?.value);
+  const platCost = num(document.getElementById("pf_platCost")?.value);
+  const cph     = num(document.getElementById("pf_cph")?.value);
+  const estBox  = document.getElementById("pf_estPreview");
+  if (estBox && estMin > 0 && exec > 0 && cph > 0) {
+    const savedH = (curMin - estMin) * exec / 60;
+    const net = savedH * cph - platCost;
+    estBox.innerHTML = `Ahorro estimado: <b>${fmtEur(net)}/mes</b> · <b>${fmtEur(net*12)}/año</b> · ${fmtH((curMin-estMin)*exec)} recuperadas/mes`;
+    estBox.classList.remove("hidden");
+  } else if(estBox) estBox.classList.add("hidden");
+}
+
+async function savePipelineItem() {
+  const name = document.getElementById("pf_name")?.value.trim();
+  if (!name) { toast("⚠️ El nombre del proceso es obligatorio", "err"); return; }
+  const btn = document.getElementById("btnSavePipe"); btn.disabled = true; btn.textContent = "Guardando...";
+
+  const existing = editingPipeId ? pipeline.find(x=>x.id===editingPipeId) : null;
+  const now = new Date().toISOString();
+
+  const data = {
+    id: editingPipeId || uid(),
+    stage: existing?.stage || "solicitud",
+    processName: name,
+    requestedBy: document.getElementById("pf_requestedBy")?.value.trim() || "",
+    department: document.getElementById("pf_dept")?.value || DEPARTMENTS[0],
+    description: document.getElementById("pf_desc")?.value.trim() || "",
+    currentMinutes: document.getElementById("pf_curMin")?.value || "",
+    monthlyExecutions: document.getElementById("pf_exec")?.value || "",
+    requestDate: document.getElementById("pf_reqDate")?.value || today(),
+    // Analysis fields (if visible)
+    automatable: document.getElementById("pf_auto")?.value || existing?.automatable || "",
+    tool: document.getElementById("pf_tool")?.value || existing?.tool || "",
+    estimatedMinutes: document.getElementById("pf_estMin")?.value || existing?.estimatedMinutes || "",
+    platformCostMonthly: document.getElementById("pf_platCost")?.value || existing?.platformCostMonthly || "",
+    implementationHours: document.getElementById("pf_implHours")?.value || existing?.implementationHours || "",
+    costPerHour: document.getElementById("pf_cph")?.value || existing?.costPerHour || "",
+    analystNotes: document.getElementById("pf_analystNotes")?.value.trim() || existing?.analystNotes || "",
+    analysisDate: existing?.analysisDate || "",
+    // Dev fields
+    responsible: document.getElementById("pf_responsible")?.value.trim() || existing?.responsible || "",
+    developmentStartDate: document.getElementById("pf_devStart")?.value || existing?.developmentStartDate || "",
+    targetDate: document.getElementById("pf_target")?.value || existing?.targetDate || "",
+    // Keep existing fields
+    activationDate: existing?.activationDate || "",
+    automationId: existing?.automationId || "",
+    discardReason: existing?.discardReason || "",
+    createdAt: existing?.createdAt || now,
+    stageUpdatedAt: existing?.stageUpdatedAt || now,
+    updatedAt: now,
+  };
+
+  const r = await apiSavePipe(data);
+  if (r && r.success) {
+    if (editingPipeId) pipeline = pipeline.map(p => p.id === editingPipeId ? data : p);
+    else pipeline.push(data);
+    toast("✅ Solicitud guardada"); closePipelineForm(); renderPipeline();
+  } else { btn.disabled = false; btn.textContent = "💾 Guardar"; }
+}
+
+function closePipelineForm() { editingPipeId = null; document.getElementById("pipelineFormContainer").innerHTML = ""; }
+
+async function deletePipelineItem(id) {
+  if (!confirm("¿Eliminar este item del pipeline?")) return;
+  const r = await apiDeletePipe(id);
+  if (r && r.success) { pipeline = pipeline.filter(p=>p.id!==id); toast("🗑️ Eliminado"); renderPipeline(); renderDashboard(); }
+}
+
+// ── Advance modal ──
+function openAdvanceModal(id) {
+  const item = pipeline.find(x=>x.id===id);
+  if (!item) return;
+  const nextStageId = STAGE_NEXT[item.stage];
+  if (!nextStageId) return;
+  const next = stageInfo(nextStageId);
+  const tO = TOOLS.map(t=>`<option ${t===(item.tool||TOOLS[0])?"selected":""}>${t}</option>`).join("");
+
+  let content = "";
+  let subtitle = `Desde "${stageInfo(item.stage).label}" → "${next.label}"`;
+
+  if (nextStageId === "analisis") {
+    const est = calcPipelineEstimate(item);
+    content = `
+      <div class="form-grid">
+        <div class="field span2">
+          <div class="field-label">¿Es automatizable?</div>
+          <div style="display:flex;gap:8px;margin-top:4px" id="autoRadioGroup">
+            <button class="btn btn-sm btn-ghost" id="rb_si"     onclick="selectAutoOption('si')"     style="flex:1">✅ Sí</button>
+            <button class="btn btn-sm btn-ghost" id="rb_parcial" onclick="selectAutoOption('parcial')" style="flex:1">⚡ Parcialmente</button>
+            <button class="btn btn-sm btn-ghost" id="rb_no"     onclick="selectAutoOption('no')"     style="flex:1">❌ No</button>
+          </div>
+          <input type="hidden" id="m_automatable" value="${item.automatable||""}">
+        </div>
+        <div class="field"><div class="field-label">Herramienta</div><select id="m_tool">${tO}</select></div>
+        <div class="field"><div class="field-label">Min. estimados post-auto <span class="req">*</span></div><input type="number" id="m_estMin" min="0" value="${item.estimatedMinutes||""}" oninput="updateModalEstPreview('${item.id}')"></div>
+        <div class="field"><div class="field-label">Coste plataforma (€/mes)</div><input type="number" id="m_platCost" min="0" step="0.5" value="${item.platformCostMonthly||0}" oninput="updateModalEstPreview('${item.id}')"></div>
+        <div class="field"><div class="field-label">Horas de implementación</div><input type="number" id="m_implHours" min="0" value="${item.implementationHours||""}"></div>
+        <div class="field"><div class="field-label">€/hora departamento</div><input type="number" id="m_cph" min="0" step="0.5" value="${item.costPerHour||""}" oninput="updateModalEstPreview('${item.id}')"></div>
+        <div class="field span2"><div class="field-label">Notas del análisis</div><textarea id="m_notes" rows="2">${esc(item.analystNotes||"")}</textarea></div>
+      </div>
+      <div id="m_estPreview" class="preview-box hidden" style="margin-top:12px"></div>`;
+    if (item.automatable) setTimeout(()=>selectAutoOption(item.automatable),50);
+  }
+  else if (nextStageId === "aprobada") {
+    content = `
+      <div class="form-grid">
+        <div class="field"><div class="field-label">Aprobado por</div><input id="m_approvedBy" placeholder="Nombre"></div>
+        <div class="field"><div class="field-label">Fecha aprobación</div><input type="date" id="m_approvalDate" value="${today()}"></div>
+        <div class="field span2"><div class="field-label">Notas</div><textarea id="m_notes" rows="2"></textarea></div>
+      </div>`;
+  }
+  else if (nextStageId === "desarrollo") {
+    content = `
+      <div class="form-grid">
+        <div class="field"><div class="field-label">Responsable</div><input id="m_responsible" value="${esc(item.responsible||"")}" placeholder="Nombre"></div>
+        <div class="field"><div class="field-label">Fecha inicio desarrollo</div><input type="date" id="m_devStart" value="${today()}"></div>
+        <div class="field"><div class="field-label">Fecha objetivo entrega</div><input type="date" id="m_targetDate"></div>
+      </div>`;
+  }
+  else if (nextStageId === "activa") {
+    const est = calcPipelineEstimate(item);
+    content = `
+      <div class="form-grid">
+        <div class="field"><div class="field-label">Fecha de activación</div><input type="date" id="m_activationDate" value="${today()}"></div>
+        <div class="field"><div class="field-label">Responsable final</div><input id="m_responsible" value="${esc(item.responsible||"")}"></div>
+      </div>
+      ${est ? `<div class="preview-box" style="margin-top:16px">
+        <div style="margin-bottom:6px;font-weight:700">Se creará automáticamente un registro con:</div>
+        <div>Ahorro estimado: <b>${fmtEur(est.net)}/mes</b> · <b>${fmtEur(est.annual)}/año</b></div>
+        ${est.monthsROI ? `<div style="margin-top:4px">ROI estimado en <b>${est.monthsROI} meses</b></div>` : ""}
+        <div style="margin-top:6px;font-size:12px;color:var(--muted)">Podrás editar los datos reales desde la pestaña Registro</div>
+      </div>` : ""}`;
+  }
+
+  document.getElementById("modalTitle").innerHTML = `${next.icon} Avanzar a <span style="color:${next.color}">${next.label}</span>`;
+  document.getElementById("modalSub").textContent = subtitle;
+  document.getElementById("modalContent").innerHTML = content;
+  modalAction = () => confirmAdvance(id, nextStageId);
+  document.getElementById("modalOverlay").classList.remove("hidden");
+
+  if (nextStageId === "analisis" && item.automatable) selectAutoOption(item.automatable);
+  if (nextStageId === "analisis") setTimeout(()=>updateModalEstPreview(id),50);
+}
+
+function selectAutoOption(val) {
+  document.getElementById("m_automatable").value = val;
+  ["si","parcial","no"].forEach(v => {
+    const btn = document.getElementById("rb_"+v);
+    if (btn) btn.className = `btn btn-sm ${v===val?"btn-primary":"btn-ghost"}`;
   });
-  const csv = "\uFEFF" + [h, ...r].map(x => x.map(c => `"${String(c||"").replace(/"/g,'""')}"`).join(";")).join("\n");
-  const b = new Blob([csv], {type:"text/csv;charset=utf-8"});
-  const u = URL.createObjectURL(b);
-  const a = document.createElement("a"); a.href = u; a.download = `autotracker_${new Date().toISOString().slice(0,10)}.csv`; a.click();
-  URL.revokeObjectURL(u);
 }
 
-// ═══ INIT ═══
+function updateModalEstPreview(itemId) {
+  const item = pipeline.find(x=>x.id===itemId);
+  if (!item) return;
+  const curMin = num(item.currentMinutes);
+  const exec   = num(item.monthlyExecutions);
+  const estMin  = num(document.getElementById("m_estMin")?.value);
+  const platCost = num(document.getElementById("m_platCost")?.value);
+  const cph     = num(document.getElementById("m_cph")?.value);
+  const box = document.getElementById("m_estPreview");
+  if (!box) return;
+  if (estMin > 0 && exec > 0 && cph > 0) {
+    const net = (curMin - estMin) * exec / 60 * cph - platCost;
+    const implH = num(document.getElementById("m_implHours")?.value);
+    const roi = net > 0 && implH > 0 ? Math.ceil(implH * cph / net) : null;
+    box.innerHTML = `Ahorro neto estimado: <b>${fmtEur(net)}/mes</b> · <b>${fmtEur(net*12)}/año</b>${roi?` · ROI en <b>${roi}m</b>`:""}`;
+    box.classList.remove("hidden");
+  } else box.classList.add("hidden");
+}
+
+function openDiscardModal(id) {
+  const item = pipeline.find(x=>x.id===id);
+  if (!item) return;
+  document.getElementById("modalTitle").textContent = "🚫 Descartar solicitud";
+  document.getElementById("modalSub").textContent = item.processName;
+  document.getElementById("modalContent").innerHTML = `
+    <div class="form-grid">
+      <div class="field span2">
+        <div class="field-label">Motivo del descarte <span class="req">*</span></div>
+        <select id="m_discardReason" style="padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:13px;width:100%">
+          <option value="">Seleccionar motivo</option>
+          <option>No es automatizable</option>
+          <option>Demasiado costoso</option>
+          <option>Prioridad baja</option>
+          <option>Cancelado por el departamento</option>
+          <option>Duplicado de otra automatización</option>
+          <option>Proceso eliminado o cambiado</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="field span2"><div class="field-label">Notas adicionales</div><textarea id="m_discardNotes" rows="2"></textarea></div>
+    </div>`;
+  modalAction = () => confirmDiscard(id);
+  document.getElementById("modalOverlay").classList.remove("hidden");
+}
+
+async function confirmAdvance(id, nextStageId) {
+  const item = pipeline.find(x=>x.id===id);
+  if (!item) return;
+  const now = new Date().toISOString();
+  const extra = {};
+
+  if (nextStageId === "analisis") {
+    const auto = document.getElementById("m_automatable")?.value;
+    if (!auto) { toast("⚠️ Indica si es automatizable", "err"); return; }
+    extra.automatable = auto;
+    extra.tool = document.getElementById("m_tool")?.value || "";
+    extra.estimatedMinutes = document.getElementById("m_estMin")?.value || "";
+    extra.platformCostMonthly = document.getElementById("m_platCost")?.value || "0";
+    extra.implementationHours = document.getElementById("m_implHours")?.value || "";
+    extra.costPerHour = document.getElementById("m_cph")?.value || "";
+    extra.analystNotes = document.getElementById("m_notes")?.value.trim() || "";
+    extra.analysisDate = today();
+  } else if (nextStageId === "aprobada") {
+    extra.approvedBy = document.getElementById("m_approvedBy")?.value.trim() || "";
+    extra.approvalDate = document.getElementById("m_approvalDate")?.value || today();
+  } else if (nextStageId === "desarrollo") {
+    extra.responsible = document.getElementById("m_responsible")?.value.trim() || "";
+    extra.developmentStartDate = document.getElementById("m_devStart")?.value || today();
+    extra.targetDate = document.getElementById("m_targetDate")?.value || "";
+  } else if (nextStageId === "activa") {
+    extra.activationDate = document.getElementById("m_activationDate")?.value || today();
+    extra.responsible = document.getElementById("m_responsible")?.value.trim() || item.responsible || "";
+  }
+
+  const updated = { ...item, ...extra, stage: nextStageId, stageUpdatedAt: now, updatedAt: now };
+  const r = await apiSavePipe(updated);
+  if (!r || !r.success) return;
+  pipeline = pipeline.map(p => p.id === id ? updated : p);
+
+  // Auto-create automation when reaching "activa"
+  if (nextStageId === "activa") {
+    const autoId = uid();
+    const newAuto = {
+      id: autoId, name: item.processName,
+      department: item.department,
+      process: item.processName,
+      responsible: extra.responsible || "",
+      tool: item.tool || TOOLS[0],
+      status: "Activa",
+      startDate: extra.activationDate || today(),
+      manualMinutes: item.currentMinutes,
+      currentMinutes: item.estimatedMinutes,
+      monthlyExecutions: item.monthlyExecutions,
+      costPerHour: item.costPerHour,
+      investmentHours: item.implementationHours || 0,
+      pipelineId: id,
+      estimatedMinutes: item.estimatedMinutes,
+      platformCostMonthly: item.platformCostMonthly || 0,
+      notes: item.analystNotes || "",
+      updatedAt: now
+    };
+    const r2 = await apiSaveAuto(newAuto);
+    if (r2 && r2.success) {
+      automations.push(newAuto);
+      updated.automationId = autoId;
+      await apiSavePipe(updated);
+      pipeline = pipeline.map(p => p.id === id ? updated : p);
+      toast("⚡ ¡Automatización activada y registrada automáticamente!");
+    }
+  } else {
+    toast(`✅ Avanzado a "${stageInfo(nextStageId).label}"`);
+  }
+  closeModal(); renderPipeline(); renderDashboard(); renderTable();
+}
+
+async function confirmDiscard(id) {
+  const reason = document.getElementById("m_discardReason")?.value;
+  if (!reason) { toast("⚠️ Selecciona un motivo", "err"); return; }
+  const item = pipeline.find(x=>x.id===id);
+  const now = new Date().toISOString();
+  const updated = { ...item, stage:"descartada", discardReason:reason,
+    discardNotes: document.getElementById("m_discardNotes")?.value.trim() || "",
+    stageUpdatedAt:now, updatedAt:now };
+  const r = await apiSavePipe(updated);
+  if (r && r.success) {
+    pipeline = pipeline.map(p => p.id === id ? updated : p);
+    toast("🚫 Descartado"); closeModal(); renderPipeline(); renderDashboard();
+  }
+}
+
+// ── Modal helpers ──
+function modalSave() { if (modalAction) modalAction(); }
+function closeModal() {
+  document.getElementById("modalOverlay").classList.add("hidden");
+  document.getElementById("modalContent").innerHTML = "";
+  modalAction = null;
+}
+
+// ═══════════════════════════════════════════════
+// REGISTRO
+// ═══════════════════════════════════════════════
+function openForm(id) {
+  editingAutoId = id || null;
+  const a = id ? automations.find(x=>x.id===id) : {
+    name:"", department:DEPARTMENTS[0], process:"", responsible:"",
+    tool:TOOLS[0], status:"Activa", startDate:today(),
+    manualMinutes:"", currentMinutes:"0", monthlyExecutions:"", costPerHour:"",
+    investmentHours:"", platformCostMonthly:"0", estimatedMinutes:"", notes:""
+  };
+  if (!a) return;
+  if (currentTab !== "registro") switchTab("registro");
+  const dO = DEPARTMENTS.map(d=>`<option ${d===a.department?"selected":""}>${d}</option>`).join("");
+  const tO = TOOLS.map(t=>`<option ${t===a.tool?"selected":""}>${t}</option>`).join("");
+  const sO = STATUSES.map(s=>`<option ${s===a.status?"selected":""}>${s}</option>`).join("");
+  const fromPipeline = !id && false;
+
+  document.getElementById("autoFormContainer").innerHTML = `
+    <div class="card form-card" style="animation:fadeIn .3s ease">
+      <h3 style="font-size:16px;font-weight:900;margin-bottom:16px">${id ? "✏️ Editar automatización" : "➕ Nueva automatización"}</h3>
+      <div class="form-grid">
+        <div class="field span2"><div class="field-label">Nombre <span class="req">*</span></div><input id="af_name" value="${esc(a.name)}"></div>
+        <div class="field"><div class="field-label">Departamento</div><select id="af_dept">${dO}</select></div>
+        <div class="field"><div class="field-label">Proceso</div><input id="af_process" value="${esc(a.process||"")}"></div>
+        <div class="field"><div class="field-label">Responsable</div><input id="af_responsible" value="${esc(a.responsible||"")}"></div>
+        <div class="field"><div class="field-label">Herramienta</div><select id="af_tool">${tO}</select></div>
+        <div class="field"><div class="field-label">Estado</div><select id="af_status">${sO}</select></div>
+        <div class="field"><div class="field-label">Fecha inicio</div><input type="date" id="af_startDate" value="${a.startDate||today()}"></div>
+        <div class="field"><div class="field-label">Min. manual/ejecución (original) <span class="req">*</span></div><input type="number" id="af_manual" min="0" step="0.5" value="${a.manualMinutes}" oninput="updateAutoPreview()"></div>
+        <div class="field"><div class="field-label">Min. real post-auto <span class="req">*</span></div><input type="number" id="af_current" min="0" step="0.5" value="${a.currentMinutes}" oninput="updateAutoPreview()"></div>
+        <div class="field"><div class="field-label">Min. estimado (análisis)</div><input type="number" id="af_estimated" min="0" step="0.5" value="${a.estimatedMinutes||""}" placeholder="Del análisis previo" oninput="updateAutoPreview()"></div>
+        <div class="field"><div class="field-label">Ejecuciones/mes <span class="req">*</span></div><input type="number" id="af_exec" min="0" value="${a.monthlyExecutions}" oninput="updateAutoPreview()"></div>
+        <div class="field"><div class="field-label">€/hora departamento <span class="req">*</span></div><input type="number" id="af_cph" min="0" step="0.5" value="${a.costPerHour}" oninput="updateAutoPreview()"></div>
+        <div class="field"><div class="field-label">Coste plataforma (€/mes)</div><input type="number" id="af_platCost" min="0" step="0.5" value="${a.platformCostMonthly||0}" oninput="updateAutoPreview()"></div>
+        <div class="field"><div class="field-label">Horas de implementación</div><input type="number" id="af_invest" min="0" step="0.5" value="${a.investmentHours||0}"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><div class="field-label">Notas</div><textarea id="af_notes" rows="2">${esc(a.notes||"")}</textarea></div>
+      <div id="af_preview" class="preview-box hidden" style="margin-top:14px"></div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-primary" id="btnSaveAuto" onclick="saveAuto()">💾 Guardar</button>
+        <button class="btn btn-ghost" onclick="closeAutoForm()">Cancelar</button>
+      </div>
+    </div>`;
+  updateAutoPreview();
+  document.getElementById("af_name").focus();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function updateAutoPreview() {
+  const manual = num(document.getElementById("af_manual")?.value);
+  const cur    = num(document.getElementById("af_current")?.value);
+  const exec   = num(document.getElementById("af_exec")?.value);
+  const cph    = num(document.getElementById("af_cph")?.value);
+  const plat   = num(document.getElementById("af_platCost")?.value);
+  const est    = num(document.getElementById("af_estimated")?.value);
+  const box    = document.getElementById("af_preview");
+  if (!box) return;
+  if (manual > 0 && exec > 0 && cph > 0) {
+    const net = (manual - cur) * exec / 60 * cph - plat;
+    let html = `Ahorro real neto: <b>${fmtEur(net)}/mes</b> · <b>${fmtEur(net*12)}/año</b>`;
+    if (est > 0) {
+      const estNet = (manual - est) * exec / 60 * cph - plat;
+      const diff = net - estNet;
+      const pct = estNet !== 0 ? Math.round(net / estNet * 100) : null;
+      html += ` | Estimado: <b>${fmtEur(estNet)}/mes</b> <span style="color:${diff>=0?'var(--primary)':'var(--danger)'}">(${diff>=0?"+":""}${fmtEur(diff)})</span>`;
+    }
+    box.innerHTML = html; box.classList.remove("hidden");
+  } else box.classList.add("hidden");
+}
+
+async function saveAuto() {
+  const name = document.getElementById("af_name")?.value.trim();
+  if (!name) { toast("⚠️ El nombre es obligatorio", "err"); return; }
+  const btn = document.getElementById("btnSaveAuto"); btn.disabled = true; btn.textContent = "Guardando...";
+  const existing = editingAutoId ? automations.find(x=>x.id===editingAutoId) : null;
+  const data = {
+    id: editingAutoId || uid(), name,
+    department: document.getElementById("af_dept").value,
+    process: document.getElementById("af_process").value.trim(),
+    responsible: document.getElementById("af_responsible").value.trim(),
+    tool: document.getElementById("af_tool").value,
+    status: document.getElementById("af_status").value,
+    startDate: document.getElementById("af_startDate").value,
+    manualMinutes: document.getElementById("af_manual").value,
+    currentMinutes: document.getElementById("af_current").value,
+    estimatedMinutes: document.getElementById("af_estimated").value,
+    monthlyExecutions: document.getElementById("af_exec").value,
+    costPerHour: document.getElementById("af_cph").value,
+    platformCostMonthly: document.getElementById("af_platCost").value,
+    investmentHours: document.getElementById("af_invest").value,
+    pipelineId: existing?.pipelineId || "",
+    notes: document.getElementById("af_notes").value.trim(),
+    updatedAt: new Date().toISOString(),
+  };
+  const r = await apiSaveAuto(data);
+  if (r && r.success) {
+    if (editingAutoId) automations = automations.map(a => a.id === editingAutoId ? data : a);
+    else automations.push(data);
+    toast("✅ Guardado"); closeAutoForm(); renderAll();
+  } else { btn.disabled = false; btn.textContent = "💾 Guardar"; }
+}
+
+function closeAutoForm() { editingAutoId = null; document.getElementById("autoFormContainer").innerHTML = ""; }
+
+async function deleteAuto(id) {
+  if (!confirm("¿Eliminar esta automatización?")) return;
+  const r = await apiDeleteAuto(id);
+  if (r && r.success) { automations = automations.filter(a=>a.id!==id); toast("🗑️ Eliminada"); renderAll(); }
+}
+
+function renderTable() {
+  populateRespFilter();
+  const rS = document.getElementById("rSearch").value.toLowerCase();
+  const rD = document.getElementById("rDept").value;
+  const rT = document.getElementById("rTool").value;
+  const rSt = document.getElementById("rStatus").value;
+  const rR = document.getElementById("rResp").value;
+  const hasFilter = !!(rS||rD||rT||rSt||rR);
+  document.getElementById("btnClearFilters").classList.toggle("hidden", !hasFilter);
+
+  let data = automations.filter(a => {
+    if (rD && a.department !== rD) return false;
+    if (rT && a.tool !== rT) return false;
+    if (rSt && a.status !== rSt) return false;
+    if (rR && a.responsible !== rR) return false;
+    if (rS && !a.name.toLowerCase().includes(rS) && !(a.process||"").toLowerCase().includes(rS)) return false;
+    return true;
+  }).map(a => ({...a, m:calcMetrics(a)}));
+
+  data.sort((a,b) => {
+    let va, vb;
+    if (sortCol==="name") { va=a.name; vb=b.name; }
+    else if (sortCol==="department") { va=a.department; vb=b.department; }
+    else if (sortCol==="savedHours") { va=a.m.savedHours; vb=b.m.savedHours; }
+    else if (sortCol==="monthlySaving") { va=a.m.netMonthlySaving; vb=b.m.netMonthlySaving; }
+    else if (sortCol==="accumulated") { va=a.m.accumulated; vb=b.m.accumulated; }
+    else { va=a.m.netMonthlySaving; vb=b.m.netMonthlySaving; }
+    if (typeof va==="string") return sortDir==="asc"?va.localeCompare(vb):vb.localeCompare(va);
+    return sortDir==="asc"?va-vb:vb-va;
+  });
+
+  document.getElementById("filterCount").textContent = data.length + " de " + automations.length;
+  const cols = [{k:"name",l:"Nombre"},{k:"department",l:"Dept."},{k:"savedHours",l:"Horas/mes"},{k:"monthlySaving",l:"€/mes neto"},{k:"accumulated",l:"Acumulado"}];
+  document.getElementById("tableHead").innerHTML = "<tr>" + cols.map(c=>
+    `<th onclick="setSort('${c.k}')">${c.l} ${sortCol===c.k?(sortDir==="desc"?"▼":"▲"):""}</th>`
+  ).join("") + "<th class='no-sort'>Estado</th><th class='no-sort edit-btn'></th></tr>";
+
+  if (!data.length) {
+    document.getElementById("tableBody").innerHTML = `<tr><td colspan="7" class="empty-state">Sin automatizaciones${hasFilter?" que coincidan":""}.${!hasFilter?' Pulsa "+ Nueva" o activa una desde Pipeline.':""}</td></tr>`;
+    return;
+  }
+
+  document.getElementById("tableBody").innerHTML = data.map(a => {
+    const roiTxt = a.m.investmentCost > 0
+      ? (a.m.accumulated >= a.m.investmentCost
+          ? ' <span style="color:var(--primary);font-size:11px">✅ Amortizada</span>'
+          : ` <span style="color:var(--dim);font-size:11px">ROI en ${Math.ceil((a.m.investmentCost-a.m.accumulated)/Math.max(a.m.netMonthlySaving,1))}m</span>`)
+      : "";
+    const linkedPipe = a.pipelineId ? pipeline.find(p=>p.id===a.pipelineId) : null;
+    return `<tr>
+      <td>
+        <div class="cell-name">${esc(a.name)}</div>
+        <div class="cell-detail">${esc(a.process||"—")} · ${esc(a.tool)}${a.responsible?" · "+esc(a.responsible):""}${linkedPipe?` · <span style="color:var(--accent)">Pipeline</span>`:""}</div>
+      </td>
+      <td>${esc(a.department)}</td>
+      <td class="cell-mono cell-warn">${fmt(a.m.savedHours,1)}h</td>
+      <td class="cell-mono cell-green">${fmtEur(a.m.netMonthlySaving)}</td>
+      <td class="cell-mono cell-purple">${fmtEur(a.m.accumulated)}${roiTxt}</td>
+      <td><span class="badge badge-${a.status.toLowerCase().replace(" ","-").replace("en ","")}">${a.status}</span></td>
+      <td style="white-space:nowrap" class="edit-btn">
+        <button class="btn-icon" onclick="openForm('${a.id}')" title="Editar">✏️</button>
+        <button class="btn-icon" onclick="deleteAuto('${a.id}')" title="Eliminar">🗑️</button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function setSort(c) { sortCol===c ? (sortDir=sortDir==="desc"?"asc":"desc") : (sortCol=c,sortDir="desc"); renderTable(); }
+function clearFilters() { ["rSearch","rDept","rTool","rStatus","rResp"].forEach(i=>document.getElementById(i).value=""); renderTable(); }
+
+// ═══════════════════════════════════════════════
+// RESULTADOS
+// ═══════════════════════════════════════════════
+function renderResultados() {
+  const linked = automations.filter(a => a.pipelineId && a.estimatedMinutes).map(a => {
+    const m = calcMetrics(a);
+    const pItem = pipeline.find(p=>p.id===a.pipelineId);
+    const estimated = m.estimatedNet;
+    const real = m.netMonthlySaving;
+    const diff = estimated !== null ? real - estimated : null;
+    const accuracy = estimated !== null && estimated !== 0 ? Math.round(real / estimated * 100) : null;
+    return { ...a, m, pItem, estimated, real, diff, accuracy };
+  });
+
+  // KPIs resultados
+  if (linked.length > 0) {
+    const validAcc = linked.filter(x => x.accuracy !== null);
+    const avgAcc = validAcc.length > 0 ? Math.round(validAcc.reduce((s,x)=>s+x.accuracy,0)/validAcc.length) : null;
+    const overEstimated = linked.filter(x => x.diff !== null && x.diff < 0).length;
+    const underEstimated = linked.filter(x => x.diff !== null && x.diff > 0).length;
+    const kpis = [
+      {l:"Automatizaciones con datos",v:String(linked.length),         c:"var(--accent)", s:"Vinculadas a pipeline"},
+      {l:"Precisión media",           v:avgAcc!=null?avgAcc+"%":"—",  c:avgAcc>=85?"var(--primary)":avgAcc>=60?"var(--warn)":"var(--danger)", s:"Estimado vs Real"},
+      {l:"Superaron estimado",        v:String(underEstimated),        c:"var(--primary)", s:"Mejor de lo esperado"},
+      {l:"Bajo estimado",             v:String(overEstimated),         c:"var(--danger)", s:"Peor de lo esperado"},
+    ];
+    document.getElementById("resultKpiGrid").innerHTML = kpis.map(k =>
+      `<div class="kpi"><div class="kpi-bar" style="background:${k.c}"></div>
+       <div class="kpi-label">${k.l}</div>
+       <div class="kpi-value" style="color:${k.c}">${k.v}</div>
+       <div class="kpi-sub">${k.s}</div></div>`
+    ).join("");
+  } else {
+    document.getElementById("resultKpiGrid").innerHTML = "";
+  }
+
+  if (!linked.length) {
+    document.getElementById("resultBody").innerHTML = `<tr><td colspan="7" class="empty-state">Sin datos. Los resultados aparecen cuando activas automatizaciones desde el Pipeline (con análisis previo).</td></tr>`;
+    if (charts["resultComp"]) { charts["resultComp"].destroy(); delete charts["resultComp"]; }
+    return;
+  }
+
+  document.getElementById("resultBody").innerHTML = linked.map(a => {
+    const accClass = a.accuracy === null ? "" : a.accuracy >= 85 ? "acc-good" : a.accuracy >= 60 ? "acc-ok" : "acc-poor";
+    const diffColor = a.diff === null ? "var(--dim)" : a.diff >= 0 ? "var(--primary)" : "var(--danger)";
+    return `<tr>
+      <td><div class="cell-name">${esc(a.name)}</div><div class="cell-detail">${esc(a.tool)}</div></td>
+      <td>${esc(a.department)}</td>
+      <td class="cell-mono" style="color:var(--muted)">${a.estimated !== null ? fmtEur(a.estimated)+"/mes" : "—"}</td>
+      <td class="cell-mono cell-green">${fmtEur(a.real)}/mes</td>
+      <td class="cell-mono" style="color:${diffColor}">${a.diff !== null ? (a.diff>=0?"+":"")+fmtEur(a.diff) : "—"}</td>
+      <td>${a.accuracy !== null ? `<span class="${accClass}">${a.accuracy}%</span>` : "—"}</td>
+      <td class="cell-mono" style="color:var(--muted)">${a.m.monthsActive}m</td>
+    </tr>`;
+  }).join("");
+
+  // Chart
+  const labels = linked.map(a => a.name.length > 18 ? a.name.slice(0,16)+"…" : a.name);
+  if (charts["resultComp"]) charts["resultComp"].destroy();
+  charts["resultComp"] = new Chart(document.getElementById("cResultComp"), {
+    type:"bar",
+    data:{
+      labels,
+      datasets:[
+        {label:"Estimado (€/mes)", data:linked.map(a=>a.estimated!==null?+a.estimated.toFixed(2):0), backgroundColor:"#6366f180", borderColor:"#6366f1", borderWidth:2, borderRadius:4},
+        {label:"Real (€/mes)",     data:linked.map(a=>+a.real.toFixed(2)), backgroundColor:"#22d3a780", borderColor:"#22d3a7", borderWidth:2, borderRadius:4},
+      ]
+    },
+    options:{responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:"#7a82a0",font:{size:12}}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+": "+fmt(c.raw,2)+"€/mes"}}
+      },
+      scales:{
+        x:{ticks:{color:"#7a82a0",font:{size:11}},grid:{display:false}},
+        y:{ticks:{callback:v=>fmt(v,0)+"€",color:"#7a82a0",font:{size:11}},grid:{color:"#2a305030"}}
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+// CSV EXPORT
+// ═══════════════════════════════════════════════
+function exportCSV() {
+  const h = ["Nombre","Departamento","Proceso","Responsable","Herramienta","Estado","Fecha inicio","Min manual","Min real","Min estimado","Ejecuciones/mes","€/hora","Plataforma €/mes","Inv.(h)","Ahorro mensual real €","Ahorro anual €","Acumulado €","Notas"];
+  const rows = automations.map(a => {
+    const m = calcMetrics(a);
+    return [a.name,a.department,a.process,a.responsible,a.tool,a.status,a.startDate,a.manualMinutes,a.currentMinutes,a.estimatedMinutes,a.monthlyExecutions,a.costPerHour,a.platformCostMonthly,a.investmentHours,m.netMonthlySaving.toFixed(2),m.annualSaving.toFixed(2),m.accumulated.toFixed(2),a.notes];
+  });
+  const csv = "﻿" + [h,...rows].map(r=>r.map(c=>`"${String(c||"").replace(/"/g,'""')}"`).join(";")).join("\n");
+  const blob = new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=`autotracker_${today()}.csv`; a.click(); URL.revokeObjectURL(a.href);
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
 function initApp() {
-  const fD = document.getElementById("fDept"), fT = document.getElementById("fTool"), fS = document.getElementById("fStatus");
-  while (fD.options.length > 1) fD.remove(1);
-  while (fT.options.length > 1) fT.remove(1);
-  while (fS.options.length > 1) fS.remove(1);
-  DEPARTMENTS.forEach(d => { const o = document.createElement("option"); o.value = d; o.textContent = d; fD.appendChild(o); });
-  TOOLS.forEach(t => { const o = document.createElement("option"); o.value = t; o.textContent = t; fT.appendChild(o); });
-  STATUSES.forEach(s => { const o = document.createElement("option"); o.value = s; o.textContent = s; fS.appendChild(o); });
+  // Populate filter selects
+  const rD=document.getElementById("rDept"), rT=document.getElementById("rTool"), rS=document.getElementById("rStatus");
+  while(rD.options.length>1)rD.remove(1);
+  while(rT.options.length>1)rT.remove(1);
+  while(rS.options.length>1)rS.remove(1);
+  DEPARTMENTS.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;rD.appendChild(o);});
+  TOOLS.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;rT.appendChild(o);});
+  STATUSES.forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;rS.appendChild(o);});
+
+  // Populate responsible filter dynamically on render
   renderAll();
 }
+
+// Dynamic responsible filter
+function populateRespFilter() {
+  const rs = [...new Set(automations.map(a=>a.responsible).filter(Boolean))];
+  const el = document.getElementById("rResp"); const cv = el.value;
+  el.innerHTML = '<option value="">Responsable</option>' + rs.map(r=>`<option ${r===cv?"selected":""}>${r}</option>`).join("");
+  el.value = cv;
+}
+const _origRenderTable = renderTable;
+// Wrap renderTable to also update responsible filter
+const _renderTableOrig = renderTable;
 </script>
 </body>
 </html>
