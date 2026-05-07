@@ -101,6 +101,18 @@ body{min-height:100vh;overflow-x:hidden}
 .stage-card.active{border-width:2px}
 .stage-card:hover{border-color:var(--dim)}
 .stage-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px}
+/* ── ACTIVITY LOG ── */
+.log-feed{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;margin-bottom:14px}
+.log-entry{display:flex;gap:10px;align-items:flex-start}
+.log-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.log-body{flex:1;background:var(--surface2);border-radius:8px;padding:10px 12px}
+.log-meta{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;gap:8px;align-items:center}
+.log-text{font-size:13px;line-height:1.5}
+.log-type-nota{background:var(--accent)}
+.log-type-bloqueado{background:var(--danger)}
+.log-type-desbloqueado{background:var(--primary)}
+.log-type-avance{background:var(--purple)}
+.blocked-badge{background:var(--danger)20;color:var(--danger);font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;border:1px solid var(--danger)40}
 /* ── DETAIL MODAL ── */
 .detail-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .detail-kpi{background:var(--surface2);border-radius:8px;padding:12px;text-align:center}
@@ -412,7 +424,7 @@ const D_COLORS = ["#22d3a7","#6366f1","#3b82f6","#f59e0b","#ef4444","#ec4899","#
 // ═══════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════
-let automations = [], pipeline = [];
+let automations = [], pipeline = [], logs = [];
 let currentTab = "dashboard", committeeMode = false;
 let sortCol = "monthlySaving", sortDir = "desc";
 let editingAutoId = null, editingPipeId = null;
@@ -481,13 +493,16 @@ async function loadAllData() {
   if (!d) return false;
   automations = d.automations || d.automatizaciones || [];
   pipeline = d.pipeline || [];
+  logs = d.logs || [];
   return true;
 }
 
-const apiSaveAuto = data => apiCall({action:"saveAutomation", data:JSON.stringify(data)});
-const apiDeleteAuto = id => apiCall({action:"deleteAutomation", id});
-const apiSavePipe = data => apiCall({action:"savePipeline", data:JSON.stringify(data)});
-const apiDeletePipe = id => apiCall({action:"deletePipeline", id});
+const apiSaveAuto  = data => apiCall({action:"saveAutomation", data:JSON.stringify(data)});
+const apiDeleteAuto = id  => apiCall({action:"deleteAutomation", id});
+const apiSavePipe  = data => apiCall({action:"savePipeline", data:JSON.stringify(data)});
+const apiDeletePipe = id  => apiCall({action:"deletePipeline", id});
+const apiSaveLog   = data => apiCall({action:"saveLog", data:JSON.stringify(data)});
+const apiDeleteLog  = id  => apiCall({action:"deleteLog", id});
 
 function setSyncStatus(s) {
   const el = document.getElementById("syncStatus");
@@ -818,12 +833,21 @@ function renderPipeline() {
     const itemsHTML = items.length
       ? items.map(p => {
           const days = daysSince(p.stageUpdatedAt || p.updatedAt || p.createdAt);
-          return `<div class="kanban-item" style="border-left-color:${s.color}" onclick="filterPipelineByStage('${s.id}')">
-            <div style="font-size:12px;font-weight:800;line-height:1.3;margin-bottom:3px">${esc(p.processName)}</div>
+          const isBlocked = p.blocked === "1" || p.blocked === "true";
+          const nLogs = logs.filter(l => l.pipelineId === p.id).length;
+          return `<div class="kanban-item" style="border-left-color:${isBlocked?"var(--danger)":s.color}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:3px">
+              <div style="font-size:12px;font-weight:800;line-height:1.3">${esc(p.processName)}</div>
+              <button class="btn-icon" style="flex-shrink:0;font-size:13px" onclick="openActivityLog('${p.id}')" title="Ver actividad">📋</button>
+            </div>
+            ${isBlocked ? `<div style="margin-bottom:4px"><span class="blocked-badge">🔴 Bloqueado</span></div>` : ""}
             ${p.description ? `<div style="font-size:11px;color:var(--muted);line-height:1.3;margin-bottom:4px">${esc(p.description)}</div>` : ""}
             <div style="font-size:11px;color:var(--dim)">${esc(p.department)}</div>
             ${p.requestedBy ? `<div style="font-size:11px;color:var(--dim)">${esc(p.requestedBy)}</div>` : ""}
-            <div style="margin-top:5px"><span class="days-badge ${daysColor(days)}">${days}d</span></div>
+            <div style="margin-top:5px;display:flex;align-items:center;gap:6px">
+              <span class="days-badge ${daysColor(days)}">${days}d</span>
+              ${nLogs > 0 ? `<span style="font-size:11px;color:var(--muted)">📝 ${nLogs}</span>` : ""}
+            </div>
           </div>`;
         }).join("")
       : `<div class="kanban-empty">Sin elementos</div>`;
@@ -895,7 +919,10 @@ function renderPipelineTable() {
     const hasNext = !!STAGE_NEXT[p.stage];
     return `<tr>
       <td>
-        <div class="cell-name">${esc(p.processName)}</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="cell-name">${esc(p.processName)}</div>
+          ${p.blocked==="1"||p.blocked==="true" ? `<span class="blocked-badge">🔴</span>` : ""}
+        </div>
         <div class="cell-detail">${esc(p.description||"")}</div>
       </td>
       <td>
@@ -914,6 +941,7 @@ function renderPipelineTable() {
         </span>
       </td>
       <td style="white-space:nowrap" class="edit-btn">
+        <button class="btn-icon" onclick="openActivityLog('${p.id}')" title="Actividad">📋</button>
         ${hasNext ? `<button class="btn-icon" onclick="openAdvanceModal('${p.id}')" title="Avanzar etapa">▶</button>` : ""}
         <button class="btn-icon" onclick="openPipelineForm('${p.id}')" title="Editar">✏️</button>
         ${p.stage !== "descartada" && p.stage !== "activa" ? `<button class="btn-icon" onclick="openDiscardModal('${p.id}')" title="Descartar">🚫</button>` : ""}
@@ -921,6 +949,107 @@ function renderPipelineTable() {
       </td>
     </tr>`;
   }).join("");
+}
+
+function openActivityLog(pipeId) {
+  const p = pipeline.find(x => x.id === pipeId);
+  if (!p) return;
+  const itemLogs = logs.filter(l => l.pipelineId === pipeId)
+    .sort((a,b) => b.createdAt.localeCompare(a.createdAt));
+  const isBlocked = p.blocked === "1" || p.blocked === "true";
+
+  const typeConfig = {
+    nota:          {label:"Nota",          color:"var(--accent)",  dot:"log-type-nota"},
+    bloqueado:     {label:"🔴 Bloqueado",  color:"var(--danger)",  dot:"log-type-bloqueado"},
+    desbloqueado:  {label:"✅ Desbloqueado",color:"var(--primary)", dot:"log-type-desbloqueado"},
+    avance:        {label:"▶ Avance",      color:"var(--purple)",  dot:"log-type-avance"},
+  };
+
+  const feedHTML = itemLogs.length
+    ? itemLogs.map(l => {
+        const tc = typeConfig[l.type] || typeConfig.nota;
+        return `<div class="log-entry">
+          <div class="log-dot ${tc.dot}"></div>
+          <div class="log-body">
+            <div class="log-meta">
+              <span style="color:${tc.color};font-weight:700">${tc.label}</span>
+              <span>${l.date}</span>
+            </div>
+            <div class="log-text">${esc(l.text)}</div>
+            <div style="margin-top:6px;text-align:right">
+              <button class="btn-icon" onclick="deleteLogEntry('${l.id}','${pipeId}')" title="Eliminar">🗑️</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("")
+    : `<div style="color:var(--dim);font-size:13px;text-align:center;padding:20px">Sin actividad registrada todavía</div>`;
+
+  openModal(
+    p.processName,
+    `${esc(p.department)}${isBlocked ? ' &nbsp;<span class="blocked-badge">🔴 BLOQUEADO</span>' : ""}`,
+    `<div class="log-feed">${feedHTML}</div>
+     <div style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:12px">
+       <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.6px">➕ Nueva entrada</div>
+       <div style="display:flex;gap:8px;margin-bottom:8px">
+         <select id="logType" style="padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:12px;font-weight:600">
+           <option value="nota">📝 Nota</option>
+           <option value="bloqueado">🔴 Bloqueado</option>
+           <option value="desbloqueado">✅ Desbloqueado</option>
+         </select>
+         <input type="date" id="logDate" value="${today()}" style="padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:12px">
+       </div>
+       <textarea id="logText" rows="2" placeholder="Escribe la actualización..." style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;resize:vertical;margin-bottom:8px"></textarea>
+       <div style="display:flex;gap:8px;justify-content:flex-end">
+         ${isBlocked
+           ? `<button class="btn btn-ghost" onclick="toggleBlocked('${pipeId}',false)">✅ Desbloquear</button>`
+           : `<button class="btn btn-ghost" style="color:var(--danger);border-color:var(--danger)" onclick="toggleBlocked('${pipeId}',true)">🔴 Marcar bloqueado</button>`}
+         <button class="btn btn-primary" onclick="addLogEntry('${pipeId}')">Guardar</button>
+       </div>
+     </div>`
+  );
+}
+
+async function addLogEntry(pipeId) {
+  const text = document.getElementById("logText").value.trim();
+  if (!text) { toast("Escribe algo antes de guardar","err"); return; }
+  const type = document.getElementById("logType").value;
+  const date = document.getElementById("logDate").value;
+  const entry = { id: uid(), pipelineId: pipeId, date, type, text, createdAt: new Date().toISOString() };
+  const r = await apiSaveLog(entry);
+  if (r && r.success) {
+    logs.push(entry);
+    if (type === "bloqueado")    await _setBlocked(pipeId, true);
+    if (type === "desbloqueado") await _setBlocked(pipeId, false);
+    toast("✅ Entrada guardada");
+    openActivityLog(pipeId);
+  }
+}
+
+async function deleteLogEntry(logId, pipeId) {
+  if (!confirm("¿Eliminar esta entrada?")) return;
+  const r = await apiDeleteLog(logId);
+  if (r && r.success) {
+    logs = logs.filter(l => l.id !== logId);
+    toast("🗑️ Entrada eliminada");
+    openActivityLog(pipeId);
+  }
+}
+
+async function toggleBlocked(pipeId, blocked) {
+  await _setBlocked(pipeId, blocked);
+  const type = blocked ? "bloqueado" : "desbloqueado";
+  const text = document.getElementById("logText")?.value?.trim();
+  if (text) await addLogEntry(pipeId);
+  else { toast(blocked ? "🔴 Marcado como bloqueado" : "✅ Desbloqueado"); openActivityLog(pipeId); }
+}
+
+async function _setBlocked(pipeId, blocked) {
+  const p = pipeline.find(x => x.id === pipeId);
+  if (!p) return;
+  p.blocked = blocked ? "1" : "0";
+  p.updatedAt = new Date().toISOString();
+  await apiSavePipe(p);
+  renderPipeline();
 }
 
 function clearPipeFilters() {
