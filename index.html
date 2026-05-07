@@ -393,7 +393,7 @@ body.committee .container{padding:24px 40px 60px!important}
     <div class="modal-title" id="modalTitle"></div>
     <div class="modal-sub" id="modalSub"></div>
     <div id="modalContent"></div>
-    <div style="display:flex;gap:10px;margin-top:20px">
+    <div style="display:flex;gap:10px;margin-top:20px" id="modalFooter">
       <button class="btn btn-primary" id="modalSaveBtn" onclick="modalSave()">Confirmar</button>
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
     </div>
@@ -1278,11 +1278,8 @@ function openAdvanceModal(id) {
       </div>` : ""}`;
   }
 
-  document.getElementById("modalTitle").innerHTML = `${next.icon} Avanzar a <span style="color:${next.color}">${next.label}</span>`;
-  document.getElementById("modalSub").textContent = subtitle;
-  document.getElementById("modalContent").innerHTML = content;
+  openModal(`${next.icon} Avanzar a <span style="color:${next.color}">${next.label}</span>`, subtitle, content, true);
   modalAction = () => confirmAdvance(id, nextStageId);
-  document.getElementById("modalOverlay").classList.remove("hidden");
 
   if (nextStageId === "analisis" && item.automatable) selectAutoOption(item.automatable);
   if (nextStageId === "analisis") setTimeout(()=>updateModalEstPreview(id),50);
@@ -1318,9 +1315,7 @@ function updateModalEstPreview(itemId) {
 function openDiscardModal(id) {
   const item = pipeline.find(x=>x.id===id);
   if (!item) return;
-  document.getElementById("modalTitle").textContent = "🚫 Descartar solicitud";
-  document.getElementById("modalSub").textContent = item.processName;
-  document.getElementById("modalContent").innerHTML = `
+  const content = `
     <div class="form-grid">
       <div class="field span2">
         <div class="field-label">Motivo del descarte <span class="req">*</span></div>
@@ -1337,8 +1332,8 @@ function openDiscardModal(id) {
       </div>
       <div class="field span2"><div class="field-label">Notas adicionales</div><textarea id="m_discardNotes" rows="2"></textarea></div>
     </div>`;
+  openModal("🚫 Descartar solicitud", esc(item.processName), content, true);
   modalAction = () => confirmDiscard(id);
-  document.getElementById("modalOverlay").classList.remove("hidden");
 }
 
 async function confirmAdvance(id, nextStageId) {
@@ -1427,10 +1422,19 @@ async function confirmDiscard(id) {
 }
 
 // ── Modal helpers ──
+function openModal(title, sub, content, showFooter = false) {
+  document.getElementById("modalTitle").innerHTML = title;
+  document.getElementById("modalSub").innerHTML = sub || "";
+  document.getElementById("modalContent").innerHTML = content;
+  document.getElementById("modalFooter").style.display = showFooter ? "flex" : "none";
+  modalAction = null;
+  document.getElementById("modalOverlay").classList.remove("hidden");
+}
 function modalSave() { if (modalAction) modalAction(); }
 function closeModal() {
   document.getElementById("modalOverlay").classList.add("hidden");
   document.getElementById("modalContent").innerHTML = "";
+  document.getElementById("modalFooter").style.display = "flex";
   modalAction = null;
 }
 
