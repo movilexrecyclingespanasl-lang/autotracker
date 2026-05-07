@@ -945,6 +945,7 @@ function renderPipelineTable() {
         ${hasNext ? `<button class="btn-icon" onclick="openAdvanceModal('${p.id}')" title="Avanzar etapa">▶</button>` : ""}
         <button class="btn-icon" onclick="openPipelineForm('${p.id}')" title="Editar">✏️</button>
         ${p.stage !== "descartada" && p.stage !== "activa" ? `<button class="btn-icon" onclick="openDiscardModal('${p.id}')" title="Descartar">🚫</button>` : ""}
+        ${p.stage === "descartada" ? `<button class="btn-icon" onclick="openRecoverModal('${p.id}')" title="Recuperar">🔄</button>` : ""}
         <button class="btn-icon" onclick="deletePipelineItem('${p.id}')" title="Eliminar">🗑️</button>
       </td>
     </tr>`;
@@ -1404,6 +1405,39 @@ async function confirmAdvance(id, nextStageId) {
     toast(`✅ Avanzado a "${stageInfo(nextStageId).label}"`);
   }
   closeModal(); renderPipeline(); renderDashboard(); renderTable();
+}
+
+function openRecoverModal(id) {
+  const item = pipeline.find(x => x.id === id);
+  if (!item) return;
+  const content = `
+    <div class="field">
+      <div class="field-label">¿A qué etapa quieres moverlo?</div>
+      <select id="m_recoverStage" style="padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:13px;width:100%;margin-top:6px">
+        <option value="solicitud">🆕 Solicitud</option>
+        <option value="analisis">🔍 En análisis</option>
+        <option value="aprobada">✅ Aprobada</option>
+        <option value="desarrollo">🚀 En desarrollo</option>
+      </select>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--muted)">Se borrará el motivo de descarte y el item volverá a estar activo en el pipeline.</div>`;
+  openModal("🔄 Recuperar solicitud", esc(item.processName), content, true);
+  modalAction = () => confirmRecover(id);
+}
+
+async function confirmRecover(id) {
+  const stage = document.getElementById("m_recoverStage")?.value;
+  if (!stage) return;
+  const item = pipeline.find(x => x.id === id);
+  if (!item) return;
+  const now = new Date().toISOString();
+  const updated = { ...item, stage, discardReason: "", discardNotes: "", stageUpdatedAt: now, updatedAt: now };
+  const r = await apiSavePipe(updated);
+  if (r && r.success) {
+    pipeline = pipeline.map(p => p.id === id ? updated : p);
+    toast(`🔄 Recuperado → ${stageInfo(stage).label}`);
+    closeModal(); renderPipeline(); renderDashboard();
+  }
 }
 
 async function confirmDiscard(id) {
