@@ -463,7 +463,7 @@ async function apiCall(params) {
 async function loadAllData() {
   const d = await apiCall({action:"getAll"});
   if (!d) return false;
-  automations = d.automations || [];
+  automations = d.automations || d.automatizaciones || [];
   pipeline = d.pipeline || [];
   return true;
 }
